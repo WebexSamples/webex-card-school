@@ -1,0 +1,32 @@
+{
+  "name": "cardschool",
+  "version": "1.0.0",
+  "description": "Webex Teams Bot to demonstrate the use of Buttons and Cards",
+  "main": "server.js",
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "build": "node build-cards.js"
+  },
+  "keywords": [
+    "Cisco",
+    "Webex",
+    "Webex Teams",
+    "Adaptive Cards",
+    "Buttons and Cards"
+  ],
+  "author": "JP Shipherd",
+  "license": "ISC",
+  "dependencies": {
+    "adaptivecards-templating": "^0.1.1-alpha.0",
+    "body-parser": "^1.15.2",
+    "dotenv": "^5.0.1",
+    "express": "^4.17.1",
+    "webex-node-bot-framework": "^0.2.2",
+    "winston": "^2.4.1",
+    "winston-papertrail": "^1.0.5"
+  }
+}

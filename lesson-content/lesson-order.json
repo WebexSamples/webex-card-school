@@ -1,0 +1,22 @@
+[
+  {
+    "contentFile": "welcome-content.json"
+  },
+  {
+    "contentFile": "what-is-a-card-content.json"
+  },
+  {
+    "contentFile": "sending-a-card-content.json",
+    "customHandlerFile": "sending-a-card-handler"
+  },
+  {
+    "contentFile": "designing-a-card.json"
+  },
+  {
+    "contentFile": "displaying-complex-info.json",
+    "customHandlerFile": "displaying-complex-info-handler"
+  },
+  {
+    "contentFile": "graduation-content.json"
+  }
+]

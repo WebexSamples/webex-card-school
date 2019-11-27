@@ -1,0 +1,190 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "What is a Card?",
+      "size": "Medium",
+      "weight": "Bolder",
+      "horizontalAlignment": "Center"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Cards are a way that Applications can share or collect information in Webex Teams.  Cards can display rich information including images, formatted text and links.   Cards can also be used to collect detailed information from Webex Teams users that would be difficult to obtain using a purely text based interface.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "TODO: Replace this with an image of a text based bot trying to collect information",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "TODO: Replace this with an image of an input card",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "Users can’t send cards using the Webex Teams client but applications can use the /messages API to send a card",
+      "wrap": true
+    },
+    {
+      "type": "Input.ChoiceSet",
+      "id": "myCardIndex",
+      "isMultiSelect": false,
+      "isVisible": false,
+      "choices": [
+        {
+          "title": "Unused Choice",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "ActionSet",
+          "horizontalAlignment": "Center",
+          "actions": [
+            {
+              "type": "Action.Submit",
+              "title": "Next Lesson: Sending A Card",
+              "data": {
+                "nextLesson": true,
+                "lessonIndex": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.ShowCard",
+      "title": "Pick Another Lesson",
+      "card": {
+        "type": "AdaptiveCard",
+        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+        "body": [
+          {
+            "type": "Container",
+            "items": [
+              {
+                "type": "TextBlock",
+                "text": "Available Lessons:"
+              },
+              {
+                "type": "Input.ChoiceSet",
+                "id": "jumpToLessonIndex",
+                "choices": [
+                  {
+                    "title": "Introduction",
+                    "value": "0"
+                  },
+                  {
+                    "title": "Lesson 1: What is a Card?",
+                    "value": "1"
+                  },
+                  {
+                    "title": "Lesson 2: Sending A Card",
+                    "value": "2"
+                  },
+                  {
+                    "title": "Lesson 3: Designing a Card",
+                    "value": "3"
+                  },
+                  {
+                    "title": "Lesson 4: Displaying Complex Info",
+                    "value": "4"
+                  }
+                ]
+              },
+              {
+                "type": "ActionSet",
+                "actions": [
+                  {
+                    "type": "Action.Submit",
+                    "title": "Go To Lesson!",
+                    "id": "gotoLesson",
+                    "data": {
+                      "nextLesson": false,
+                      "pickAnotherLesson": true
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "Action.ShowCard",
+      "title": "More Resources",
+      "card": {
+        "type": "AdaptiveCard",
+        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+        "body": [
+          {
+            "type": "ActionSet",
+            "actions": [
+              {
+                "type": "Action.OpenUrl",
+                "title": "Buttons and Cards Developers Guide",
+                "url": "https://developer.webex.com/docs/api/guides/cards"
+              },
+              {
+                "type": "Action.OpenUrl",
+                "title": "Buttons and Cards Designer",
+                "url": "https://developer.webex.com/adaptive-cards-designer"
+              },
+              {
+                "type": "Action.Submit",
+                "id": "showSource",
+                "title": "See this card's source",
+                "data": {
+                  "showCardSource": "true"
+                }
+              },
+              {
+                "type": "Action.OpenUrl",
+                "title": "See this App's Source",
+                "url": "https://github.com/jpjpjp/webex-card-sampler"
+              }
+            ]
+          },
+          {
+            "type": "Container",
+            "items": [
+              {
+                "type": "TextBlock",
+                "text": "Do you have questions, comments or suggestions?\n\nWe'd love to get your feedback on this bot or any aspect of the Webex Teams Buttons and Cards feature.",
+                "wrap": true
+              },
+              {
+                "type": "Input.Text",
+                "id": "feedback",
+                "isMultiline": true,
+                "placeholder": "Enter your feedback"
+              },
+              {
+                "type": "ActionSet",
+                "actions": [
+                  {
+                    "type": "Action.Submit",
+                    "title": "Send Feedback",
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

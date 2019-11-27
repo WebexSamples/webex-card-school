@@ -1,0 +1,29 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Displaying Complex Info",
+      "size": "Medium",
+      "weight": "Bolder",
+      "horizontalAlignment": "Center"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Cards can use images, text, and links to external URLs to display complex information.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "Below we will show an example \"card\" that provides information about you.  It uses schema elements such as the \"Container\", \"ColumnSet\", \"Colum\", \"Image\", \"TextBlock\", and \"FactSet\" to present it in a pleasing format",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "It also uses the \"ActionSet\" and  \"Action.OpenUrl\" elements to provide buttons that will link you to more information.  In this case you can see the card's generic JSON, and the custom renderer function which populates it with your information.",
+      "wrap": true
+    }
+  ]
+}

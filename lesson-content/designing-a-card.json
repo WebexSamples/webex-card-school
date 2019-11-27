@@ -1,0 +1,34 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Designing a Card",
+      "size": "Medium",
+      "weight": "Bolder",
+      "horizontalAlignment": "Center"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Cards are build using the Adaptive Card Framework, a standard that has is adopted by many messaging providers such as Microsoft, Slack and Cisco.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "A card is defined by creating a JSON object that describes the various Adaptive Card schema elements that should be displayed.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "Webex For Developers provides a [Buttons and Cards Designer](http://developer.webex.com/buttons-and-cards-designer) that allows you to visually build a card and then copy the JSON to your application.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "In our next few lessons we will dive into more detail on how these schema elements can be used in Webex Teams cards.",
+      "wrap": true
+    }
+  ]
+}

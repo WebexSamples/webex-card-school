@@ -1,0 +1,25 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Congratulations Graduate!",
+      "size": "Medium",
+      "weight": "Bolder",
+      "horizontalAlignment": "Center"
+    },
+    {
+      "type": "TextBlock",
+      "text": "If you worked your way through all the lessons, congratulations, you are now a graduate of Webex Teams Buttons and Cards School.  Here is a certificate suitable for framing:",
+      "wrap": true
+    },
+    {
+      "type": "Image",
+      "altText": "Picture of a diploma",
+      "url": "http://jpshipherd.ngrok.io/images/diploma.png",
+      "horizontalAlignment": "Center"
+    }
+  ]
+}

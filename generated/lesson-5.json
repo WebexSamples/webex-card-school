@@ -1,0 +1,132 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Congratulations Graduate!",
+      "size": "Medium",
+      "weight": "Bolder",
+      "horizontalAlignment": "Center"
+    },
+    {
+      "type": "TextBlock",
+      "text": "If you worked your way through all the lessons, congratulations, you are now a graduate of Webex Teams Buttons and Cards School.  Here is a certificate suitable for framing:",
+      "wrap": true
+    },
+    {
+      "type": "Image",
+      "altText": "Picture of a diploma",
+      "url": "http://jpshipherd.ngrok.io/images/diploma.png",
+      "horizontalAlignment": "Center"
+    },
+    {
+      "type": "Input.ChoiceSet",
+      "id": "myCardIndex",
+      "isMultiSelect": false,
+      "isVisible": false,
+      "choices": [
+        {
+          "title": "Unused Choice",
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Do you have questions, comments or suggestions?\n\nWe'd love to get your feedback on this bot or any aspect of the Webex Teams Buttons and Cards feature.",
+          "wrap": true
+        },
+        {
+          "type": "Input.Text",
+          "id": "feedback",
+          "isMultiline": true,
+          "placeholder": "Enter your feedback"
+        },
+        {
+          "type": "ActionSet",
+          "actions": [
+            {
+              "type": "Action.Submit",
+              "title": "Send Feedback",
+              "data": {}
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "ActionSet",
+          "actions": [
+            {
+              "type": "Action.ShowCard",
+              "title": "Review a Previous Lesson",
+              "card": {
+                "type": "AdaptiveCard",
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "body": [
+                  {
+                    "type": "Container",
+                    "items": [
+                      {
+                        "type": "TextBlock",
+                        "text": "Available Lessons:"
+                      },
+                      {
+                        "type": "Input.ChoiceSet",
+                        "id": "jumpToLessonIndex",
+                        "choices": [
+                          {
+                            "title": "Introduction",
+                            "value": "0"
+                          },
+                          {
+                            "title": "Lesson 1: What is a Card?",
+                            "value": "1"
+                          },
+                          {
+                            "title": "Lesson 2: Sending A Card",
+                            "value": "2"
+                          },
+                          {
+                            "title": "Lesson 3: Designing a Card",
+                            "value": "3"
+                          },
+                          {
+                            "title": "Lesson 4: Displaying Complex Info",
+                            "value": "4"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "ActionSet",
+                        "actions": [
+                          {
+                            "type": "Action.Submit",
+                            "title": "Go To Lesson!",
+                            "id": "gotoLesson",
+                            "data": {
+                              "nextLesson": false,
+                              "pickAnotherLesson": true
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

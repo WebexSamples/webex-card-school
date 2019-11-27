@@ -1,0 +1,35 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Welcome to Buttons and Cards School",
+      "size": "Medium",
+      "weight": "Bolder",
+      "horizontalAlignment": "Center"
+    },
+    {
+      "type": "Image",
+      "altText": "Optional Images can be added",
+      "url": "http://jpshipherd.ngrok.io/images/school.png",
+      "horizontalAlignment": "Center"
+    },
+    {
+      "type": "TextBlock",
+      "text": "This is an open source Webex Teams Bot that helps users and developers become familiar with Webex Teams Buttons and Cards",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "In this class we'll learn about what a card is, why they might be used, and how applications can use them.   If you are ready to begin just click the **Next Lesson** button to learn what a card is.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "Click **Pick Another Lesson** to browse through the lessons available, or **More Resources** to see what else is available.",
+      "wrap": true
+    }
+  ]
+}

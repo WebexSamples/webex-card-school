@@ -1,0 +1,34 @@
+[
+  {
+    "contentFile": "welcome-content.json",
+    "index": 0,
+    "title": "Welcome to Buttons and Cards School"
+  },
+  {
+    "contentFile": "what-is-a-card-content.json",
+    "index": 1,
+    "title": "What is a Card?"
+  },
+  {
+    "contentFile": "sending-a-card-content.json",
+    "customHandlerFile": "sending-a-card-handler",
+    "index": 2,
+    "title": "Sending A Card"
+  },
+  {
+    "contentFile": "designing-a-card.json",
+    "index": 3,
+    "title": "Designing a Card"
+  },
+  {
+    "contentFile": "displaying-complex-info.json",
+    "customHandlerFile": "displaying-complex-info-handler",
+    "index": 4,
+    "title": "Displaying Complex Info"
+  },
+  {
+    "contentFile": "graduation-content.json",
+    "index": 5,
+    "title": "Congratulations Graduate!"
+  }
+]

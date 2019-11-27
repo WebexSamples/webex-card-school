@@ -1,0 +1,48 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Sending A Card",
+      "size": "Medium",
+      "weight": "Bolder",
+      "horizontalAlignment": "Center"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Applications can send a card the same way they send messages, via the [Webex Teams /messages API](https://developer.webex.com/docs/api/v1/messages/create-a-message).  ",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "A message that includes a card will include an “attachment” field which includes data that tells Webex how to render a card, for example:",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "```json\n{\n  \"roomId\": \"{{roomId}}\",\n  \"text\": \"If you see this message, the card card did not render\",\n  \"attachments\": [\n    {\n      \"contentType\": \"application/vnd.microsoft.card.adaptive\",\n        \"content\": {\n          \"type\": \"AdaptiveCard\",\n          \"version\": \"1.0\",\n          \"body\": [\n            {\n              \"type\": \"TextBlock\",\n              \"text\": \"Here is a logo\"\n            },\n            {\n              \"type\": \"Image\",\n              \"url\": \"https://www.ccsmedia.com/media/WebexTeams_Logo-150x150.png\"\n            }\n         ]\n       }\n    }\n  ]\n}",
+      "wrap": true
+    },
+    {
+      "type": "ActionSet",
+      "horizontalAlignment": "center",
+			"actions": [
+				{
+          "type": "Action.Submit",
+          "id": "postMessageButton",
+					"title": "Try Posting This Message...",
+					"data": {
+            "customPostMessage": true
+          }
+				}
+			]
+		},    
+    {
+      "type": "TextBlock",
+      "text": "TODO: Add a button to allow the user to post this message to the API",
+      "wrap": true
+    }
+  ]
+}

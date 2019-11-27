@@ -1,0 +1,19 @@
+{
+  "type": "Container",
+  "items": [
+    {
+      "type": "ActionSet",
+      "horizontalAlignment": "Center",
+      "actions": [
+        {
+          "type": "Action.Submit",
+          "title": "Next Lesson: ",
+          "data": {
+            "nextLesson": true,
+            "lessonIndex": "to be generated"
+          }
+        }
+      ]
+    }
+  ]
+}
