@@ -41,6 +41,18 @@ if ((process.env.WEBHOOK) && (process.env.TOKEN) &&
   process.exit();
 }
 
+// The beta-mode module allows us to restrict our bot to spaces
+// that include a specified list of users
+let validUsers = [];
+let BetaMode = null;
+if (process.env.EFT_USER_EMAILS) {
+  validUsers = process.env.EFT_USER_EMAILS.split(',');
+  if (validUsers.length) {
+    BetaMode = require('./beta-mode');
+  }
+}
+
+
 // The admin will get extra notifications about bot usage
 let adminEmail = '';
 let botEmail = 'the bot';
@@ -97,29 +109,46 @@ framework.on("initialized", function () {
   logger.info("Framework initialized successfully! [Press CTRL-C to quit]");
 });
 
-framework.on('spawn', function (bot) {
+
+framework.on('spawn', async function (bot) {
+  // Save initialization status when this handler was first called
+  let initiatlized = framework.initialized;
+  // Notify the admin if the bot has been added to a new space
+  if (!initiatlized) {
+    // An instance of the bot has been added to a room
+    logger.info(`Framework startup found bot in existing room: ${bot.room.title}`);
+  } else {
+    logger.info(`Our bot was added to a new room: ${bot.room.title}`);
+  }
+  // Set our bot's email -- this is used by our health check endpoint
+  if (botEmail === 'the bot') {  // should only happen once
+    botEmail = bot.person.emails[0];
+  }
+
+  // Ideally we fetch any existing betamode config from a database
+  // before configuring it for this run of our server
+  // TODO - read config out of db
+  // If we specified EFT users, register the beta-mode module
+  if (validUsers) {
+    bot.betaMode = new BetaMode(bot, logger, true, ['jshipher@cisco.com']);
+    await bot.betaMode.onSpawn();
+  }
   // See if this instance is the 1-1 space with the admin
   if ((!adminsBot) && (bot.isDirect) &&
     (bot.isDirectTo.toLocaleLowerCase() === adminEmail.toLocaleLowerCase())) {
     adminsBot = bot;
   }
-  // Notify the admin if the bot has been added to a new space
-  if (!framework.initialized) {
-    // An instance of the bot has been added to a room
-    logger.info(`Framework startup found bot in existing room: ${bot.room.title}`);
-  } else {
-    logger.info(`Our bot was added to a new room: ${bot.room.title}`);
+
+  if (initiatlized) {
+    // Our bot has just been added to a new space!
     if (adminsBot) {
       adminsBot.say(`${bot.person.displayName} was added to a space: ${bot.room.title}`)
         .catch((e) => logger.error(`Failed to update to Admin about a new bot. Error:${e.message}`));
     }
+    // Since we just got added, say hello
     showHelp(bot)
       .then(() => cardArray[0].renderCard(bot, null, logger))
       .catch((e) => logger.error(`Error starting up in space "${bot.room.title}": ${e.message}`));
-  }
-  // Set our bot's email -- this is used by our health check endpoint
-  if (botEmail === 'the bot') {  // should only happen once
-    botEmail = bot.person.emails[0];
   }
 });
 
