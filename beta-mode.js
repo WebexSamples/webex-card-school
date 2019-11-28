@@ -54,38 +54,66 @@ class BetaMode {
     this.bot = bot;
   };
 
-  async onSpawn() {
-    let validUser = false;
-    if (this.betaMode) {
-      // Check the users in this space to see if this bot should be active here
-      validUser = await this.checkForValidUsers();
+  async onSpawn(addedById) {
+    let validUser = '';
+    try {
+      if (!this.betaMode) {
+        this.logger.warning('Unneeded call to BetaMode.onSpawn() when not in beta mode');
+        this.initConfig('');
+        return when(true);
+      }
+
+      let botJustAdded = (addedById) ? true : false;
+      if ((botJustAdded) && (addedById !== this.bot.person.id)) {
+        let addedByPerson = await this.bot.framework.webex.people.get(addedById);
+        let addedByEmail = _.toLower(addedByPerson.emails[0]);
+        validUser = _.find(this.validUsers, userEmail => {
+          return (addedByEmail === _.toLower(userEmail));
+        });
+        if (!validUser) {
+          if (this.bot.isDirect) {
+            this.logger.info(`Bot was added to a one-on-one space by non EFT user ${addedByEmail}.  Sending EFT Message.`);
+            this.bot.origSay('I am not yet generally available and will ignore all input until I am. I will message this space when I become available.')
+              .catch((e) => this.logger.error(`BetaMode:onSpawn unable to send non-GA message to space "${this.bot.room.title}": ${e.message}`));
+          } else {
+            this.logger.info(`Bot was added to a space "${this.bot.room.title}" by non EFT user ${addedByEmail}.  Leaving space.`);
+            this.bot.origSay('I am not yet generally available. Try adding me again later.')
+              .catch((e) => this.logger.error(`BetaMode:onSpawn unable to send non-GA message to space "${this.bot.room.title}": ${e.message}`));
+            this.bot.exit();
+            return when(false);
+          }
+        }
+      } else {
+        // Check the users in this space to see if this bot should be active here
+        validUser = await this.checkForValidUsers();
+      }
+
+      // If this bot did not have a stored betaModeConfig we assume this is the 
+      // first time it was spawned.  If there are no valid users in the space,
+      // send a one time message letting the user(s) know we aren't available yet
+      // Ideally this should only happen once
+      if ((!("betaModeConfig" in this.bot)) && (this.betaMode) && (!validUser)) {
+        // Comment this out until we are ready to carefully test it
+        //bot.say('I am not yet generally available and will ignore all input until I am. I will message this space when I become available.');
+        console.log('I would spam existing spaces here');
+      }
+
+      // Check if this bot has prevously been in betaMode and now isn't
+      // In this case we want to announce that the bot is available
+      // Ideally this should only happen once
+      if ((!this.betaMode) && (this.bot.betaModeConfig) && (this.bot.betaModeConfig.enabled)) {
+        // Comment this out until we are ready to carefully test it
+        //bot.say('I am now available. Send me a "help" message to see what I can do');
+        console.log('I would spam existing spaces here');
+      }
+    } catch (e) {
+      this.logger.error(`Failed to set up beta mode for bot spawned in room "${this.bot.room.title}`);
+      this.betaMode = false;
+      this.initConfig('');
+      return when(true);
     }
 
-    // If this bot did not have a stored betaModeConfig we assume this is the 
-    // first time it was spawned.  If there are no valid users in the space,
-    // send a one time message letting the user(s) know we aren't available yet
-    // Ideally this should only happen once
-    if ((!("betaModeConfig" in this.bot)) && (this.betaMode) && (!validUser)) {
-      // Comment this out until we are ready to carefully test it
-      //bot.say('I am not yet generally availble and will ignore all input until I am. I will message this space when I become available.');
-      console.log('I would spam existing spaces here');
-    }
-
-    // Check if this bot has prevously been in betaMode and now isn't
-    // In this case we want to announce that the bot is available
-    // Ideally this should only happen once
-    if ((!this.betaMode) && (this.bot.betaModeConfig) && (this.bot.betaModeConfig.enabled)) {
-      // Comment this out until we are ready to carefully test it
-      //bot.say('I am now availble. Send me a "help" message to see what I can do');
-      console.log('I would spam existing spaces here');
-    }
-
-    if (!("betaModeConfig" in this.bot)) {
-      this.bot.betaModeConfig = {};
-    }
-    this.bot.betaModeConfig.allowed = (validUser) ? true : false;
-    this.bot.betaModeConfig.validUser = validUser;
-    this.bot.betaModeConfig.enabled = this.betaMode;
+    this.initConfig(validUser);
 
     // Register a handlers for membership changes
     this.bot.on('memberEnters', (bot, membership) => {
@@ -120,6 +148,19 @@ class BetaMode {
     });
 
   };
+
+  initConfig(validUser) {
+    if (!("betaModeConfig" in this.bot)) {
+      this.bot.betaModeConfig = {};
+    }
+    this.bot.betaModeConfig.enabled = this.betaMode;
+    this.bot.betaModeConfig.validUser = validUser;
+    if (this.betaMode) {
+      this.bot.betaModeConfig.allowed = (validUser) ? true : false;
+    } else {
+      this.bot.betaModeConfig.allowed = true;
+    }
+  }
 
   async checkForValidUsers() {
     if (!this.validUsers.length) {

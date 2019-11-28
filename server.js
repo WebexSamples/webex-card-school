@@ -43,11 +43,11 @@ if ((process.env.WEBHOOK) && (process.env.TOKEN) &&
 
 // The beta-mode module allows us to restrict our bot to spaces
 // that include a specified list of users
-let validUsers = [];
+let betaUsers = [];
 let BetaMode = null;
 if (process.env.EFT_USER_EMAILS) {
-  validUsers = process.env.EFT_USER_EMAILS.split(',');
-  if (validUsers.length) {
+  betaUsers = process.env.EFT_USER_EMAILS.split(',');
+  if (betaUsers.length) {
     BetaMode = require('./beta-mode');
   }
 }
@@ -110,7 +110,7 @@ framework.on("initialized", function () {
 });
 
 
-framework.on('spawn', async function (bot) {
+framework.on('spawn', async function (bot, id, addedById) {
   // Save initialization status when this handler was first called
   let initiatlized = framework.initialized;
   // Notify the admin if the bot has been added to a new space
@@ -129,9 +129,12 @@ framework.on('spawn', async function (bot) {
   // before configuring it for this run of our server
   // TODO - read config out of db
   // If we specified EFT users, register the beta-mode module
-  if (validUsers) {
-    bot.betaMode = new BetaMode(bot, logger, true, ['jshipher@cisco.com']);
-    await bot.betaMode.onSpawn();
+  if (betaUsers) {
+    bot.betaMode = new BetaMode(bot, logger, true, betaUsers);
+    let validBetaSpace = await bot.betaMode.onSpawn(addedById);
+    if (!validBetaSpace) {
+      return;
+    }
   }
   // See if this instance is the 1-1 space with the admin
   if ((!adminsBot) && (bot.isDirect) &&
@@ -141,6 +144,7 @@ framework.on('spawn', async function (bot) {
 
   if (initiatlized) {
     // Our bot has just been added to a new space!
+    // TODO add metrics
     if (adminsBot) {
       adminsBot.say(`${bot.person.displayName} was added to a space: ${bot.room.title}`)
         .catch((e) => logger.error(`Failed to update to Admin about a new bot. Error:${e.message}`));
@@ -151,6 +155,12 @@ framework.on('spawn', async function (bot) {
       .catch((e) => logger.error(`Error starting up in space "${bot.room.title}": ${e.message}`));
   }
 });
+
+framework.on('despawn', async function (bot) {
+  logger.info(`Bot has been removed from space "${bot.room.title}"`);
+  //TODO add metrics
+});
+
 
 /*
  * framework.hears() events will process text based messages to our bot
