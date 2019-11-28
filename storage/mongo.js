@@ -113,12 +113,13 @@ class MongoStore {
       return when.reject(new Error(msg));
     }
     if (key) {
-      if (value) {
+      if ((typeof value === 'number') || (value)) {
         bot.storeConfig[key] = value;
       } else {
         bot.storeConfig[key] = '';
       }
-      return this.mCollection.update(bot.storeConfig, { w: 1 })
+      return this.mCollection.updateOne(
+        { _id: bot.storeConfig._id },bot.storeConfig, { upsert: true,  w: 1 })
         .catch((e) => {
           this.logger.error(`Failed DB storeConfig update "${bot.room.title}": ${e.message}`);
           return when(bot.storeConfig);
@@ -139,7 +140,7 @@ class MongoStore {
  * @returns {(String|Number|Boolean|Array|Object)}
  */
   recall(bot, key) {
-    if ((!bot) || (!('storeConfig' in bot))) {
+    if ((typeof bot !== 'object') || (!('storeConfig' in bot))) {
       let msg = `Failed to store {${key}: ${value}}.  Invalid bot object.`;
       this.logger.error(msg);
       return null;
@@ -183,7 +184,8 @@ class MongoStore {
       bot.storeConfig = {};
       bot.storeConfig._id = bot.room.id;
     }
-    return this.mCollection.update(bot.storeConfig, { w: 1 })
+    return this.mCollection.updateOne(
+      { _id: bot.storeConfig._id },bot.storeConfig, { upsert: true,  w: 1 })
       .catch((e) => {
         this.logger.error(`Failed DB storeConfig update "${bot.room.title}": ${e.message}`);
         return when(bot.storeConfig);

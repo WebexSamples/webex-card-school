@@ -32,7 +32,7 @@ class DisplayingComplexInfoHandlers {
         email: trigger.person.emails[0],
         organization: "A Test Organization",
         currentLesson: cardObj.lessonInfo.title,
-        previousLesson: "unknown"
+        previousLesson: cardObj.lessons[parseInt(bot.framework.mongoStore.recall(bot, 'previousLessonIndex'))].title
       };
       if (trigger.type != 'attachmentAction') {
         context.$root.date = trigger.message.created;
@@ -45,7 +45,7 @@ class DisplayingComplexInfoHandlers {
         } else if (inputs.pickAnotherLesson) {
           context.$root.requestedVia = 'Pick Another Lesson Button';
         } else {
-          context.$root.requestedVia = 'Unknown!';
+          context.$root.requestedVia = 'Unknown';
         }
       }
 
@@ -58,9 +58,14 @@ class DisplayingComplexInfoHandlers {
       let nextLessonButton = theCard.body.pop();
       theCard.body.push(card.body[0]); // push the "Show Card" Action Set
       theCard.body.push(nextLessonButton); // push the "Next Lesson" button back to the end
-      const json = JSON.stringify(theCard, null, 2);
-      //Fs.writeFile('./generated-card.json', json);
+      // const json = JSON.stringify(theCard, null, 2);
+      // Fs.writeFile('./generated-card.json', json);
       bot.sendCard(theCard, "If you see this your client cannot render our Introduction Card.   Try using a different Webex Teams client with this bot.")
+        .then((message) => {
+          if ('id' in message) {
+            bot.framework.mongoStore.store(bot, 'activeCardMessageId', message.id);
+          }
+        })
         .catch((err) => {
           let msg = 'Failed to render Displaying Complex Info lesson.';
           logger.error(`${msg} Error:${err.message}`);

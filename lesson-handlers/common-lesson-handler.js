@@ -3,8 +3,9 @@
  **/
 
 class LessonHandler {
-  constructor(card, srcBaseUrl, contentType, lessonInfo, customHandlers) {
+  constructor(card, srcBaseUrl, contentType, lessons, lessonInfo, customHandlers) {
     this.card = card;
+    this.lessons = lessons;
     this.lessonInfo = lessonInfo;
     this.customHandlers = customHandlers;
     // if (lessonInfo.customHandlerFile) {
@@ -25,10 +26,20 @@ class LessonHandler {
   }
 
   async renderCard(bot, trigger, logger) {
+    // Update the indices for the current and previous lesson
+    bot.framework.mongoStore.store(bot, 'previousLessonIndex',
+      bot.framework.mongoStore.recall(bot, 'currentLessonIndex'));
+    bot.framework.mongoStore.store(bot, 'currentLessonIndex', this.lessonInfo.index);
+
     if ((this.customHandlers) && (typeof this.customHandlers.customRenderCard == 'function')) {
       return this.customHandlers.customRenderCard(bot, trigger, this, logger);
     }
     bot.sendCard(this.card, "If you see this your client cannot render our Introduction Card.   Try using a different Webex Teams client with this bot.")
+      .then((message) => {
+        if ('id' in message) {
+          bot.framework.mongoStore.store(bot, 'activeCardMessageId', message.id);
+        }
+      })
       .catch((err) => {
         let msg = 'Failed to render Introduction card.';
         logger.error(`${msg} Error:${err.message}`);

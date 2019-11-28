@@ -12,12 +12,12 @@
 * [x]  Add logic to be "inoperative" if the space isn't populated by a set of known users when bot is spawaned
 * [x]  Change operate/inoperative status when memberships change
 * [x] Exit group spaces when a non EFT user added us regardless of other members  
-* [ ]  Add a persistent store for information about the bots
-  * [ ]  Store operative/inopareative status
-  * [ ]  Store current lesson
+* [x]  Add a persistent store for information about the bots
+  * [x]  Store operative/inopareative status
+  * [x]  Store current lesson
 
 ## Core functionality
-* [ ]  Add logic to know the most recent card presented.  Respond to submit actions from other cards with a reply that only the most current card's input is processed.
+* [x]  Add logic to know the most recent card presented.  Respond to submit actions from other cards with a reply that only the most current card's input is processed.
 * [x]  Set the threading-api feature toggle for this bot
 * [ ]  Add a "syllabus" command, that lays out the lessons in text format and allows the user to specify the leson they want
 
@@ -48,6 +48,8 @@ Research mongo to see if its better to update a single field in a dictionary or
 * [x] on bot.store, write to local copy, lazy return from database write with error messages for DB write fails
 * [x] on bot.recall read syncronously from local copy
 * [x] on bot.forget, update db lazily
+* [ ] Add "announce" logic so that bots added to 1-1 spaces during the EFT announce that they are working 1 TIME ONLY!
 
 ## Framework improvements
 * [ ] reimplment beta-mode as a core frameowrk feature
+* [ ] reimplement mongoStore as a framework store

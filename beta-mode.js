@@ -201,7 +201,7 @@ class BetaMode {
       return this.origSay(format, message);
     } else {
       logger.verbose(`BetaMode: Supressing message from bot in space "${this.room.title}"`);
-      return when(true);
+      return when({});
     }
   };
 
@@ -210,7 +210,7 @@ class BetaMode {
       return this.origSendCard(cardJson, fallbackText);
     } else {
       logger.verbose(`BetaMode: Supressing card from bot in space "${this.room.title}"`);
-      return when(true);
+      return when({});
     }
   };
 
@@ -219,7 +219,7 @@ class BetaMode {
       return this.origReply(replyTo, message, format);
     } else {
       logger.verbose(`BetaMode: Supressing reply from bot in space "${this.room.title}"`);
-      return when(true);
+      return when({});
     }
   };
 
@@ -228,7 +228,7 @@ class BetaMode {
       return this.origDm(person, format, message);
     } else {
       logger.verbose(`BetaMode: Supressing dm from bot in space "${this.room.title}"`);
-      return when(true);
+      return when({});
     }
   };
 
@@ -237,7 +237,7 @@ class BetaMode {
       return this.origUploadStream(filename, stream);
     } else {
       logger.verbose(`BetaMode: Supressing uploadStream from bot in space "${this.room.title}"`);
-      return when(true);
+      return when({});
     }
   };
 
@@ -246,7 +246,7 @@ class BetaMode {
       return this.origMessageStreamRoom(roomId, message);
     } else {
       logger.verbose(`BetaMode: Supressing uploadStream from bot in space "${this.room.title}"`);
-      return when(true);
+      return when({});
     }
   };
 
@@ -255,83 +255,9 @@ class BetaMode {
       return this.origUpload(filepath);
     } else {
       logger.verbose(`BetaMode: Supressing uploadStream from bot in space "${this.room.title}"`);
-      return when(true);
+      return when({});
     }
   };
-
-
-
-
-
-
-  //  // Check each member for a jira acount and leave the space
-  // // (or invalidate the space for a one-on-on space)
-  // // if we find a non jira user in the space with our bot
-  // async function exitIfNonJiraUsers(bot, members) {
-  //   botEmail = flint.email.toLocaleLowerCase();
-  //   securityBotEmail = "spark-cisco-it-admin-bot@cisco.com";
-  //   let userLookupPromises = [];
-  //   for (let i = 0; i < members.length; i++) {
-  //     memberEmail = members[i].personEmail.toLocaleLowerCase();
-  //     // Don't check our bot or Cisco's security bot
-  //     if ((memberEmail != botEmail) && (memberEmail != securityBotEmail)) {
-  //       // See if we have previously looked up this user in Jira
-  //       if ((bot.spaceInfo.validatedUsers) && (bot.spaceInfo.validatedUsers.includes(memberEmail))) {
-  //         continue;
-  //       }
-  //       // Asyncronously check with Jira if this user has an account
-  //       userLookupPromises.push(jira.lookupUser(memberEmail));
-  //     }
-  //   }
-  //   if (userLookupPromises.length) {
-  //     // We wait for all the lookups to complete
-  //     try {
-  //       let jiraUsers = await Promise.all(userLookupPromises);
-  //       // Add the checked users to this spaces data so we can skip checking them on restarts
-  //       if (!bot.spaceInfo.validatedUsers) { bot.spaceInfo.validatedUsers = []; }
-  //       for (let i = 0; i < jiraUsers.length; i++) {
-  //         bot.spaceInfo.validatedUsers.push(jiraUsers[i][0].emailAddress);
-  //       }
-  //       updateSpaceInfo(bot);
-  //     } catch (err) {
-  //       if (bot.isDirect) {
-  //         logger.warn('Will not interact one-on-one with user ' + bot.room.title + ', ' + err.message);
-  //         bot.isValidUser = false;
-  //       } else {
-  //         logger.warn('Leaving ' + bot.room.title + ', ' + err.message);
-  //         bot.say(err.message + '  \nI am only permitted to work in spaces where all members have ' +
-  //           'access to the Webex Platform Jira instance. ' +
-  //           'If you think that IS the case for this space please contact ' + adminEmail +
-  //           '.  \nGoodbye.');
-  //         bot.state = 'idle';
-  //         return bot.exit();
-  //       }
-  //     }
-  //   } else {
-  //     logger.verbose('Already checked all participants in space: ' + bot.room.title + ' for jira accounts');
-  //   }
-  //   return null;
-  // }
-
-  // // Walk the membership for a space and exit if any members are
-  // // not jira users
-  // function exitIfInvalidMembers(bot) {
-  //   flint.webex.memberships.list({ roomId: bot.room.id }).then(members => {
-  //     exitIfNonJiraUsers(bot, members.items);
-  //   }).catch(err => {
-  //     logger.error('Can\'t get membership for room ' + bot.room.title + ': ' + err.message);
-  //     bot.say('Sorry, I can\'t figure out if I belong here or not.');
-  //     return bot.exit();
-  //   });
-  // }
-
-  // // Check if a single user is a non jira user and exit the space if so
-  // function exitIfInvalidMember(bot, email) {
-  //   // mimic the structure of a room membership array returned in the multi-user 
-  //   // version of this function
-  //   let userToCheck = [{ "personEmail": email }];
-  //   exitIfNonJiraUsers(bot, userToCheck);
-  // }
 
 };
 module.exports = BetaMode;

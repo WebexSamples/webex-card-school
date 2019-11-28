@@ -108,7 +108,7 @@ try {
       customHandlers = new CustomHandlers();
     }
     cardArray.push(new LessonHandler(cardJson, cardsConfig.srcBaseUrl,
-      cardsConfig.contentType, lessons[i], customHandlers));
+      cardsConfig.contentType, lessons, lessons[i], customHandlers));
   }
 } catch (e) {
   console.error(`During initiatlization error reading in card data: ${e.message}`);
@@ -138,7 +138,7 @@ framework.on('spawn', async function (bot, id, addedById) {
   try {
     // Ideally we fetch any existing betamode config from a database
     // before configuring it for this run of our server
-    let config = await framework.mongoStore.onSpawn(bot, initiatlized);
+    await framework.mongoStore.onSpawn(bot, initiatlized);
     // TODO - read config out of db
     // If we specified EFT users, register the beta-mode module
     if (betaUsers) {
@@ -219,8 +219,14 @@ framework.hears(/lesson ./, function (bot, trigger) {
 // send a lesson card in response to any input
 framework.hears(/.*/, function (bot, trigger) {
   if (!responded) {
-    // TODO discover the current lessonfor the bot and render that one.
-    cardArray[0].renderCard(bot, trigger, logger);
+    let currentLessonIndex = 
+      parseInt(bot.framework.mongoStore.recall(bot, 'currentLessonIndex'));
+    if ((currentLessonIndex >= 0) && (currentLessonIndex < cardArray.length)) {
+      cardArray[currentLessonIndex].renderCard(bot, trigger, logger);
+    } else {
+      logger.error(`Got invalid index for current lesson: ${currentLessonIndex}.  Displaying intro lesson.`);
+      cardArray[0].renderCard(bot, trigger, logger);
+    }
   }
   responded = false;
 });
@@ -236,6 +242,10 @@ framework.on('attachmentAction', function (bot, trigger) {
   try {
     let attachmentAction = trigger.attachmentAction;
     logger.verbose(`Got an attachmentAction:\n${JSON.stringify(attachmentAction, null, 2)}`);
+    // Only process input from most recently displayed card
+    if (attachmentAction.messageId !== bot.framework.mongoStore.recall(bot, 'activeCardMessageId')) {
+      return bot.reply(attachmentAction, 'I do not process button clicks from old lessons.  Scroll down to the most recent lesson card, or post any message to get me to display a new lesson.');
+    }
     // Go to next card (or ask this card to handle input)
     // TODO store info about the previous lesson for the Displaying Info lesson
     if (attachmentAction.inputs.nextLesson) {
