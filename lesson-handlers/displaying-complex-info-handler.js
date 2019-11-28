@@ -32,13 +32,14 @@ class DisplayingComplexInfoHandlers {
         email: trigger.person.emails[0],
         organization: "A Test Organization",
         currentLesson: cardObj.lessonInfo.title,
-        previousLesson: "unknown",
-        date: trigger.attachmentAction.created
+        previousLesson: "unknown"
       };
       if (trigger.type != 'attachmentAction') {
+        context.$root.date = trigger.message.created;
         context.$root.requestedVia = `Message to Bot: ${trigger.message.text}`;
       } else {
         let inputs = trigger.attachmentAction.inputs;
+        context.$root.date = trigger.attachmentAction.created;
         if (inputs.nextLesson) {
           context.$root.requestedVia = 'Next Lesson Button';
         } else if (inputs.pickAnotherLesson) {
@@ -58,7 +59,7 @@ class DisplayingComplexInfoHandlers {
       theCard.body.push(card.body[0]); // push the "Show Card" Action Set
       theCard.body.push(nextLessonButton); // push the "Next Lesson" button back to the end
       const json = JSON.stringify(theCard, null, 2);
-      Fs.writeFile('./generated-card.json', json);
+      //Fs.writeFile('./generated-card.json', json);
       bot.sendCard(theCard, "If you see this your client cannot render our Introduction Card.   Try using a different Webex Teams client with this bot.")
         .catch((err) => {
           let msg = 'Failed to render Displaying Complex Info lesson.';
