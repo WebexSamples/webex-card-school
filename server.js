@@ -65,12 +65,22 @@ if (process.env.ADMIN_EMAIL) {
 }
 var adminsBot = null;
 
+// Setup our persistent config storage
+let defaultStoredConfig = {
+  currentLessonIndex: 0,
+  previousLessonIndex: 0
+};
+let MongoStore = require('./storage/mongo.js');
+let mongoStore = new MongoStore(logger, defaultStoredConfig);
+
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(express.static('public'));
 
 // init framework
 var framework = new Framework(frameworkConfig);
+// TODO, ideally we would somehow wait until DB is initialized before starting the framework
+framework.mongoStore = mongoStore;
 framework.start();
 framework.messageFormat = 'markdown';
 logger.info("Starting framework, please wait...");
@@ -125,16 +135,21 @@ framework.on('spawn', async function (bot, id, addedById) {
     botEmail = bot.person.emails[0];
   }
 
-  // Ideally we fetch any existing betamode config from a database
-  // before configuring it for this run of our server
-  // TODO - read config out of db
-  // If we specified EFT users, register the beta-mode module
-  if (betaUsers) {
-    bot.betaMode = new BetaMode(bot, logger, true, betaUsers);
-    let validBetaSpace = await bot.betaMode.onSpawn(addedById);
-    if (!validBetaSpace) {
-      return;
+  try {
+    // Ideally we fetch any existing betamode config from a database
+    // before configuring it for this run of our server
+    let config = await framework.mongoStore.onSpawn(bot, initiatlized);
+    // TODO - read config out of db
+    // If we specified EFT users, register the beta-mode module
+    if (betaUsers) {
+      bot.betaMode = new BetaMode(bot, logger, true, betaUsers);
+      let validBetaSpace = await bot.betaMode.onSpawn(addedById);
+      if (!validBetaSpace) {
+        return;
+      }
     }
+  } catch (e) {
+    logger.error(`Failed to init stored configuration and beta mode. Error:${e.message}`);
   }
   // See if this instance is the 1-1 space with the admin
   if ((!adminsBot) && (bot.isDirect) &&

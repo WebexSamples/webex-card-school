@@ -88,24 +88,25 @@ class BetaMode {
         validUser = await this.checkForValidUsers();
       }
 
+      // TODO figure this out -- want to announce when beta mode is over in existing spaces, but only once!
       // If this bot did not have a stored betaModeConfig we assume this is the 
       // first time it was spawned.  If there are no valid users in the space,
       // send a one time message letting the user(s) know we aren't available yet
       // Ideally this should only happen once
-      if ((!("betaModeConfig" in this.bot)) && (this.betaMode) && (!validUser)) {
-        // Comment this out until we are ready to carefully test it
-        //bot.say('I am not yet generally available and will ignore all input until I am. I will message this space when I become available.');
-        console.log('I would spam existing spaces here');
-      }
+      // if ((!("betaModeConfig" in this.bot)) && (this.betaMode) && (!validUser)) {
+      //   // Comment this out until we are ready to carefully test it
+      //   //bot.say('I am not yet generally available and will ignore all input until I am. I will message this space when I become available.');
+      //   console.log('I would spam existing spaces here');
+      // }
 
       // Check if this bot has prevously been in betaMode and now isn't
       // In this case we want to announce that the bot is available
       // Ideally this should only happen once
-      if ((!this.betaMode) && (this.bot.betaModeConfig) && (this.bot.betaModeConfig.enabled)) {
-        // Comment this out until we are ready to carefully test it
-        //bot.say('I am now available. Send me a "help" message to see what I can do');
-        console.log('I would spam existing spaces here');
-      }
+      // if ((!this.betaMode) && (this.bot.betaModeConfig) && (this.bot.betaModeConfig.enabled)) {
+      //   // Comment this out until we are ready to carefully test it
+      //   //bot.say('I am now available. Send me a "help" message to see what I can do');
+      //   console.log('I would spam existing spaces here');
+      // }
     } catch (e) {
       this.logger.error(`Failed to set up beta mode for bot spawned in room "${this.bot.room.title}`);
       this.betaMode = false;
@@ -117,14 +118,17 @@ class BetaMode {
 
     // Register a handlers for membership changes
     this.bot.on('memberEnters', (bot, membership) => {
-      if (!bot.betaModeConfig.allowed) {
+      if (bot.framework.mongoStore.recall(bot, 'betaModeAllowed')) {
+        //      if (!bot.betaModeConfig.allowed) {
         var foundUserEmail = _.find(this.validUsers, userEmail => {
           return (_.toLower(membership.personEmail) === _.toLower(userEmail));
         });
         if (foundUserEmail) {
           this.logger.verbose(`EFT User ${membership.personDisplayName} joined previously deactivated room ${bot.room.title}`);
-          this.bot.betaModeConfig.allowed = true;
-          this.bot.betaModeConfig.validUser = foundUserEmail;
+          bot.framework.mongoStore.store(bot, 'betaModeAllowed', true);
+          bot.framework.mongoStore.store(bot, 'betaModeValidUser', foundUserEmail);
+          // this.bot.betaModeConfig.allowed = true;
+          // this.bot.betaModeConfig.validUser = foundUserEmail;
           bot.origSay(`EFT User ${membership.personDisplayName} joined the spaces, so I am now active. Send me a "help" message to see what I can do!`)
             .catch((e) => this.logger.error(`Failed to notify space that bot is enabled while in beta mode: ${e.message}`));
         }
@@ -132,33 +136,35 @@ class BetaMode {
     });
 
     this.bot.on('memberExits', async (bot, membership) => {
-      if ((bot.betaModeConfig.allowed) && (membership.personEmail === this.bot.betaModeConfig.validUser)) {
+      if ((bot.framework.mongoStore.recall(bot, 'betaModeAllowed')) &&
+        (membership.personEmail ===
+          bot.framework.mongoStore.recall(bot, 'betaModeValidUser'))) {
         this.logger.verbose(`${membership.personDisplayName} left ${bot.room.title}.  Checking for other valid EFT users...`);
         let validUser = await this.checkForValidUsers();
         if (validUser) {
-          this.bot.betaModeConfig.validUser = validUser;
+          bot.framework.mongoStore.store(bot, 'betaModeValidUser', validUser);
+          //this.bot.betaModeConfig.validUser = validUser;
           this.logger.verbose(`Found another EFT user ${membership.personDisplayName} in room  ${bot.room.title}.`);
         } else {
           this.logger.verbose(`No other EFT users in in room ${bot.room.title}. Will deactiveate `);
-          this.bot.betaModeConfig.allowed = false;
+          bot.framework.mongoStore.store(bot, 'betaModeAllowed', false);
+          //this.bot.betaModeConfig.allowed = false;
           bot.origSay('This bot is still in beta mode and no more authorized beta users are members of this space.  I will ignore input until I go GA')
             .catch((e) => this.logger.error(`Failed to notify space that bot is disabling while in beta mode: ${e.message}`));
         }
       }
     });
 
+    return when(true);
   };
 
   initConfig(validUser) {
-    if (!("betaModeConfig" in this.bot)) {
-      this.bot.betaModeConfig = {};
-    }
-    this.bot.betaModeConfig.enabled = this.betaMode;
-    this.bot.betaModeConfig.validUser = validUser;
+    this.bot.framework.mongoStore.store(this.bot, 'betaModeEnabled', this.betaMode);
+    this.bot.framework.mongoStore.store(this.bot, 'betaModeValidUser', validUser);
     if (this.betaMode) {
-      this.bot.betaModeConfig.allowed = (validUser) ? true : false;
+      this.bot.framework.mongoStore.store(this.bot, 'betaModeAllowed', (validUser) ? true : false);
     } else {
-      this.bot.betaModeConfig.allowed = true;
+      this.bot.framework.mongoStore.store(this.bot, 'betaModeAllowed', false);
     }
   }
 
@@ -190,8 +196,8 @@ class BetaMode {
    * betaMode functions for intercepting bot interactions with users
    */
 
-  say(format, message, overridBetaMode /* default false */) {
-    if ((this.betaModeConfig.allowed) || (overridBetaMode === true)) {
+  say(format, message) {
+    if (this.framework.mongoStore.recall(this, 'betaModeAllowed')) {
       return this.origSay(format, message);
     } else {
       logger.verbose(`BetaMode: Supressing message from bot in space "${this.room.title}"`);
@@ -199,8 +205,8 @@ class BetaMode {
     }
   };
 
-  sendCard(cardJson, fallbackText, overridBetaMode /* default false */) {
-    if ((this.betaModeConfig.allowed) || (overridBetaMode === true)) {
+  sendCard(cardJson, fallbackText) {
+    if (this.framework.mongoStore.recall(this, 'betaModeAllowed')) {
       return this.origSendCard(cardJson, fallbackText);
     } else {
       logger.verbose(`BetaMode: Supressing card from bot in space "${this.room.title}"`);
@@ -208,8 +214,8 @@ class BetaMode {
     }
   };
 
-  reply(replyTo, message, format, overridBetaMode /* default false */) {
-    if ((this.betaModeConfig.allowed) || (overridBetaMode === true)) {
+  reply(replyTo, message, format) {
+    if (this.framework.mongoStore.recall(this, 'betaModeAllowed')) {
       return this.origReply(replyTo, message, format);
     } else {
       logger.verbose(`BetaMode: Supressing reply from bot in space "${this.room.title}"`);
@@ -217,8 +223,8 @@ class BetaMode {
     }
   };
 
-  dm(person, format, message, overridBetaMode /* default false */) {
-    if ((this.betaModeConfig.allowed) || (overridBetaMode === true)) {
+  dm(person, format, message) {
+    if (this.framework.mongoStore.recall(this, 'betaModeAllowed')) {
       return this.origDm(person, format, message);
     } else {
       logger.verbose(`BetaMode: Supressing dm from bot in space "${this.room.title}"`);
@@ -226,8 +232,8 @@ class BetaMode {
     }
   };
 
-  uploadStream(filename, stream, overridBetaMode /* default false */) {
-    if ((this.betaModeConfig.allowed) || (overridBetaMode === true)) {
+  uploadStream(filename, stream) {
+    if (this.framework.mongoStore.recall(this, 'betaModeAllowed')) {
       return this.origUploadStream(filename, stream);
     } else {
       logger.verbose(`BetaMode: Supressing uploadStream from bot in space "${this.room.title}"`);
@@ -235,8 +241,8 @@ class BetaMode {
     }
   };
 
-  messageStreamRoom(roomId, message, overridBetaMode /* default false */) {
-    if ((this.betaModeConfig.allowed) || (overridBetaMode === true)) {
+  messageStreamRoom(roomId, message) {
+    if (this.framework.mongoStore.recall(this, 'betaModeAllowed')) {
       return this.origMessageStreamRoom(roomId, message);
     } else {
       logger.verbose(`BetaMode: Supressing uploadStream from bot in space "${this.room.title}"`);
@@ -244,8 +250,8 @@ class BetaMode {
     }
   };
 
-  upload(filepath, overridBetaMode /* default false */) {
-    if ((this.betaModeConfig.allowed) || (overridBetaMode === true)) {
+  upload(filepath) {
+    if (this.framework.mongoStore.recall(this, 'betaModeAllowed')) {
       return this.origUpload(filepath);
     } else {
       logger.verbose(`BetaMode: Supressing uploadStream from bot in space "${this.room.title}"`);
