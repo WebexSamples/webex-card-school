@@ -13,15 +13,28 @@
  * If you have created new content run `npm run build` to generate new card content
  * 
  */
-const Fs = require('fs').promises;
-
 let resourceDir = './lesson-content';
 let sharedResourceDir = './shared-lesson-content';
 let generatedDir = './generated';
+let githubGeneratedDir = 'blob/master/generated';
+
+// The Adaptive Cards Template SDK helps us populate a card design
+// template with values from a data source
+var ACData = require("adaptivecards-templating");
+
+// Read URLs for Card and App source links from environment
+require('dotenv').config();
+
+if (!process.env.APP_SRC_BASE_URL) {
+  console.error('Cannot read the environment variable APP_SRC_BASE_URL, needed to configure the buttons with links to the app and card source.');
+  console.error('The lesson cards were NOT updated!\n');
+  process.exit(0);
+}
 
 // Because we are using the promise version of fs
 // we require node version > 10.x.  Validate that.
 // Note: v11.0.0 or greater will remove the "experimental" warning output
+const Fs = require('fs').promises;
 let semver = require('semver');
 let { engines } = require('./package');
 
@@ -49,11 +62,26 @@ async function doIt(resourceDir, sharedResourceDir, generatedDir) {
     // OK, lets append the Next Lesson and More Options button to each lesson
     // and write out the complete generated content to lesson-X content files
     nextLesson = require(`${sharedResourceDir}/next-lesson.json`);
+    // Update the "View This Cards Source" button link using the Adaptive Card Template SDK
+    var template = new ACData.Template(generatedActions);
+
     let i;
     for (i = 0; i < lessonList.length - 1; i++) {
       let nextLessonInfo = (i < lessonList.length - 1) ? lessonList[i + 1] : null;
       let fileContent = `${resourceDir}/${lessonList[i].contentFile}`;
-      let cardJson = buildCard(i, fileContent, generatedActions, nextLessonInfo, nextLesson);
+      var appSource = process.env.APP_SRC_BASE_URL;
+      var cardSource = (appSource[appSource.length - 1] === '/') ?
+        appSource + `${githubGeneratedDir}/lesson-${i}.json` :
+        appSource + `/${githubGeneratedDir}/lesson-${i}.json`;
+      var context = new ACData.EvaluationContext();
+      context.$root = {
+        appSourceUrl: appSource,
+        cardSourceUrl: cardSource
+      };
+      // "Expand" the common actions template with the correct URLs
+      var thisCardsActions = template.expand(context);
+
+      let cardJson = buildCard(i, fileContent, thisCardsActions, nextLessonInfo, nextLesson);
       generateCardFile(i, cardJson, generatedDir);
     }
 

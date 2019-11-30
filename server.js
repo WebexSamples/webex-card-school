@@ -33,9 +33,6 @@ if ((process.env.WEBHOOK) && (process.env.TOKEN) &&
   // Extend the timeout when waiting for a webex API request to return
   frameworkConfig.requestTimeout = 60000;
 
-  // Read the card schema and URL for the source example from environment
-  cardsConfig.srcBaseUrl = process.env.CARD_SRC_BASE_URL;
-  cardsConfig.contentType = process.env.CARD_CONENT_TYPE;
 } else {
   logger.error('Cannot start server.  Missing required environment varialbles WEBHOOK, TOKEN or CARD_CONTENT_TYPE');
   process.exit();
@@ -107,8 +104,7 @@ try {
       let CustomHandlers = require(`./lesson-handlers/${lessons[i].customHandlerFile}`);
       customHandlers = new CustomHandlers();
     }
-    cardArray.push(new LessonHandler(cardJson, cardsConfig.srcBaseUrl,
-      cardsConfig.contentType, lessons, lessons[i], customHandlers));
+    cardArray.push(new LessonHandler(cardJson, lessons, lessons[i], customHandlers));
   }
 } catch (e) {
   console.error(`During initiatlization error reading in card data: ${e.message}`);

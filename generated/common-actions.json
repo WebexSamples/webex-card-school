@@ -79,17 +79,14 @@
               "url": "https://developer.webex.com/adaptive-cards-designer"
             },
             {
-              "type": "Action.Submit",
-              "id": "showSource",
+              "type": "Action.OpenUrl",
               "title": "See this card's source",
-              "data": {
-                "showCardSource": "true"
-              }
+              "url": "{cardSourceUrl}"
             },
             {
               "type": "Action.OpenUrl",
               "title": "See this App's Source",
-              "url": "https://github.com/jpjpjp/webex-card-sampler"
+              "url": "{appSourceUrl}"
             }
           ]
         },

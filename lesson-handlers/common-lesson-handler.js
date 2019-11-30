@@ -3,26 +3,17 @@
  **/
 
 class LessonHandler {
-  constructor(card, srcBaseUrl, contentType, lessons, lessonInfo, customHandlers) {
+  constructor(card, lessons, thisLessonInfo, customHandlers) {
     this.card = card;
     this.lessons = lessons;
-    this.lessonInfo = lessonInfo;
+    this.lessonInfo = thisLessonInfo;
     this.customHandlers = customHandlers;
-    // if (lessonInfo.customHandlerFile) {
-    //   // try {
-    //     //this.customHandlers = require(`./lesson-handlers/${lessonInfo.customHandlerFile}`);
-    //     console.log(process.cwd());
-    //     let customHandlers = require('./lesson-handlers/sending-a-card-handler.js');
-    //     // } catch (e) {
-    //   //   console.error(`During initiatlization error reading in custom card handler: ${e.message}`);
-    //   //   console.error(`Inspect content in lesson-content/lesson-order.json`);
-    //   //   process.exit(-1);      
-    //   // }
-    // }
-    this.contentType = contentType;
-    this.srcUrl = (srcBaseUrl[srcBaseUrl.length - 1] === '/') ?
-      srcBaseUrl + 'sample-picker.js' :
-      srcBaseUrl + '/sample-picker.js';
+    // this.contentType = contentType;
+
+    // this.appSourceUrl = srcBaseUrl;
+    // this.cardSourceUrl = (srcBaseUrl[srcBaseUrl.length - 1] === '/') ?
+    //   srcBaseUrl + `generated/lesson-${lessonInfo.index}.json` :
+    //   srcBaseUrl + `/generated/lesson-${lessonInfo.index}.json`;
   }
 
   async renderCard(bot, trigger, logger) {

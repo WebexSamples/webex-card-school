@@ -13,6 +13,11 @@ class SendingACardHandlers {
       logger.error('SendingACardHandlers.customRenderCard did not find the expected example card JSON at cards.body[3].text');
     }
     bot.sendCard(card, "If you see this your client cannot render our Introduction Card.   Try using a different Webex Teams client with this bot.")
+      .then((message) => {
+        if ('id' in message) {
+          bot.framework.mongoStore.store(bot, 'activeCardMessageId', message.id);
+        }
+      })
       .catch((err) => {
         let msg = 'Failed to render Sending A Card lesson.';
         logger.error(`${msg} Error:${err.message}`);
@@ -28,7 +33,7 @@ class SendingACardHandlers {
         return true;
       }
       return false;
-    } catch(e) {
+    } catch (e) {
       logger.error(`SendingACardHandlers.customActionHandler failed: ${e.message}`);
       bot.say('Error sending message.  Contact Developer Support');
       return false;
