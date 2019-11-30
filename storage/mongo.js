@@ -10,10 +10,6 @@
  */
 const when = require('when');
 
-// promisfy JSON.parse and JSON.stringify
-const jsonParse = when.lift(JSON.parse);
-const jsonStringify = when.lift(JSON.stringify);
-
 var mongo_client = require('mongodb').MongoClient;
 var mConfig = {};
 if ((process.env.MONGO_USER) && (process.env.MONGO_PW) &&
@@ -22,9 +18,8 @@ if ((process.env.MONGO_USER) && (process.env.MONGO_PW) &&
   mConfig.mongoPass = process.env.MONGO_PW;
   mConfig.mongoUrl = process.env.MONGO_URL;
   mConfig.mongoDb = process.env.MONGO_DB;
+  mConfig.mongoCollectionName = process.env.MONGO_COLLECTION;
 }
-// TODO figure out where/when this should be specified.  Hard coded here aint good
-var mongo_collection_name = "cardSchoolDevStorage";
 var mongoUri = 'mongodb://' + mConfig.mongoUser + ':' + mConfig.mongoPass + '@' + mConfig.mongoUrl + mConfig.mongoDb + '?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin';
 
 class MongoStore {
@@ -34,7 +29,7 @@ class MongoStore {
     this.defaultConfig = defaultConfig;
     // TODO -- latest mongo version syntax has changed.   Figure out how/if to upgrade
     mongo_client.connect(mongoUri)
-      .then((db) => db.collection(mongo_collection_name))
+      .then((db) => db.collection(mConfig.mongoCollectionName))
       .then((collection) => {
         this.mCollection = collection;
       })
