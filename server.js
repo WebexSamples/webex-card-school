@@ -23,9 +23,8 @@ require('dotenv').config();
 
 // Configure the bot framework for the environment we are running in
 var frameworkConfig = {};
-var cardsConfig = {};
 if ((process.env.WEBHOOK) && (process.env.TOKEN) &&
-  (process.env.PORT) && (process.env.CARD_CONENT_TYPE)) {
+  (process.env.PORT)) {
   frameworkConfig.webhookUrl = process.env.WEBHOOK;
   frameworkConfig.token = process.env.TOKEN;
   frameworkConfig.port = process.env.PORT;
@@ -34,7 +33,7 @@ if ((process.env.WEBHOOK) && (process.env.TOKEN) &&
   frameworkConfig.requestTimeout = 60000;
 
 } else {
-  logger.error('Cannot start server.  Missing required environment varialbles WEBHOOK, TOKEN or CARD_CONTENT_TYPE');
+  logger.error('Cannot start server.  Missing required environment varialbles WEBHOOK, TOKEN or PORT');
   process.exit();
 }
 
