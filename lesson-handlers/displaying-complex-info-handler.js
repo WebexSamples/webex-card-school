@@ -33,7 +33,7 @@ class DisplayingComplexInfoHandlers {
         organization: "A Test Organization",
         currentLesson: cardObj.lessonInfo.title,
         previousLesson: cardObj.lessons[parseInt(bot.framework.mongoStore.recall(bot, 'previousLessonIndex'))].title,
-        studentInfoTemplate: `${process.env.APP_SRC_BASE_URL}/blob/master/lesson-content/student-info-template.json` 
+        studentInfoTemplate: `${process.env.APP_SRC_BASE_URL}/blob/master/lesson-content/student-info-template.json` ,
         customRenderSource: `${process.env.APP_SRC_BASE_URL}/blob/master/lesson-handlers/displaying-complex-info-handler.js`
       };
       if (trigger.type != 'attachmentAction') {
