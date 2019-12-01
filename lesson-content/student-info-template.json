@@ -107,12 +107,12 @@
                       {
                         "type": "Action.OpenUrl",
                         "title": "View Card JSON",
-                        "url": "http://adaptivecards.io"
+                        "url": "{studentInfoTemplate}"
                       },
                       {
                         "type": "Action.OpenUrl",
                         "title": "View Card's Render Code",
-                        "url": "http://adaptivecards.io"
+                        "url": "{customRenderSource}"
                       }
                     ]
                   }
