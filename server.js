@@ -42,7 +42,7 @@ if ((process.env.WEBHOOK) && (process.env.TOKEN) &&
 let betaUsers = [];
 let BetaMode = null;
 if (process.env.EFT_USER_EMAILS) {
-  betaUsers = process.env.EFT_USER_EMAILS.split(',');
+  betaUsers = process.env.EFT_USER_EMAILS.split(/[ ,]+/);
   if (betaUsers.length) {
     BetaMode = require('./beta-mode');
   }
