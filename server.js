@@ -77,7 +77,11 @@ app.use(express.static('public'));
 var framework = new Framework(frameworkConfig);
 // TODO, ideally we would somehow wait until DB is initialized before starting the framework
 framework.mongoStore = mongoStore;
-framework.start();
+framework.start()
+  .catch((e) => {
+    logger.error(`Framework.start() failed: ${e.message}.  Exiting`);
+    process.exit(-1);
+  })
 framework.messageFormat = 'markdown';
 logger.info("Starting framework, please wait...");
 
@@ -214,7 +218,7 @@ framework.hears(/lesson ./, function (bot, trigger) {
 // send a lesson card in response to any input
 framework.hears(/.*/, function (bot, trigger) {
   if (!responded) {
-    let currentLessonIndex = 
+    let currentLessonIndex =
       parseInt(bot.framework.mongoStore.recall(bot, 'currentLessonIndex'));
     if ((currentLessonIndex >= 0) && (currentLessonIndex < cardArray.length)) {
       cardArray[currentLessonIndex].renderCard(bot, trigger, logger);
