@@ -51,15 +51,22 @@ if (process.env.EFT_USER_EMAILS) {
 
 // The admin will get extra notifications about bot usage
 let adminEmail = '';
+let adminSpaceId = '';
+let adminsBot = null;
 let botEmail = 'the bot';
-if (process.env.ADMIN_EMAIL) {
+if (process.env.METRICS_ROOM_ID) {
+  adminSpaceId = process.env.METRICS_ROOM_ID;
+}
+else if (process.env.ADMIN_EMAIL) {
   adminEmail = process.env.ADMIN_EMAIL;
-  botName = process.env.BOTNAME;
-  botEmail = process.env.BOT_EMAIL;
 } else {
   logger.error('No ADMIN_EMAIL environment variable.  Will not notify author about bot activity');
 }
-var adminsBot = null;
+if ((process.env.BOTNAME) && (process.env.BOT_EMAIL)) {
+  // TODO see what happens if this never happens
+  botName = process.env.BOTNAME;
+  botEmail = process.env.BOT_EMAIL;
+} 
 
 // Setup our persistent config storage
 let defaultStoredConfig = {
@@ -151,17 +158,30 @@ framework.on('spawn', async function (bot, id, addedById) {
     logger.error(`Failed to init stored configuration and beta mode. Error:${e.message}`);
   }
   // See if this instance is the 1-1 space with the admin
-  if ((!adminsBot) && (bot.isDirect) &&
+  if ((!adminsBot) && (bot.isDirect) && (adminEmail) &&
     (bot.isDirectTo.toLocaleLowerCase() === adminEmail.toLocaleLowerCase())) {
     adminsBot = bot;
+    this.adminsBot = adminsBot;
+  } else if ((!adminsBot) && (adminSpaceId) && (bot.room.id === adminSpaceId)) {
+    adminsBot = bot;
+    this.adminsBot = adminsBot;
   }
 
   if (initiatlized) {
     // Our bot has just been added to a new space!
     // TODO add metrics
     if (adminsBot) {
-      adminsBot.say(`${bot.person.displayName} was added to a space: ${bot.room.title}`)
-        .catch((e) => logger.error(`Failed to update to Admin about a new bot. Error:${e.message}`));
+      if (addedById) {
+        this.webex.people.get(addedById)
+          .then((person) => {
+            adminsBot.say(`${bot.person.displayName} was added to a space: ${bot.room.title} by ${person.displayName}`)
+              .catch((e) => logger.error(`Failed to update to Admin about a new bot. Error:${e.message}`));
+          })
+          .catch((e) => logger.error(`Failed get user who added our bot to new space. Error:${e.message}`));
+      } else {
+        adminsBot.say(`${bot.person.displayName} was added to a space: ${bot.room.title}`)
+          .catch((e) => logger.error(`Failed to update to Admin about a new bot. Error:${e.message}`));
+      }
     }
     // Since we just got added, say hello
     showHelp(bot)

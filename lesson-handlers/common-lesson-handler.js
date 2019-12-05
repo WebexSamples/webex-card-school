@@ -65,6 +65,17 @@ class LessonHandler {
 function handleFeedback(bot, submitter, attachmentAction, lessonInfo) {
   // TODO -- write this to a database
   // TODO -- write this to a feedback space (adminsBot?)
+  if (bot.framework.adminsBot) {
+    return bot.framework.adminsBot.say('markdown', 'Feedback sumbitted:\n' +
+      `* User: ${submitter.emails[0]} - ${submitter.displayName} \n` +
+      `* Space: ${bot.room.title}\n` +
+      `* Lesson: ${lessonInfo.title}\n` +
+      `* Date: ${attachmentAction.created} \n` +
+      `* feedback: ${attachmentAction.inputs.feedback}`)
+      .then(() => bot.reply(attachmentAction, 
+        `Your feedback: "${attachmentAction.inputs.feedback}", has been captured.  THANK YOU!`))
+      .catch((e) => logger.error(`Failed handling a "Send Feedback: ${e.message}`));
+  }
   bot.reply(attachmentAction, 'Feedback not implmented.  Want to store:\n' +
     `* User: ${submitter.displayName} \n` +
     `* Email: ${submitter.emails[0]} \n` +
