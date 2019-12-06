@@ -66,7 +66,21 @@ if ((process.env.BOTNAME) && (process.env.BOT_EMAIL)) {
   // TODO see what happens if this never happens
   botName = process.env.BOTNAME;
   botEmail = process.env.BOT_EMAIL;
-} 
+}
+
+// Read the tables we will write metrics data into
+let metricsTables = [];
+let metricsTable = '';
+let feedbackTable = '';
+if (process.env.MONGO_BOT_METRICS) {
+  metricsTable = process.env.MONGO_BOT_METRICS;
+  metricsTables.push(metricsTable);
+}
+if (process.env.MONGO_BOT_FEEDBACK) {
+  feedbackTable = process.env.MONGO_BOT_FEEDBACK;
+  metricsTables.push(feedbackTable);
+}
+
 
 // Setup our persistent config storage
 let defaultStoredConfig = {
@@ -88,7 +102,7 @@ framework.start()
   .catch((e) => {
     logger.error(`Framework.start() failed: ${e.message}.  Exiting`);
     process.exit(-1);
-  })
+  });
 framework.messageFormat = 'markdown';
 logger.info("Starting framework, please wait...");
 
@@ -114,7 +128,7 @@ try {
       let CustomHandlers = require(`./lesson-handlers/${lessons[i].customHandlerFile}`);
       customHandlers = new CustomHandlers();
     }
-    cardArray.push(new LessonHandler(cardJson, lessons, lessons[i], customHandlers));
+    cardArray.push(new LessonHandler(cardJson, logger, lessons, lessons[i], metricsTables, customHandlers));
   }
 } catch (e) {
   console.error(`During initiatlization error reading in card data: ${e.message}`);
@@ -129,6 +143,7 @@ framework.on("initialized", function () {
 framework.on('spawn', async function (bot, id, addedById) {
   // Save initialization status when this handler was first called
   let initiatlized = framework.initialized;
+  let addedByPerson = null;
   // Notify the admin if the bot has been added to a new space
   if (!initiatlized) {
     // An instance of the bot has been added to a room
@@ -144,12 +159,14 @@ framework.on('spawn', async function (bot, id, addedById) {
   try {
     // Ideally we fetch any existing betamode config from a database
     // before configuring it for this run of our server
-    await framework.mongoStore.onSpawn(bot, initiatlized);
-    // TODO - read config out of db
+    await framework.mongoStore.onSpawn(bot, initiatlized, metricsTables);
+    if (addedById) {
+      addedByPerson = await this.webex.people.get(addedById);
+    }
     // If we specified EFT users, register the beta-mode module
     if (betaUsers) {
       bot.betaMode = new BetaMode(bot, logger, true, betaUsers);
-      let validBetaSpace = await bot.betaMode.onSpawn(addedById);
+      let validBetaSpace = await bot.betaMode.onSpawn(addedByPerson);
       if (!validBetaSpace) {
         return;
       }
@@ -169,30 +186,28 @@ framework.on('spawn', async function (bot, id, addedById) {
 
   if (initiatlized) {
     // Our bot has just been added to a new space!
-    // TODO add metrics
     if (adminsBot) {
-      if (addedById) {
-        this.webex.people.get(addedById)
-          .then((person) => {
-            adminsBot.say(`${bot.person.displayName} was added to a space: ${bot.room.title} by ${person.displayName}`)
-              .catch((e) => logger.error(`Failed to update to Admin about a new bot. Error:${e.message}`));
-          })
-          .catch((e) => logger.error(`Failed get user who added our bot to new space. Error:${e.message}`));
-      } else {
-        adminsBot.say(`${bot.person.displayName} was added to a space: ${bot.room.title}`)
-          .catch((e) => logger.error(`Failed to update to Admin about a new bot. Error:${e.message}`));
+      let msg = `${bot.person.displayName} was added to a space: "${bot.room.title}"`;
+      if (addedByPerson) {
+        msg += ` by ${addedByPerson.displayName}`;
       }
+      adminsBot.say(msg)
+        .catch((e) => logger.error(`Failed to update to Admin about a new bot. Error:${e.message}`));
     }
+
+    // Write to our metrics DB
+    framework.mongoStore.writeMetric(metricsTable, 'botAddedToSpace', bot, addedByPerson);
+
     // Since we just got added, say hello
     showHelp(bot)
-      .then(() => cardArray[0].renderCard(bot, null, logger))
-      .catch((e) => logger.error(`Error starting up in space "${bot.room.title}": ${e.message}`));
+      .then(() => cardArray[0].renderCard(bot, { message: {text: 'Initial Add Action'}, person: addedByPerson })
+        .catch((e) => logger.error(`Error starting up in space "${bot.room.title}": ${e.message}`)));
   }
 });
 
-framework.on('despawn', async function (bot) {
+framework.on('despawn', async function (bot, id, removedById) {
   logger.info(`Bot has been removed from space "${bot.room.title}"`);
-  //TODO add metrics
+  framework.mongoStore.writeMetric(metricsTable, 'botRemovedFromSpace', bot, removedById);
 });
 
 
@@ -213,7 +228,7 @@ framework.hears(/help/i, function (bot) {
 // start the lessons over
 framework.hears(/start over/i, function (bot, trigger) {
   responded = true;
-  cardArray[0].renderCard(bot, trigger, logger);
+  cardArray[0].renderCard(bot, trigger);
 });
 
 // go to a lesson
@@ -224,7 +239,7 @@ framework.hears(/lesson ./, function (bot, trigger) {
   if ((lessonIndex > -1) && (lessonIndex < args.length - 1)) {
     let lesson = parseInt(trigger.args[lessonIndex + 1]);
     if ((lesson >= 0) && (lesson < cardArray.length)) {
-      cardArray[lesson].renderCard(bot, trigger, logger);
+      cardArray[lesson].renderCard(bot, trigger);
       responded = true;
     }
   }
@@ -241,10 +256,10 @@ framework.hears(/.*/, function (bot, trigger) {
     let currentLessonIndex =
       parseInt(bot.framework.mongoStore.recall(bot, 'currentLessonIndex'));
     if ((currentLessonIndex >= 0) && (currentLessonIndex < cardArray.length)) {
-      cardArray[currentLessonIndex].renderCard(bot, trigger, logger);
+      cardArray[currentLessonIndex].renderCard(bot, trigger);
     } else {
       logger.error(`Got invalid index for current lesson: ${currentLessonIndex}.  Displaying intro lesson.`);
-      cardArray[0].renderCard(bot, trigger, logger);
+      cardArray[0].renderCard(bot, trigger);
     }
   }
   responded = false;
@@ -268,13 +283,13 @@ framework.on('attachmentAction', function (bot, trigger) {
     // Go to next card (or ask this card to handle input)
     // TODO store info about the previous lesson for the Displaying Info lesson
     if (attachmentAction.inputs.nextLesson) {
-      cardArray[attachmentAction.inputs.lessonIndex].renderCard(bot, trigger, logger);
+      cardArray[attachmentAction.inputs.lessonIndex].renderCard(bot, trigger);
     } else if (attachmentAction.inputs.pickAnotherLesson) {
-      cardArray[attachmentAction.inputs.jumpToLessonIndex].renderCard(bot, trigger, logger);
+      cardArray[attachmentAction.inputs.jumpToLessonIndex].renderCard(bot, trigger);
     } else {
       // Handle card specific actions
       let index = parseInt(attachmentAction.inputs.myCardIndex);
-      cardArray[index].handleSubmit(attachmentAction, trigger.person, bot, logger);
+      cardArray[index].handleSubmit(trigger, bot);
     }
   } catch (e) {
     logger.error(`Error processing AttachmentAction: ${e.message}`);

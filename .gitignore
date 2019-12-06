@@ -20,11 +20,7 @@ jspm_packages
 .node_repl_history
 
 # Config
-.env
-.env-emulator
-.env-real
-.env-production
-.env-devel
+.env*
 config.json
 mongo.json
 config-prodbot.json

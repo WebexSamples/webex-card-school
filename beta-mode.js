@@ -54,7 +54,7 @@ class BetaMode {
     this.bot = bot;
   };
 
-  async onSpawn(addedById) {
+  async onSpawn(addedByPerson) {
     let validUser = '';
     try {
       if (!this.betaMode) {
@@ -63,9 +63,8 @@ class BetaMode {
         return when(true);
       }
 
-      let botJustAdded = (addedById) ? true : false;
-      if ((botJustAdded) && (addedById !== this.bot.person.id)) {
-        let addedByPerson = await this.bot.framework.webex.people.get(addedById);
+      let botJustAdded = (addedByPerson) ? true : false;
+      if ((botJustAdded) && (addedByPerson.id !== this.bot.person.id)) {
         let addedByEmail = _.toLower(addedByPerson.emails[0]);
         validUser = _.find(this.validUsers, userEmail => {
           return (addedByEmail === _.toLower(userEmail));
