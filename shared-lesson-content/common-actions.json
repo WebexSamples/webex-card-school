@@ -66,6 +66,11 @@
               "type": "Action.OpenUrl",
               "title": "See this App's Source",
               "url": "{appSourceUrl}"
+            },
+            {
+              "type": "Action.OpenUrl",
+              "title": "Join the Ask B&C School Webex Teams Space",
+              "url": "{askSpaceUrl}"
             }
           ]
         },

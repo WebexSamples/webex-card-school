@@ -30,6 +30,11 @@ if (!process.env.APP_SRC_BASE_URL) {
   console.error('The lesson cards were NOT updated!\n');
   process.exit(0);
 }
+if (!process.env.ASK_SPACE_URL) {
+  console.error('Cannot read the environment variable ASK_SPACE_URL, needed to configure the buttons with links to the app and card source.');
+  console.error('The lesson cards were NOT updated!\n');
+  process.exit(0);
+}
 
 // Because we are using the promise version of fs
 // we require node version > 10.x.  Validate that.
@@ -76,7 +81,8 @@ async function doIt(resourceDir, sharedResourceDir, generatedDir) {
       var context = new ACData.EvaluationContext();
       context.$root = {
         appSourceUrl: appSource,
-        cardSourceUrl: cardSource
+        cardSourceUrl: cardSource,
+        askSpaceUrl: process.env.ASK_SPACE_URL
       };
       // "Expand" the common actions template with the correct URLs
       var thisCardsActions = template.expand(context);

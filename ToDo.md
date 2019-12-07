@@ -6,7 +6,7 @@
 * [x] Create an npm command to generate lessons so they don't get generated each time the server restarts
 * [ ] Complete Readme that describes how to generate lesson content
 * [x] Build a class for lesson specific Action.Submit buttons
-* [ ] Create links for Show Source based on an environment variable
+* [x] Create links for Show Source based on an environment variable
 
 ## Controlled rollout
 * [x]  Add logic to be "inoperative" if the space isn't populated by a set of known users when bot is spawaned
@@ -24,16 +24,16 @@
 ## Metrics and Feedback
 * [x] Add logic for a lesson-feedback.json as the last lesson
 * [ ] Write the following "metrics" data
-  * [ ] Bot Added/Removed from Space
-  * [ ] Action.Submit button pressed
+  * [x] Bot Added/Removed from Space
+  * [x] Action.Submit button pressed
   * [ ] Command entered
-  * [ ] Feedback Provided
+  * [x] Feedback Provided
   * [ ] Figure out how to best index this data so that we can run queries such as:
   * [ ] How many spaces is our bot in
   * [ ] How many users have interacted with our bot (ever, this week)
   * [ ] How many users got to the graduation card
   * [ ] How many users interacted with more than X lessons
-* [ ] Write Add/Remove feedback to a space.  Perhaps create an AdminRoomId instead of AdminEmail for group control
+* [x] Write Add/Remove feedback to a space.  Perhaps create an AdminRoomId instead of AdminEmail for group control
 
 ## Lesson Content
 * [ ] Show an Input Form
@@ -53,3 +53,10 @@ Research mongo to see if its better to update a single field in a dictionary or
 ## Framework improvements
 * [ ] reimplment beta-mode as a core frameowrk feature
 * [ ] reimplement mongoStore as a framework store
+
+
+## Ask Buttons and Cards School
+* [x] Create an Ask Buttons and Cards School Space
+* [x] Make avaialble with EURL for Cisco only
+* [x] Add link to Ask space in More Resources
+* [ ] Ask EURL to make link publically avaialble after GA

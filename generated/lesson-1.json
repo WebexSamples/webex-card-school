@@ -151,6 +151,11 @@
                 "type": "Action.OpenUrl",
                 "title": "See this App's Source",
                 "url": "https://github.com/jpjpjp/webex-card-school"
+              },
+              {
+                "type": "Action.OpenUrl",
+                "title": "Join the Ask B&C School Webex Teams Space",
+                "url": "https://eurl.io/#SJiS9VKTH"
               }
             ]
           },
