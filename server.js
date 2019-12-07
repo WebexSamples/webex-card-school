@@ -71,16 +71,10 @@ if ((process.env.BOTNAME) && (process.env.BOT_EMAIL)) {
 // Read the tables we will write metrics data into
 let metricsTables = [];
 let metricsTable = '';
-let feedbackTable = '';
 if (process.env.MONGO_BOT_METRICS) {
   metricsTable = process.env.MONGO_BOT_METRICS;
   metricsTables.push(metricsTable);
 }
-if (process.env.MONGO_BOT_FEEDBACK) {
-  feedbackTable = process.env.MONGO_BOT_FEEDBACK;
-  metricsTables.push(feedbackTable);
-}
-
 
 // Setup our persistent config storage
 let defaultStoredConfig = {

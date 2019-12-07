@@ -10,14 +10,10 @@ class LessonHandler {
     this.lessonInfo = thisLessonInfo;
 
     this.metricsTable = '';
-    this.feedbackTable = '';
     if ((typeof metricsTables === "object") && (metricsTables.length > 0)) {
       this.metricsTable = metricsTables[0];
       if (metricsTables.length > 1) {
-        this.feedbackTable = metricsTables[1];
-      }
-      if (metricsTables.length > 2) {
-        this.logger.warn(`Unexpected Metrics DB Table names including ${metricsTables[2]} passed to LessonHandler constructor`);
+        this.logger.warn(`Unexpected Metrics DB Table names including ${metricsTables[1]} passed to LessonHandler constructor`);
       }
     }
 
@@ -77,7 +73,7 @@ class LessonHandler {
     let attachmentAction = trigger.attachmentAction;
     let submitter = trigger.person; 
     // Write metrics that feedback was provided
-    bot.framework.mongoStore.writeMetric(this.feedbackTable, 'feedbackProvided', bot, submitter, this, trigger);
+    bot.framework.mongoStore.writeMetric(this.metricsTable, 'feedbackProvided', bot, submitter, this, trigger);
   
     if (bot.framework.adminsBot) {
       return bot.framework.adminsBot.say('markdown', 'Feedback sumbitted:\n' +
