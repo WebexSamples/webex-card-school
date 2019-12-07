@@ -48,10 +48,9 @@ class LessonHandler {
 
   async  handleSubmit(trigger, bot) {
     let attachmentAction = trigger.attachmentAction;
-    let submitter = trigger.person; 
     if ((this.customHandlers) && (typeof this.customHandlers.customActionHandler == 'function')) {
       // Let lesson specific handlers have first crack at this
-      let responded = await this.customHandlers.customActionHandler(attachmentAction, submitter, bot, this.logger);
+      let responded = await this.customHandlers.customActionHandler(trigger, bot, this);
       if (responded) {
         return true;
       }

@@ -26,15 +26,26 @@ class SendingACardHandlers {
       });
   };
 
-  async customActionHandler(attachmentAction, submitter, bot, logger) {
+  async customActionHandler(trigger, bot, cardObj) {
     try {
+      let attachmentAction = trigger.attachmentAction;
       if (attachmentAction.inputs.customPostMessage) {
-        await bot.reply(attachmentAction, 'Will add post message logic here');
+        await bot.reply(attachmentAction, 'Posting the request body above to the /messaages API.   New card should render below...');
+        // In the card, our /messages request body is formatted as a JSON string
+        // turn it back into a proper JSON object
+        let requestBody = cardObj.card.body[3].text;
+        requestBody = requestBody.replace(/```json/, '');
+        requestBody = JSON.parse(requestBody);
+        requestBody.roomId = bot.room.id;
+        // The following is the equivilent of doing a POST /messages call a request body
+        // that matches the one displayed in this card.   The framework's bot.say method
+        // is simply a convenience wrapper that POSTs via node's request library
+        await bot.say(requestBody);
         return true;
       }
       return false;
     } catch (e) {
-      logger.error(`SendingACardHandlers.customActionHandler failed: ${e.message}`);
+      cardObj.logger.error(`SendingACardHandlers.customActionHandler failed: ${e.message}`);
       bot.say('Error sending message.  Contact Developer Support');
       return false;
     }
