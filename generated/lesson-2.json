@@ -5,7 +5,7 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "Sending A Card",
+      "text": "Lesson 2: Sending A Card",
       "size": "Medium",
       "weight": "Bolder",
       "horizontalAlignment": "Center"
@@ -46,7 +46,7 @@
       "isVisible": false,
       "choices": [
         {
-          "title": "Unused Choice",
+          "title": "This hidden choice ensures that myCardIndex is returned with every Action.Submit attachmentAction",
           "value": "2"
         }
       ]

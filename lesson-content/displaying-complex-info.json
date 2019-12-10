@@ -7,8 +7,7 @@
       "type": "TextBlock",
       "text": "Displaying Complex Info",
       "size": "Medium",
-      "weight": "Bolder",
-      "horizontalAlignment": "Center"
+      "weight": "Bolder"
     },
     {
       "type": "TextBlock",

@@ -5,10 +5,9 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "What is a Card?",
+      "text": "Lesson 1: What is a Card?",
       "size": "Medium",
-      "weight": "Bolder",
-      "horizontalAlignment": "Center"
+      "weight": "Bolder"
     },
     {
       "type": "TextBlock",
@@ -17,12 +16,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "TODO: Replace this with an image of a text based bot trying to collect information",
-      "wrap": true
-    },
-    {
-      "type": "TextBlock",
-      "text": "TODO: Replace this with an image of an input card",
+      "text": "Users can’t send cards using the Webex Teams client but applications can use the /messages API to send a card",
       "wrap": true
     },
     {
@@ -37,7 +31,7 @@
       "isVisible": false,
       "choices": [
         {
-          "title": "Unused Choice",
+          "title": "This hidden choice ensures that myCardIndex is returned with every Action.Submit attachmentAction",
           "value": "1"
         }
       ]

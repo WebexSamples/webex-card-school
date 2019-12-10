@@ -5,10 +5,9 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "Displaying Complex Info",
+      "text": "Lesson 4: Displaying Complex Info",
       "size": "Medium",
-      "weight": "Bolder",
-      "horizontalAlignment": "Center"
+      "weight": "Bolder"
     },
     {
       "type": "TextBlock",
@@ -32,7 +31,7 @@
       "isVisible": false,
       "choices": [
         {
-          "title": "Unused Choice",
+          "title": "This hidden choice ensures that myCardIndex is returned with every Action.Submit attachmentAction",
           "value": "4"
         }
       ]

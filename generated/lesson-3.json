@@ -5,14 +5,13 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "Designing a Card",
+      "text": "Lesson 3: Designing a Card",
       "size": "Medium",
-      "weight": "Bolder",
-      "horizontalAlignment": "Center"
+      "weight": "Bolder"
     },
     {
       "type": "TextBlock",
-      "text": "Cards are build using the Adaptive Card Framework, a standard that has is adopted by many messaging providers such as Microsoft, Slack and Cisco.",
+      "text": "Cards are built and displayed using the Adaptive Card Framework, a standard that has is adopted by many messaging providers such as Microsoft, Slack and Cisco.",
       "wrap": true
     },
     {
@@ -37,7 +36,7 @@
       "isVisible": false,
       "choices": [
         {
-          "title": "Unused Choice",
+          "title": "This hidden choice ensures that myCardIndex is returned with every Action.Submit attachmentAction",
           "value": "3"
         }
       ]

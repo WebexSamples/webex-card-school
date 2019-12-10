@@ -124,6 +124,11 @@ function buildCard(contentIndex, lessonContent, actionContent, nextLessonInfo, n
     // Read in the lesson specific info
     let card = require(lessonContent);
 
+    // Include the Lesson Index in the title (except for Welcome and Graduation)
+    if ((contentIndex > 0) && (nextLessonInfo)) {
+      card.body[0].text = `Lesson ${contentIndex}: ${card.body[0].text}`;
+    }
+
     // Action.Submit data includes an Input.X element values 
     // Add a hidden Input.Choice block that will ensure that our
     // card's index is always returned with every action
@@ -134,7 +139,7 @@ function buildCard(contentIndex, lessonContent, actionContent, nextLessonInfo, n
       isVisible: false,
       choices: [
         {
-          title: "Unused Choice",
+          title: "This hidden choice ensures that myCardIndex is returned with every Action.Submit attachmentAction",
           value: `${contentIndex}`
         }
       ]

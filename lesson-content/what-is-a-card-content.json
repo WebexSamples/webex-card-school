@@ -7,8 +7,7 @@
       "type": "TextBlock",
       "text": "What is a Card?",
       "size": "Medium",
-      "weight": "Bolder",
-      "horizontalAlignment": "Center"
+      "weight": "Bolder"
     },
     {
       "type": "TextBlock",
@@ -17,17 +16,12 @@
     },
     {
       "type": "TextBlock",
-      "text": "TODO: Replace this with an image of a text based bot trying to collect information",
-      "wrap": true
-    },
-    {
-      "type": "TextBlock",
-      "text": "TODO: Replace this with an image of an input card",
-      "wrap": true
-    },
-    {
-      "type": "TextBlock",
       "text": "Users can’t send cards using the Webex Teams client but applications can use the /messages API to send a card",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "In the coming lessons we'll discuss times when an application might use a card instead of sending text based messages and waiting for users to respond the same way.",
       "wrap": true
     }
   ]

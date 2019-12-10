@@ -12,13 +12,13 @@
     },
     {
       "type": "Image",
-      "altText": "Optional Images can be added",
+      "altText": "Picture of a school",
       "url": "http://jpshipherd.ngrok.io/images/school.png",
       "horizontalAlignment": "Center"
     },
     {
       "type": "TextBlock",
-      "text": "This is an open source Webex Teams Bot that helps users and developers become familiar with Webex Teams Buttons and Cards",
+      "text": "This is an open source Webex Teams Bot that helps users and developers become familiar with Webex Teams Buttons and Cards.",
       "wrap": true
     },
     {
@@ -38,7 +38,7 @@
       "isVisible": false,
       "choices": [
         {
-          "title": "Unused Choice",
+          "title": "This hidden choice ensures that myCardIndex is returned with every Action.Submit attachmentAction",
           "value": "0"
         }
       ]
