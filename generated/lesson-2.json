@@ -17,25 +17,52 @@
     },
     {
       "type": "TextBlock",
-      "text": "A message that includes a card will include an “attachment” field which includes data that tells Webex how to render a card, for example:",
+      "text": "A message request body to send a card looks very much like a \"regular\" message request, except that the request body will include an “attachment” attribute which includes data that tells Webex how to render a card.",
       "wrap": true
     },
     {
-      "type": "TextBlock",
-      "text": "```json\n{\n  \"roomId\": \"{{roomId}}\",\n  \"text\": \"If you see this message, the card card did not render\",\n  \"attachments\": [\n    {\n      \"contentType\": \"application/vnd.microsoft.card.adaptive\",\n        \"content\": {\n          \"type\": \"AdaptiveCard\",\n          \"version\": \"1.0\",\n          \"body\": [\n            {\n              \"type\": \"TextBlock\",\n              \"text\": \"Here is a logo\"\n            },\n            {\n              \"type\": \"Image\",\n              \"url\": \"https://www.ccsmedia.com/media/WebexTeams_Logo-150x150.png\",\n              \"size\": \"small\"\n            }\n         ]\n       }\n    }\n  ]\n}",
-      "wrap": true
-    },
-    {
-      "type": "ActionSet",
-      "horizontalAlignment": "center",
-      "actions": [
+      "type": "Container",
+      "items": [
         {
-          "type": "Action.Submit",
-          "id": "postMessageButton",
-          "title": "Try Posting This Message...",
-          "data": {
-            "customPostMessage": true
-          }
+          "type": "ActionSet",
+          "horizontalAlignment": "Center",
+          "actions": [
+            {
+              "type": "Action.ShowCard",
+              "title": "Show an example Webex Card request body...",
+              "card": {
+                "type": "AdaptiveCard",
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "version": "1.2",
+                "body": [
+                  {
+                    "type": "Container",
+                    "items": [
+                      {
+                        "type": "TextBlock",
+                        "text": "```json\n{\n  \"roomId\": \"{{roomId}}\",\n  \"text\": \"This is the text a user will see if the card cannot be rendered.\",\n  \"attachments\": [\n    {\n      \"contentType\": \"application/vnd.microsoft.card.adaptive\",\n        \"content\": {\n          \"type\": \"AdaptiveCard\",\n          \"version\": \"1.0\",\n          \"body\": [\n            {\n              \"type\": \"TextBlock\",\n              \"text\": \"Here is a logo\"\n            },\n            {\n              \"type\": \"Image\",\n              \"url\": \"https://www.ccsmedia.com/media/WebexTeams_Logo-150x150.png\",\n              \"size\": \"small\"\n            }\n         ]\n       }\n    }\n  ]\n}",
+                        "wrap": true
+                      },
+                      {
+                        "type": "ActionSet",
+                        "horizontalAlignment": "center",
+                        "actions": [
+                          {
+                            "type": "Action.Submit",
+                            "id": "postMessageButton",
+                            "title": "Try Posting This Message...",
+                            "data": {
+                              "customPostMessage": true
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
         }
       ]
     },

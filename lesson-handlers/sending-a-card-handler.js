@@ -7,8 +7,14 @@ class SendingACardHandlers {
   async customRenderCard(bot, trigger, cardObject, logger) {
     let card = cardObject.card;
     // Add this room's ID to the message payload
-    if (0 === card.body[3].text.indexOf('```json')) {
-      card.body[3].text = card.body[3].text.replace(/{{roomId}}/, bot.room.id);
+    // This is buried deep in our card JSON as an adaptive card
+    // within a Action.ShowCard, see ../lesson-content/sending-a-card-content.json
+    if (0 ===
+      card.body[3].items[0].actions[0].card.body[0].items[0].text.indexOf('```json')) {
+      card.body[3].items[0].actions[0].card.body[0].items[0].text =
+        card.body[3].items[0].actions[0].card.body[0].items[0].text.replace(/{{roomId}}/, bot.room.id);
+      // if (0 === card.body[3].text.indexOf('```json')) {
+      //   card.body[3].text = card.body[3].text.replace(/{{roomId}}/, bot.room.id);
     } else {
       logger.error('SendingACardHandlers.customRenderCard did not find the expected example card JSON at cards.body[3].text');
     }
@@ -33,7 +39,9 @@ class SendingACardHandlers {
         await bot.reply(attachmentAction, 'Posting the request body above to the /messaages API.   New card should render below...');
         // In the card, our /messages request body is formatted as a JSON string
         // turn it back into a proper JSON object
-        let requestBody = cardObj.card.body[3].text;
+        // This is buried deep in our card JSON as an adaptive card
+        // within a Action.ShowCard, see ../lesson-content/sending-a-card-content.json
+        let requestBody = cardObj.card.body[3].items[0].actions[0].card.body[0].items[0].text;
         requestBody = requestBody.replace(/```json/, '');
         requestBody = JSON.parse(requestBody);
         requestBody.roomId = bot.room.id;

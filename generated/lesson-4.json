@@ -25,6 +25,134 @@
       "wrap": true
     },
     {
+      "type": "Container",
+      "items": [
+        {
+          "type": "ActionSet",
+          "horizontalAlignment": "Center",
+          "actions": [
+            {
+              "type": "Action.ShowCard",
+              "title": "Show the \"Student Info\" card...",
+              "card": {
+                "type": "AdaptiveCard",
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "version": "1.2",
+                "body": [
+                  {
+                    "type": "Container",
+                    "items": [
+                      {
+                        "type": "TextBlock",
+                        "size": "Medium",
+                        "weight": "Bolder",
+                        "text": "Student Info"
+                      },
+                      {
+                        "type": "ColumnSet",
+                        "columns": [
+                          {
+                            "type": "Column",
+                            "items": [
+                              {
+                                "type": "Image",
+                                "id": "avatar",
+                                "style": "Person",
+                                "url": "{avatar}",
+                                "size": "Small"
+                              }
+                            ],
+                            "width": "auto"
+                          },
+                          {
+                            "type": "Column",
+                            "items": [
+                              {
+                                "type": "TextBlock",
+                                "id": "name",
+                                "weight": "Bolder",
+                                "text": "{name}",
+                                "wrap": true
+                              },
+                              {
+                                "type": "TextBlock",
+                                "id": "email",
+                                "spacing": "None",
+                                "text": "{email}",
+                                "isSubtle": true,
+                                "wrap": true
+                              },
+                              {
+                                "type": "TextBlock",
+                                "id": "organization",
+                                "spacing": "None",
+                                "text": "{organization}",
+                                "isSubtle": true,
+                                "wrap": true
+                              }
+                            ],
+                            "width": "stretch"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Container",
+                    "separator": true,
+                    "items": [
+                      {
+                        "type": "TextBlock",
+                        "text": "Class Activity",
+                        "wrap": true
+                      },
+                      {
+                        "type": "FactSet",
+                        "spacing": "None",
+                        "facts": [
+                          {
+                            "title": "Current Lesson:",
+                            "value": "{currentLesson}"
+                          },
+                          {
+                            "title": "Requested via:",
+                            "value": "{requestedVia}"
+                          },
+                          {
+                            "title": "Previous Lesson:",
+                            "value": "{previousLesson}"
+                          },
+                          {
+                            "title": "Date:",
+                            "value": "{date}"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "ActionSet",
+                        "actions": [
+                          {
+                            "type": "Action.OpenUrl",
+                            "title": "View Card JSON",
+                            "url": "{studentInfoTemplate}"
+                          },
+                          {
+                            "type": "Action.OpenUrl",
+                            "title": "View Card's Render Code",
+                            "url": "{customRenderSource}"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "type": "Input.ChoiceSet",
       "id": "myCardIndex",
       "isMultiSelect": false,

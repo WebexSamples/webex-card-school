@@ -18,10 +18,8 @@ class DisplayingComplexInfoHandlers {
    **/
   async customRenderCard(bot, trigger, cardObj, logger) {
     try {
-      // Read in the generic "contact card" and populate it
-      var templatePayload = require('../lesson-content/student-info-template.json');
-      // Create a Template instamce from the template payload
-      var template = new ACData.Template(templatePayload);
+      // Create a Template instance from this cards payload
+      var template = new ACData.Template(cardObj.card);
 
       // Create a data binding context, and set its $root property to the
       // data object to bind the template to, in this case our student info
@@ -55,14 +53,15 @@ class DisplayingComplexInfoHandlers {
       // ready to render
       var card = template.expand(context);
 
-      // Insert the genereted student info into the lesson card, before the next lesson button
-      let theCard = JSON.parse(JSON.stringify(cardObj.card));
-      let nextLessonButton = theCard.body.pop();
-      theCard.body.push(card.body[0]); // push the "Show Card" Action Set
-      theCard.body.push(nextLessonButton); // push the "Next Lesson" button back to the end
-      // const json = JSON.stringify(theCard, null, 2);
-      // Fs.writeFile('./generated-card.json', json);
-      bot.sendCard(theCard, "If you see this your client cannot render our Introduction Card.   Try using a different Webex Teams client with this bot.")
+      // // Insert the genereted student info into the lesson card, before the next lesson button
+      // let theCard = JSON.parse(JSON.stringify(cardObj.card));
+      // let nextLessonButton = theCard.body.pop();
+      // theCard.body.push(card.body[0]); // push the "Show Card" Action Set
+      // theCard.body.push(nextLessonButton); // push the "Next Lesson" button back to the end
+      // // const json = JSON.stringify(theCard, null, 2);
+      // // Fs.writeFile('./generated-card.json', json);
+      // bot.sendCard(theCard, "If you see this your client cannot render our Introduction Card.   Try using a different Webex Teams client with this bot.")
+      bot.sendCard(card, "If you see this your client cannot render our Introduction Card.   Try using a different Webex Teams client with this bot.")
         .then((message) => {
           if ('id' in message) {
             bot.framework.mongoStore.store(bot, 'activeCardMessageId', message.id);

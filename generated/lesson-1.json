@@ -21,7 +21,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "Users can’t send cards using the Webex Teams client but applications can use the /messages API to send a card",
+      "text": "In the coming lessons we'll discuss times when an application might use a card instead of sending text based messages and waiting for users to respond the same way.",
       "wrap": true
     },
     {
