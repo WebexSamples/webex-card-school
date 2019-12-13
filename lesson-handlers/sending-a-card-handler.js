@@ -9,6 +9,7 @@ class SendingACardHandlers {
     // Add this room's ID to the message payload
     // This is buried deep in our card JSON as an adaptive card
     // within a Action.ShowCard, see ../lesson-content/sending-a-card-content.json
+    // THis is brittle and will break if the underlying design changes
     if (0 ===
       card.body[3].items[0].actions[0].card.body[0].items[0].text.indexOf('```json')) {
       card.body[3].items[0].actions[0].card.body[0].items[0].text =
