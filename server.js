@@ -16,10 +16,10 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 var _ = require('lodash');
-logger = require('./logger');
 
 // When running locally read environment variables from a .env file
 require('dotenv').config();
+logger = require('./logger');
 
 // Configure the bot framework for the environment we are running in
 var frameworkConfig = {};

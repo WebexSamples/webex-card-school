@@ -28,3 +28,7 @@ mongo-prodbot.json
  
 # Debug configs
 .vscode/launch.json
+
+# Deployment scripts
+publish-to-aws.sh
+shutdown-aws.sh
