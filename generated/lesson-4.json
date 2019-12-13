@@ -58,7 +58,6 @@
                                 "type": "Image",
                                 "id": "avatar",
                                 "style": "Person",
-                                "url": "{avatar}",
                                 "size": "Small"
                               }
                             ],
@@ -71,14 +70,12 @@
                                 "type": "TextBlock",
                                 "id": "name",
                                 "weight": "Bolder",
-                                "text": "{name}",
                                 "wrap": true
                               },
                               {
                                 "type": "TextBlock",
                                 "id": "email",
                                 "spacing": "None",
-                                "text": "{email}",
                                 "isSubtle": true,
                                 "wrap": true
                               },
@@ -86,7 +83,6 @@
                                 "type": "TextBlock",
                                 "id": "organization",
                                 "spacing": "None",
-                                "text": "{organization}",
                                 "isSubtle": true,
                                 "wrap": true
                               }
@@ -111,20 +107,16 @@
                         "spacing": "None",
                         "facts": [
                           {
-                            "title": "Current Lesson:",
-                            "value": "{currentLesson}"
+                            "title": "Current Lesson:"
                           },
                           {
-                            "title": "Requested via:",
-                            "value": "{requestedVia}"
+                            "title": "Requested via:"
                           },
                           {
-                            "title": "Previous Lesson:",
-                            "value": "{previousLesson}"
+                            "title": "Previous Lesson:"
                           },
                           {
-                            "title": "Date:",
-                            "value": "{date}"
+                            "title": "Date:"
                           }
                         ]
                       },
@@ -133,13 +125,11 @@
                         "actions": [
                           {
                             "type": "Action.OpenUrl",
-                            "title": "View Card JSON",
-                            "url": "{studentInfoTemplate}"
+                            "title": "View Card JSON"
                           },
                           {
                             "type": "Action.OpenUrl",
-                            "title": "View Card's Render Code",
-                            "url": "{customRenderSource}"
+                            "title": "View Card's Render Code"
                           }
                         ]
                       }
@@ -267,7 +257,7 @@
               {
                 "type": "Action.OpenUrl",
                 "title": "See this card's source",
-                "url": "https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-4.json"
+                "url": "https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-5.json"
               },
               {
                 "type": "Action.OpenUrl",

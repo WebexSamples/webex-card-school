@@ -13,7 +13,7 @@
     {
       "type": "Image",
       "altText": "Picture of a school",
-      "url": "http://jpshipherd.ngrok.io/images/school.png",
+      "url": "{imageHostingUrl}school.png",
       "horizontalAlignment": "Center"
     },
     {

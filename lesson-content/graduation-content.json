@@ -18,7 +18,7 @@
     {
       "type": "Image",
       "altText": "Picture of a diploma",
-      "url": "http://jpshipherd.ngrok.io/images/diploma.png",
+      "url": "{imageHostingUrl}/diploma.png",
       "horizontalAlignment": "Center"
     }
   ]

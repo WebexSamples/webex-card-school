@@ -35,6 +35,11 @@ if (!process.env.ASK_SPACE_URL) {
   console.error('The lesson cards were NOT updated!\n');
   process.exit(0);
 }
+if (!process.env.IMAGE_HOSTING_URL) {
+  console.error('Cannot read the environment variable IMAGE_HOSTING_URL, needed to display images on cards.');
+  console.error('The lesson cards were NOT updated!\n');
+  process.exit(0);
+}
 
 // Because we are using the promise version of fs
 // we require node version > 10.x.  Validate that.
@@ -64,30 +69,31 @@ async function doIt(resourceDir, sharedResourceDir, generatedDir) {
     let generatedActions = await generateActions(`${sharedResourceDir}/common-actions.json`,
       lessonList, generatedDir);
 
-    // OK, lets append the Next Lesson and More Options button to each lesson
-    // and write out the complete generated content to lesson-X content files
+    // // OK, lets append the Next Lesson and More Options button to each lesson
+    // // and write out the complete generated content to lesson-X content files
     nextLesson = require(`${sharedResourceDir}/next-lesson.json`);
-    // Update the "View This Cards Source" button link using the Adaptive Card Template SDK
-    var template = new ACData.Template(generatedActions);
+    // // Update the "View This Cards Source" button link using the Adaptive Card Template SDK
+    // var template = new ACData.Template(generatedActions);
 
     let i;
     for (i = 0; i < lessonList.length - 1; i++) {
       let nextLessonInfo = (i < lessonList.length - 1) ? lessonList[i + 1] : null;
       let fileContent = `${resourceDir}/${lessonList[i].contentFile}`;
-      var appSource = process.env.APP_SRC_BASE_URL;
-      var cardSource = (appSource[appSource.length - 1] === '/') ?
-        appSource + `${githubGeneratedDir}/lesson-${i}.json` :
-        appSource + `/${githubGeneratedDir}/lesson-${i}.json`;
-      var context = new ACData.EvaluationContext();
-      context.$root = {
-        appSourceUrl: appSource,
-        cardSourceUrl: cardSource,
-        askSpaceUrl: process.env.ASK_SPACE_URL
-      };
+      // var appSource = process.env.APP_SRC_BASE_URL;
+      // var cardSource = (appSource[appSource.length - 1] === '/') ?
+      //   appSource + `${githubGeneratedDir}/lesson-${i}.json` :
+      //   appSource + `/${githubGeneratedDir}/lesson-${i}.json`;
+      // var context = new ACData.EvaluationContext();
+      // context.$root = {
+      //   appSourceUrl: appSource,
+      //   cardSourceUrl: cardSource,
+      //   askSpaceUrl: process.env.ASK_SPACE_URL,
+      //   imageHostingUrl: process.env.IMAGE_HOSTING_URL
+      // };
       // "Expand" the common actions template with the correct URLs
-      var thisCardsActions = template.expand(context);
+      // var thisCardsActions = template.expand(context);
 
-      let cardJson = buildCard(i, fileContent, thisCardsActions, nextLessonInfo, nextLesson);
+      let cardJson = buildCard(i, fileContent, generatedActions, nextLessonInfo, nextLesson);
       generateCardFile(i, cardJson, generatedDir);
     }
 
@@ -158,7 +164,24 @@ function buildCard(contentIndex, lessonContent, actionContent, nextLessonInfo, n
 
     // Add the "Pick Another Lesson" and "More Resources" buttons shared by all cards
     card.actions = actionContent;
-    return card;
+
+    // Now that the complete card has been built, lets update any templatized values
+    var template = new ACData.Template(card);
+    var appSource = process.env.APP_SRC_BASE_URL;
+    var cardSource = (appSource[appSource.length - 1] === '/') ?
+      appSource + `${githubGeneratedDir}/lesson-${i}.json` :
+      appSource + `/${githubGeneratedDir}/lesson-${i}.json`;
+    var context = new ACData.EvaluationContext();
+    context.$root = {
+      appSourceUrl: appSource,
+      cardSourceUrl: cardSource,
+      askSpaceUrl: process.env.ASK_SPACE_URL,
+      imageHostingUrl: process.env.IMAGE_HOSTING_URL
+    };
+    // "Expand" any templatized components into the final card
+    let populatedCard = template.expand(context);
+
+    return populatedCard;
   } catch (e) {
     console.error(`Error generating cards: ${e.message}`);
     process.exit(-1);
