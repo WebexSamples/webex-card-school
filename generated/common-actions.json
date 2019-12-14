@@ -64,51 +64,21 @@
   },
   {
     "type": "Action.ShowCard",
-    "title": "More Resources",
+    "title": "Helpful Resources",
     "card": {
       "type": "AdaptiveCard",
       "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
       "body": [
         {
-          "type": "TextBlock",
-          "text": "Helpful Resources",
-          "size": "Medium",
-          "weight": "Bolder"
-        },
-        {
           "type": "Image",
           "altText": "",
           "url": "{imageHostingUrl}/helpful-resources.jpg",
-          "size": "Large",
+          "size": "Medium",
           "horizontalAlignment": "Center"
         },
         {
           "type": "TextBlock",
-          "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n"
-        },
-        {
-          "type": "TextBlock",
-          "text": "* [View the Source for This Card]({cardSourceUrl})"
-        },
-        {
-          "type": "TextBlock",
-          "text": "* [View the Source for This App]({appSourceUrl})"
-        },
-        {
-          "type": "TextBlock",
-          "text": "* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n"
-        },
-        {
-          "type": "TextBlock",
-          "text": "* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)"
-        },
-        {
-          "type": "TextBlock",
-          "text": "* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)"
-        },
-        {
-          "type": "TextBlock",
-          "text": "* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
+          "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card]({cardSourceUrl})\n* [View the Source for This App]({appSourceUrl})\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
         },
         {
           "type": "Container",
