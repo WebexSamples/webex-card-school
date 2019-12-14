@@ -3,6 +3,9 @@
     "contentFile": "welcome-content.json"
   },
   {
+    "contentFile": "adaptive-cards.json"
+  },
+  {
     "contentFile": "what-is-a-card-content.json"
   },
   {
