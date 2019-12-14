@@ -22,20 +22,24 @@
                   "value": "0"
                 },
                 {
-                  "title": "Lesson 1: What is a Card?",
+                  "title": "Lesson 1: Card Specifications",
                   "value": "1"
                 },
                 {
-                  "title": "Lesson 2: Sending A Card",
+                  "title": "Lesson 2: What is a Card?",
                   "value": "2"
                 },
                 {
-                  "title": "Lesson 3: Designing a Card",
+                  "title": "Lesson 3: Sending A Card",
                   "value": "3"
                 },
                 {
-                  "title": "Lesson 4: Displaying Complex Info",
+                  "title": "Lesson 4: Designing a Card",
                   "value": "4"
+                },
+                {
+                  "title": "Lesson 5: Displaying Complex Info",
+                  "value": "5"
                 }
               ]
             },
@@ -66,34 +70,45 @@
       "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
       "body": [
         {
-          "type": "ActionSet",
-          "actions": [
-            {
-              "type": "Action.OpenUrl",
-              "title": "Buttons and Cards Developers Guide",
-              "url": "https://developer.webex.com/docs/api/guides/cards"
-            },
-            {
-              "type": "Action.OpenUrl",
-              "title": "Buttons and Cards Designer",
-              "url": "https://developer.webex.com/adaptive-cards-designer"
-            },
-            {
-              "type": "Action.OpenUrl",
-              "title": "See this card's source",
-              "url": "{cardSourceUrl}"
-            },
-            {
-              "type": "Action.OpenUrl",
-              "title": "See this App's Source",
-              "url": "{appSourceUrl}"
-            },
-            {
-              "type": "Action.OpenUrl",
-              "title": "Join the Ask B&C School Webex Teams Space",
-              "url": "{askSpaceUrl}"
-            }
-          ]
+          "type": "TextBlock",
+          "text": "Helpful Resources",
+          "size": "Medium",
+          "weight": "Bolder"
+        },
+        {
+          "type": "Image",
+          "altText": "",
+          "url": "{imageHostingUrl}/helpful-resources.jpg",
+          "size": "Large",
+          "horizontalAlignment": "Center"
+        },
+        {
+          "type": "TextBlock",
+          "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n"
+        },
+        {
+          "type": "TextBlock",
+          "text": "* [View the Source for This Card]({cardSourceUrl})"
+        },
+        {
+          "type": "TextBlock",
+          "text": "* [View the Source for This App]({appSourceUrl})"
+        },
+        {
+          "type": "TextBlock",
+          "text": "* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n"
+        },
+        {
+          "type": "TextBlock",
+          "text": "* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)"
+        },
+        {
+          "type": "TextBlock",
+          "text": "* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)"
+        },
+        {
+          "type": "TextBlock",
+          "text": "* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
         },
         {
           "type": "Container",
