@@ -72,27 +72,11 @@ async function doIt(resourceDir, sharedResourceDir, generatedDir) {
     // // OK, lets append the Next Lesson and More Options button to each lesson
     // // and write out the complete generated content to lesson-X content files
     nextLesson = require(`${sharedResourceDir}/next-lesson.json`);
-    // // Update the "View This Cards Source" button link using the Adaptive Card Template SDK
-    // var template = new ACData.Template(generatedActions);
 
     let i;
     for (i = 0; i < lessonList.length - 1; i++) {
       let nextLessonInfo = (i < lessonList.length - 1) ? lessonList[i + 1] : null;
       let fileContent = `${resourceDir}/${lessonList[i].contentFile}`;
-      // var appSource = process.env.APP_SRC_BASE_URL;
-      // var cardSource = (appSource[appSource.length - 1] === '/') ?
-      //   appSource + `${githubGeneratedDir}/lesson-${i}.json` :
-      //   appSource + `/${githubGeneratedDir}/lesson-${i}.json`;
-      // var context = new ACData.EvaluationContext();
-      // context.$root = {
-      //   appSourceUrl: appSource,
-      //   cardSourceUrl: cardSource,
-      //   askSpaceUrl: process.env.ASK_SPACE_URL,
-      //   imageHostingUrl: process.env.IMAGE_HOSTING_URL
-      // };
-      // "Expand" the common actions template with the correct URLs
-      // var thisCardsActions = template.expand(context);
-
       let cardJson = buildCard(i, fileContent, generatedActions, nextLessonInfo, nextLesson);
       generateCardFile(i, cardJson, generatedDir);
     }
@@ -101,7 +85,7 @@ async function doIt(resourceDir, sharedResourceDir, generatedDir) {
     // Providing fewer of the "more resources" buttons
     let fileContent = `${resourceDir}/${lessonList[i].contentFile}`;
     let graduationJson = buildCard(i, fileContent, generatedActions);
-    let submitFeedback = graduationJson.actions[1].card.body[1];
+    let submitFeedback = graduationJson.actions[1].card.body[2];
     let pickALesson = graduationJson.actions[0];
     pickALesson.title = "Review a Previous Lesson";
     let pickALessonContainer = {
@@ -169,8 +153,8 @@ function buildCard(contentIndex, lessonContent, actionContent, nextLessonInfo, n
     var template = new ACData.Template(card);
     var appSource = process.env.APP_SRC_BASE_URL;
     var cardSource = (appSource[appSource.length - 1] === '/') ?
-      appSource + `${githubGeneratedDir}/lesson-${i}.json` :
-      appSource + `/${githubGeneratedDir}/lesson-${i}.json`;
+      appSource + `${githubGeneratedDir}/lesson-${contentIndex}.json` :
+      appSource + `/${githubGeneratedDir}/lesson-${contentIndex}.json`;
     var context = new ACData.EvaluationContext();
     context.$root = {
       appSourceUrl: appSource,
@@ -235,9 +219,9 @@ async function generateActions(actionsTemplate, lessonList, generatedPath) {
     if (actions[0].card.body[0].items[1].type !== "Input.ChoiceSet") {
       throw new Error(`${actionsTemplate} did not define the expected Input.ChoiceSet in the Pick Another Lesson card`);
     }
-    if (actions[1].card.body[0].type !== "ActionSet") {
-      throw new Error(`${actionsTemplate} did not define the expected ActionSet in the More Options Lesson card`);
-    }
+    // if (actions[1].card.body[0].type !== "ActionSet") {
+    //   throw new Error(`${actionsTemplate} did not define the expected ActionSet in the More Options Lesson card`);
+    // }
     actions[0].card.body[0].items[1].choices = [];
     actions[0].card.body[0].items[1].choices.push(
       {
