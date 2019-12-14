@@ -28,7 +28,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "Click **Pick Another Lesson** to browse through the lessons available, or **More Resources** to see what else is available.",
+      "text": "Click **Pick Another Lesson** to browse through the lessons available, or **Helpful Resources** to see what else is available.",
       "wrap": true
     }
   ]
