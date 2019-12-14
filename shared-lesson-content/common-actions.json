@@ -39,40 +39,21 @@
   },
   {
     "type": "Action.ShowCard",
-    "title": "More Resources",
+    "title": "Helpful Resources",
     "card": {
       "type": "AdaptiveCard",
       "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
       "body": [
         {
-          "type": "ActionSet",
-          "actions": [
-            {
-              "type": "Action.OpenUrl",
-              "title": "Buttons and Cards Developers Guide",
-              "url": "https://developer.webex.com/docs/api/guides/cards"
-            },
-            {
-              "type": "Action.OpenUrl",
-              "title": "Buttons and Cards Designer",
-              "url": "https://developer.webex.com/adaptive-cards-designer"
-            },
-            {
-              "type": "Action.OpenUrl",
-              "title": "See this card's source",
-              "url": "{cardSourceUrl}"
-            },
-            {
-              "type": "Action.OpenUrl",
-              "title": "See this App's Source",
-              "url": "{appSourceUrl}"
-            },
-            {
-              "type": "Action.OpenUrl",
-              "title": "Join the Ask B&C School Webex Teams Space",
-              "url": "{askSpaceUrl}"
-            }
-          ]
+          "type": "Image",
+          "altText": "",
+          "url": "{imageHostingUrl}/helpful-resources.jpg",
+          "size": "Medium",
+          "horizontalAlignment": "Center"
+        },
+        {
+          "type": "TextBlock",
+          "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card]({cardSourceUrl})\n* [View the Source for This App]({appSourceUrl})\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
         },
         {
           "type": "Container",
