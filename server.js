@@ -21,6 +21,12 @@ var _ = require('lodash');
 require('dotenv').config();
 logger = require('./logger');
 
+// Print out the docker container build date if available
+if (process.env.DOCKER_BUILD) {
+  logger.info('\n\n\nSERVICE RESTARTING...\n\n\n');
+  logger.info(`Starting app in docker container built: ${process.env.DOCKER_BUILD}`);
+}
+
 // Configure the bot framework for the environment we are running in
 var frameworkConfig = {};
 if ((process.env.WEBHOOK) && (process.env.TOKEN) &&
@@ -311,12 +317,20 @@ app.post('/', webhook(framework));
 
 // Health Check
 app.get('/', function (req, res) {
-  res.send(`I'm alive.  To use this app add ${botEmail} to a Webex Teams space.`);
+  if (process.env.DOCKER_BUILD) {
+    res.send(`I'm alive, running in container built ${process.env.DOCKER_BUILD}.  To use this app add ${botEmail} to a Webex Teams space.`);
+  } else {
+    res.send(`I'm alive.  To use this app add ${botEmail} to a Webex Teams space.`);
+  }
 });
 
 // start express server
 var server = app.listen(frameworkConfig.port, function () {
-  framework.debug('Framework listening on port %s', frameworkConfig.port);
+  if (frameworkConfig.webhookUrl) {
+    logger.info('Server started at %s listening on port %s', frameworkConfig.webhookUrl, frameworkConfig.port);
+  } else {
+    logger.info('Server listening on port %s', frameworkConfig.port);
+  }
 });
 
 // gracefully shutdown (ctrl-c)
