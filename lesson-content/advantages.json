@@ -1,0 +1,48 @@
+{
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Advantages of Using Cards",
+      "size": "medium",
+      "weight": "bolder"
+    },
+    {
+      "type": "TextBlock",
+      "text": "The idea for bots is to make work easier. In reality, text-only chat bots can be cumbersome and tedious to work with, especially when interactions get more complex. Users may need to remember complicated commands or respond to a series of questions in order to complete a task.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "Compare this:",
+      "weight": "Bolder"
+    },
+    {
+      "type": "Image",
+      "altText": "text bot",
+      "url": "{imageHostingUrl}/jira-text-bot.png"
+    },
+    {
+      "type": "TextBlock",
+      "text": "with this:",
+      "weight": "Bolder"
+    },
+    {
+      "type": "Image",
+      "altText": "buttons and cards",
+      "url": "{imageHostingUrl}/jira-card-bot.png"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Cards are essentially GUIs, which are much more intuitive and easier for users to follow. As you can see in the example above, the card uses a simple form to collect information instead of a more complex text-based interaction.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "If you have previously built Webex bots or integrations, consider how the user experience of those apps can be optimized by using Buttons and Cards.",
+      "wrap": true
+    }
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+}

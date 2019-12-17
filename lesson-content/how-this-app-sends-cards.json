@@ -1,0 +1,45 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "How This App Sends Cards",
+      "size": "medium",
+      "weight": "bolder",
+      "horizontalAlignment": "center"
+    },
+    {
+      "type": "TextBlock",
+      "text": "This open source sample application is built using the [webex-node-bot-framework](https://github.com/jpjpjp/webex-node-bot-framework), which abstracts away some of the complexity of calling the Webex APIs.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "The [README](https://github.com/jpjpjp/webex-card-school/blob/master/README.md) for this app provides more information for developers who are interested in understanding the specifics of this app, but in a nutshell, the framework provides our app with a `bot` object each time our bot is added to a space.  The app logic can then call helper methods like `bot.say()` to send messages to the appropriate space.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "For sending a card, our app can call `bot.sendCard()` and simply pass the card's JSON design, which could be copied directly from the designer, abstracting away the need to build a full `attachments` array. In our app we created an object for each card which contains the card's JSON, resulting in the following:",
+      "wrap": true
+    },
+    {
+      "type": "Image",
+      "altText": "Picture of a bot.sendCard()",
+      "url": "{imageHostingUrl}/bot-send-card.png",
+      "horizontalAlignment": "Center"
+    },
+    {
+      "type": "TextBlock",
+      "text": "[View this on github](https://github.com/jpjpjp/webex-card-school/blob/master/lesson-handlers/common-lesson-handler.js)",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "While this framework is a handy option for node.js developers, the lessons in this bot will primarily cover the pure API approach, while still calling out where this app's code might be slightly different.",
+      "wrap": true
+    }
+  ]
+}

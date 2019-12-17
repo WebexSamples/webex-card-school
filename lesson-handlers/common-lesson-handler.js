@@ -4,7 +4,7 @@
 
 class LessonHandler {
   constructor(card, logger, lessons, thisLessonInfo, metricsTables, customHandlers) {
-    this.card = card;
+    this.cardJSON = card;
     this.logger = logger;
     this.lessons = lessons;
     this.lessonInfo = thisLessonInfo;
@@ -32,7 +32,9 @@ class LessonHandler {
     if ((this.customHandlers) && (typeof this.customHandlers.customRenderCard == 'function')) {
       return this.customHandlers.customRenderCard(bot, trigger, this, this.logger);
     }
-    bot.sendCard(this.card, `If you see this your client cannot render the card for ${this.lessonInfo.title}.   Try using a different Webex Teams client with this bot.`)
+    bot.sendCard(this.cardJSON, 
+      `If you see this your client cannot render the card for ${this.lessonInfo.title}.\n` +
+      `Try using a different Webex Teams client with this bot.`)
       .then((message) => {
         if ('id' in message) {
           bot.framework.mongoStore.store(bot, 'activeCardMessageId', message.id);

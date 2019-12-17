@@ -54,7 +54,7 @@ class DisplayingComplexInfoHandlers {
       var card = template.expand(context);
 
       // Insert the genereted student info into the lesson card
-      let theCard = JSON.parse(JSON.stringify(cardObj.card));
+      let theCard = JSON.parse(JSON.stringify(cardObj.cardJSON));
       // Update the Action.ShowCard elements card attribute
       // This is a bit brittle as it will break if the lesson changes
       theCard.body[4].items[0].actions[0].card = card;

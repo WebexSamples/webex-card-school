@@ -3,17 +3,32 @@
     "contentFile": "welcome-content.json"
   },
   {
+    "contentFile": "what-is-a-card.json"
+  },
+  {
+    "contentFile": "advantages.json"
+  },
+  {
     "contentFile": "adaptive-cards.json"
   },
   {
-    "contentFile": "what-is-a-card-content.json"
+    "contentFile": "designing-a-card.json"
+  },
+  {
+    "contentFile": "webex-card-designer.json"
   },
   {
     "contentFile": "sending-a-card-content.json",
     "customHandlerFile": "sending-a-card-handler"
   },
   {
-    "contentFile": "designing-a-card.json"
+    "contentFile": "how-this-app-sends-cards.json"
+  },
+  {
+    "contentFile": "action-card-webhook.json"
+  },
+  {
+    "contentFile": "handling-submissions.json"
   },
   {
     "contentFile": "displaying-complex-info.json",

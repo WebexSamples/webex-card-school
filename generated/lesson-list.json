@@ -5,30 +5,60 @@
     "title": "Welcome to Buttons and Cards School"
   },
   {
-    "contentFile": "what-is-a-card-content.json",
+    "contentFile": "what-is-a-card.json",
     "index": 1,
     "title": "What is a Card?"
   },
   {
-    "contentFile": "sending-a-card-content.json",
-    "customHandlerFile": "sending-a-card-handler",
+    "contentFile": "advantages.json",
     "index": 2,
-    "title": "Sending A Card"
+    "title": "Advantages of Using Cards"
+  },
+  {
+    "contentFile": "adaptive-cards.json",
+    "index": 3,
+    "title": "Card Specifications"
   },
   {
     "contentFile": "designing-a-card.json",
-    "index": 3,
+    "index": 4,
     "title": "Designing a Card"
+  },
+  {
+    "contentFile": "webex-card-designer.json",
+    "index": 5,
+    "title": "Webex Card Designer Tool"
+  },
+  {
+    "contentFile": "sending-a-card-content.json",
+    "customHandlerFile": "sending-a-card-handler",
+    "index": 6,
+    "title": "Sending A Card to Webex Teams"
+  },
+  {
+    "contentFile": "how-this-app-sends-cards.json",
+    "index": 7,
+    "title": "How This App Sends Cards"
+  },
+  {
+    "contentFile": "action-card-webhook.json",
+    "index": 8,
+    "title": "Constructing an Action Card"
+  },
+  {
+    "contentFile": "handling-submissions.json",
+    "index": 9,
+    "title": "Constructing an Action Card"
   },
   {
     "contentFile": "displaying-complex-info.json",
     "customHandlerFile": "displaying-complex-info-handler",
-    "index": 4,
+    "index": 10,
     "title": "Displaying Complex Info"
   },
   {
     "contentFile": "graduation-content.json",
-    "index": 5,
+    "index": 11,
     "title": "Congratulations Graduate!"
   }
 ]

@@ -1,0 +1,28 @@
+{
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+        {
+            "type": "TextBlock",
+            "text": "Webex Card Designer Tool",
+            "size": "medium",
+            "weight": "bolder"
+        },
+        {
+            "type": "Image",
+            "altText": "",
+            "url": "{imageHostingUrl}/Webex-Card-Designer.png"
+        },
+        {
+            "type": "TextBlock",
+            "text": "To make designing a card easier, there is a very handy [Card Designer](https://developer.webex.com/buttons-and-cards-designer) tool on the Webex for Developer portal that provides a drag & drop interface to build a card. It also automatically generates the JSON object for the card, making it a snap to implement it inside your app.\n",
+            "wrap": true
+        },
+        {
+          "type": "TextBlock",
+          "text": "When your card is looking good in the designer, click the `Copy card JSON` button so you can move your design to your application and start building out the code to send it to Webex Teams.\n",
+          "wrap": true
+      }
+  ],
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+}

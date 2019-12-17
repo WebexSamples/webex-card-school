@@ -1,0 +1,38 @@
+{
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+        {
+            "type": "TextBlock",
+            "text": "What is a Card?",
+            "size": "medium",
+            "weight": "bolder"
+        },
+        {
+            "type": "Image",
+            "altText": "",
+            "url": "{imageHostingUrl}/what-is-a-card.png"
+        },
+        {
+            "type": "TextBlock",
+            "text": "Cards provide a way for Applications (bots or integrations) to share and collect information in Webex Teams.\n\n",
+            "wrap": true
+        },
+        {
+            "type": "TextBlock",
+            "text": "Cards can display rich information including images, formatted text and links. They can also be used to collect detailed information from Webex Teams users that would be difficult to obtain using a purely text based interface. ",
+            "wrap": true
+        },
+        {
+            "type": "TextBlock",
+            "text": "Even cards that only show informational messages, such as the current weather conditions, flight statuses, or internal service alerts really stand out over text-only dialogue. ",
+            "wrap": true
+        },
+        {
+            "type": "TextBlock",
+            "text": "Where the really standout though, are in the interactions that solicit complex feedback from the user, such as responding to a poll or submitting a registration form.  We'll demonstrate this in the next lesson.",
+            "wrap": true
+        }
+    ],
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+}

@@ -5,19 +5,34 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "Sending A Card",
-      "size": "Medium",
-      "weight": "Bolder",
-      "horizontalAlignment": "Center"
+      "text": "Sending A Card to Webex Teams",
+      "size": "medium",
+      "weight": "bolder",
+      "horizontalAlignment": "center"
     },
     {
       "type": "TextBlock",
-      "text": "Applications can send a card the same way they send messages, via the [Webex Teams /messages API](https://developer.webex.com/docs/api/v1/messages/create-a-message).  ",
+      "text": "To generate a Card in Webex Teams, you'll need to include the card's JSON in a new request to the [POST /message API](https://developer.webex.com/docs/api/v1/messages/create-a-message). ",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "A message request body to send a card looks very much like a \"regular\" message request, except that the request body will include an “attachment” attribute which includes data that tells Webex how to render a card.",
+      "text": "A message request to send a card looks very much like a \"regular\" message request, except that the request body will include an `attachments` attribute which includes data that tells Webex how to render a card.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "The `attachments` field is an array that will include a single object made up of two fields:\n\n* `contentType`: always set to \"application/vnd.microsoft.card.adaptive\"\n\n* `content`: this is your card's design JSON, possibly copied from the designer",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "When sending the card data, the Webex message object must also include either a `text` or `markdown` field for use by clients that cannot render cards. This text should convey information about the card's content and provide an alternative method to interact with the card's actions.\n",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "Click the button below to see a simple example of a message request body with an attachments field.\n",
       "wrap": true
     },
     {
@@ -29,7 +44,7 @@
           "actions": [
             {
               "type": "Action.ShowCard",
-              "title": "Show an example Webex Card request body...",
+              "title": "Show sample Send Card request",
               "card": {
                 "type": "AdaptiveCard",
                 "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",

@@ -1,0 +1,50 @@
+{
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+        {
+            "type": "TextBlock",
+            "text": "Constructing an Action Card",
+            "size": "medium",
+            "weight": "bolder"
+        },
+        {
+            "type": "ColumnSet",
+            "columns": [
+                {
+                    "type": "Column",
+                    "width": "auto",
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "text": "Part 1 - Create a Webhook",
+                            "spacing": "None",
+                            "weight": "Bolder"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "TextBlock",
+            "text": "Taking what we learned in Lesson 7, in order to construct a card that users can interact with, the next step would be to create a [webhook](https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook) to notify the application when a user submits data from the Card (such as a button was pressed). ",
+            "wrap": true
+        },
+        {
+            "type": "TextBlock",
+            "text": "Keep in mind, only one webhook is needed to receive submission notifications for every card created by your app.",
+            "wrap": true
+        },
+        {
+            "type": "TextBlock",
+            "text": "When configuring the webhook , use `attachmentActions` as the resource:",
+            "wrap": true
+        },
+        {
+            "type": "Image",
+            "altText": "",
+            "url": "{imageHostingUrl}/action-card-webhook.png"
+        }
+    ],
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+}
