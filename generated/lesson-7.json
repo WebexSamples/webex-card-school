@@ -1,36 +1,44 @@
 {
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "type": "AdaptiveCard",
   "version": "1.0",
   "body": [
     {
       "type": "TextBlock",
-      "text": "Lesson 1: What is a Card?",
+      "text": "Lesson 7: How This App Sends Cards",
       "size": "medium",
-      "weight": "bolder"
+      "weight": "bolder",
+      "horizontalAlignment": "center"
+    },
+    {
+      "type": "TextBlock",
+      "text": "This open source sample application is built using the [webex-node-bot-framework](https://github.com/jpjpjp/webex-node-bot-framework), which abstracts away some of the complexity of calling the Webex APIs.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "The [README](https://github.com/jpjpjp/webex-card-school/blob/master/README.md) for this app provides more information for developers who are interested in understanding the specifics of this app, but in a nutshell, the framework provides our app with a `bot` object each time our bot is added to a space.  The app logic can then call helper methods like `bot.say()` to send messages to the appropriate space.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "For sending a card, our app can call `bot.sendCard()` and simply pass the card's JSON design, which could be copied directly from the designer, abstracting away the need to build a full `attachments` array. In our app we created an object for each card which contains the card's JSON, resulting in the following:",
+      "wrap": true
     },
     {
       "type": "Image",
-      "altText": "",
-      "url": "http://jpshipherd.ngrok.io/images/what-is-a-card.png"
+      "altText": "Picture of a bot.sendCard()",
+      "url": "http://jpshipherd.ngrok.io/images/bot-send-card.png",
+      "horizontalAlignment": "Center"
     },
     {
       "type": "TextBlock",
-      "text": "Cards provide a way for Applications (bots or integrations) to share and collect information in Webex Teams.\n\n",
+      "text": "[View this on github](https://github.com/jpjpjp/webex-card-school/blob/master/lesson-handlers/common-lesson-handler.js)",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "Cards can display rich information including images, formatted text and links. They can also be used to collect detailed information from Webex Teams users that would be difficult to obtain using a purely text based interface. ",
-      "wrap": true
-    },
-    {
-      "type": "TextBlock",
-      "text": "Even cards that only show informational messages, such as the current weather conditions, flight statuses, or internal service alerts really stand out over text-only dialogue. ",
-      "wrap": true
-    },
-    {
-      "type": "TextBlock",
-      "text": "Where the really standout though, are in the interactions that solicit complex feedback from the user, such as responding to a poll or submitting a registration form.  We'll demonstrate this in the next lesson.",
+      "text": "While this framework is a handy option for node.js developers, the lessons in this bot will primarily cover the pure API approach, while still calling out where this app's code might be slightly different.",
       "wrap": true
     },
     {
@@ -41,7 +49,7 @@
       "choices": [
         {
           "title": "This hidden choice ensures that myCardIndex is returned with every Action.Submit attachmentAction",
-          "value": "1"
+          "value": "7"
         }
       ]
     },
@@ -54,10 +62,10 @@
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Next Lesson: Advantages of Using Cards",
+              "title": "Next Lesson: Constructing an Action Card",
               "data": {
                 "nextLesson": true,
-                "lessonIndex": 2
+                "lessonIndex": 8
               }
             }
           ]
@@ -65,7 +73,6 @@
       ]
     }
   ],
-  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "actions": [
     {
       "type": "Action.ShowCard",
@@ -166,7 +173,7 @@
           },
           {
             "type": "TextBlock",
-            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-1.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
+            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-7.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
           },
           {
             "type": "Container",

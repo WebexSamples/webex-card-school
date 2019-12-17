@@ -6,15 +6,16 @@
     {
       "type": "TextBlock",
       "text": "Welcome to Buttons and Cards School",
-      "size": "Medium",
-      "weight": "Bolder",
-      "horizontalAlignment": "Center"
+      "size": "medium",
+      "weight": "bolder",
+      "horizontalAlignment": "center"
     },
     {
       "type": "Image",
       "altText": "Picture of a school",
-      "url": "https://cardschool.webexbots.cloud/images/school.png",
-      "horizontalAlignment": "Center"
+      "url": "http://jpshipherd.ngrok.io/images/school.png",
+      "horizontalAlignment": "Center",
+      "size": "medium"
     },
     {
       "type": "TextBlock",
@@ -28,7 +29,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "Click **Pick Another Lesson** to browse through the lessons available, or **More Resources** to see what else is available.",
+      "text": "Click **Pick Another Lesson** to browse through the lessons available, or **Helpful Resources** to see what else is available.",
       "wrap": true
     },
     {
@@ -91,16 +92,40 @@
                     "value": "1"
                   },
                   {
-                    "title": "Lesson 2: Sending A Card",
+                    "title": "Lesson 2: Advantages of Using Cards",
                     "value": "2"
                   },
                   {
-                    "title": "Lesson 3: Designing a Card",
+                    "title": "Lesson 3: Card Specifications",
                     "value": "3"
                   },
                   {
-                    "title": "Lesson 4: Displaying Complex Info",
+                    "title": "Lesson 4: Designing a Card",
                     "value": "4"
+                  },
+                  {
+                    "title": "Lesson 5: Webex Card Designer Tool",
+                    "value": "5"
+                  },
+                  {
+                    "title": "Lesson 6: Sending A Card to Webex Teams",
+                    "value": "6"
+                  },
+                  {
+                    "title": "Lesson 7: How This App Sends Cards",
+                    "value": "7"
+                  },
+                  {
+                    "title": "Lesson 8: Constructing an Action Card",
+                    "value": "8"
+                  },
+                  {
+                    "title": "Lesson 9: Constructing an Action Card",
+                    "value": "9"
+                  },
+                  {
+                    "title": "Lesson 10: Displaying Complex Info",
+                    "value": "10"
                   }
                 ]
               },
@@ -125,40 +150,21 @@
     },
     {
       "type": "Action.ShowCard",
-      "title": "More Resources",
+      "title": "Helpful Resources",
       "card": {
         "type": "AdaptiveCard",
         "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
         "body": [
           {
-            "type": "ActionSet",
-            "actions": [
-              {
-                "type": "Action.OpenUrl",
-                "title": "Buttons and Cards Developers Guide",
-                "url": "https://developer.webex.com/docs/api/guides/cards"
-              },
-              {
-                "type": "Action.OpenUrl",
-                "title": "Buttons and Cards Designer",
-                "url": "https://developer.webex.com/adaptive-cards-designer"
-              },
-              {
-                "type": "Action.OpenUrl",
-                "title": "See this card's source",
-                "url": "https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-5.json"
-              },
-              {
-                "type": "Action.OpenUrl",
-                "title": "See this App's Source",
-                "url": "https://github.com/jpjpjp/webex-card-school"
-              },
-              {
-                "type": "Action.OpenUrl",
-                "title": "Join the Ask B&C School Webex Teams Space",
-                "url": "https://eurl.io/#SJiS9VKTH"
-              }
-            ]
+            "type": "Image",
+            "altText": "",
+            "url": "http://jpshipherd.ngrok.io/images/helpful-resources.jpg",
+            "size": "Medium",
+            "horizontalAlignment": "Center"
+          },
+          {
+            "type": "TextBlock",
+            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-0.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
           },
           {
             "type": "Container",

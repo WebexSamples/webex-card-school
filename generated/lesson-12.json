@@ -1,0 +1,160 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Congratulations Graduate!",
+      "size": "Medium",
+      "weight": "Bolder",
+      "horizontalAlignment": "Center"
+    },
+    {
+      "type": "TextBlock",
+      "text": "If you worked your way through all the lessons, congratulations, you are now a graduate of Webex Teams Buttons and Cards School.  Here is a certificate suitable for framing:",
+      "wrap": true
+    },
+    {
+      "type": "Image",
+      "altText": "Picture of a diploma",
+      "url": "http://jpshipherd.ngrok.io/images/diploma.png",
+      "horizontalAlignment": "Center"
+    },
+    {
+      "type": "Input.ChoiceSet",
+      "id": "myCardIndex",
+      "isMultiSelect": false,
+      "isVisible": false,
+      "choices": [
+        {
+          "title": "This hidden choice ensures that myCardIndex is returned with every Action.Submit attachmentAction",
+          "value": "12"
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Do you have questions, comments or suggestions?\n\nWe'd love to get your feedback on this bot or any aspect of the Webex Teams Buttons and Cards feature.",
+          "wrap": true
+        },
+        {
+          "type": "Input.Text",
+          "id": "feedback",
+          "isMultiline": true,
+          "placeholder": "Enter your feedback"
+        },
+        {
+          "type": "ActionSet",
+          "actions": [
+            {
+              "type": "Action.Submit",
+              "title": "Send Feedback",
+              "data": {}
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "ActionSet",
+          "actions": [
+            {
+              "type": "Action.ShowCard",
+              "title": "Review a Previous Lesson",
+              "card": {
+                "type": "AdaptiveCard",
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "body": [
+                  {
+                    "type": "Container",
+                    "items": [
+                      {
+                        "type": "TextBlock",
+                        "text": "Available Lessons:"
+                      },
+                      {
+                        "type": "Input.ChoiceSet",
+                        "id": "jumpToLessonIndex",
+                        "choices": [
+                          {
+                            "title": "Introduction",
+                            "value": "0"
+                          },
+                          {
+                            "title": "Lesson 1: What is a Card?",
+                            "value": "1"
+                          },
+                          {
+                            "title": "Lesson 2: Advantages of Using Cards",
+                            "value": "2"
+                          },
+                          {
+                            "title": "Lesson 3: Card Specifications",
+                            "value": "3"
+                          },
+                          {
+                            "title": "Lesson 4: How Cards are Sent",
+                            "value": "4"
+                          },
+                          {
+                            "title": "Lesson 5: Sending A Card",
+                            "value": "5"
+                          },
+                          {
+                            "title": "Lesson 6: Designing a Card",
+                            "value": "6"
+                          },
+                          {
+                            "title": "Lesson 7: Webex Card Designer Tool",
+                            "value": "7"
+                          },
+                          {
+                            "title": "Lesson 8: Constructing a Card",
+                            "value": "8"
+                          },
+                          {
+                            "title": "Lesson 9: Constructing an Action Card",
+                            "value": "9"
+                          },
+                          {
+                            "title": "Lesson 10: Constructing an Action Card",
+                            "value": "10"
+                          },
+                          {
+                            "title": "Lesson 11: Displaying Complex Info",
+                            "value": "11"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "ActionSet",
+                        "actions": [
+                          {
+                            "type": "Action.Submit",
+                            "title": "Go To Lesson!",
+                            "id": "gotoLesson",
+                            "data": {
+                              "nextLesson": false,
+                              "pickAnotherLesson": true
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,70 +1,47 @@
 {
-  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "type": "AdaptiveCard",
   "version": "1.0",
   "body": [
     {
       "type": "TextBlock",
-      "text": "Lesson 2: Sending A Card",
-      "size": "Medium",
-      "weight": "Bolder",
-      "horizontalAlignment": "Center"
+      "text": "Lesson 2: Advantages of Using Cards",
+      "size": "medium",
+      "weight": "bolder"
     },
     {
       "type": "TextBlock",
-      "text": "Applications can send a card the same way they send messages, via the [Webex Teams /messages API](https://developer.webex.com/docs/api/v1/messages/create-a-message).  ",
+      "text": "The idea for bots is to make work easier. In reality, text-only chat bots can be cumbersome and tedious to work with, especially when interactions get more complex. Users may need to remember complicated commands or respond to a series of questions in order to complete a task.",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "A message request body to send a card looks very much like a \"regular\" message request, except that the request body will include an “attachment” attribute which includes data that tells Webex how to render a card.",
+      "text": "Compare this:",
+      "weight": "Bolder"
+    },
+    {
+      "type": "Image",
+      "altText": "text bot",
+      "url": "http://jpshipherd.ngrok.io/images/jira-text-bot.png"
+    },
+    {
+      "type": "TextBlock",
+      "text": "with this:",
+      "weight": "Bolder"
+    },
+    {
+      "type": "Image",
+      "altText": "buttons and cards",
+      "url": "http://jpshipherd.ngrok.io/images/jira-card-bot.png"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Cards are essentially GUIs, which are much more intuitive and easier for users to follow. As you can see in the example above, the card uses a simple form to collect information instead of a more complex text-based interaction.",
       "wrap": true
     },
     {
-      "type": "Container",
-      "items": [
-        {
-          "type": "ActionSet",
-          "horizontalAlignment": "Center",
-          "actions": [
-            {
-              "type": "Action.ShowCard",
-              "title": "Show an example Webex Card request body...",
-              "card": {
-                "type": "AdaptiveCard",
-                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-                "version": "1.2",
-                "body": [
-                  {
-                    "type": "Container",
-                    "items": [
-                      {
-                        "type": "TextBlock",
-                        "text": "```json\n{\n  \"roomId\": \"{{roomId}}\",\n  \"text\": \"This is the text a user will see if the card cannot be rendered.\",\n  \"attachments\": [\n    {\n      \"contentType\": \"application/vnd.microsoft.card.adaptive\",\n        \"content\": {\n          \"type\": \"AdaptiveCard\",\n          \"version\": \"1.0\",\n          \"body\": [\n            {\n              \"type\": \"TextBlock\",\n              \"text\": \"Here is a logo\"\n            },\n            {\n              \"type\": \"Image\",\n              \"url\": \"https://www.ccsmedia.com/media/WebexTeams_Logo-150x150.png\",\n              \"size\": \"small\"\n            }\n         ]\n       }\n    }\n  ]\n}",
-                        "wrap": true
-                      },
-                      {
-                        "type": "ActionSet",
-                        "horizontalAlignment": "center",
-                        "actions": [
-                          {
-                            "type": "Action.Submit",
-                            "id": "postMessageButton",
-                            "title": "Try Posting This Message...",
-                            "data": {
-                              "customPostMessage": true
-                            }
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      ]
+      "type": "TextBlock",
+      "text": "If you have previously built Webex bots or integrations, consider how the user experience of those apps can be optimized by using Buttons and Cards.",
+      "wrap": true
     },
     {
       "type": "Input.ChoiceSet",
@@ -87,7 +64,7 @@
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Next Lesson: Designing a Card",
+              "title": "Next Lesson: Card Specifications",
               "data": {
                 "nextLesson": true,
                 "lessonIndex": 3
@@ -98,6 +75,7 @@
       ]
     }
   ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "actions": [
     {
       "type": "Action.ShowCard",
@@ -126,16 +104,40 @@
                     "value": "1"
                   },
                   {
-                    "title": "Lesson 2: Sending A Card",
+                    "title": "Lesson 2: Advantages of Using Cards",
                     "value": "2"
                   },
                   {
-                    "title": "Lesson 3: Designing a Card",
+                    "title": "Lesson 3: Card Specifications",
                     "value": "3"
                   },
                   {
-                    "title": "Lesson 4: Displaying Complex Info",
+                    "title": "Lesson 4: Designing a Card",
                     "value": "4"
+                  },
+                  {
+                    "title": "Lesson 5: Webex Card Designer Tool",
+                    "value": "5"
+                  },
+                  {
+                    "title": "Lesson 6: Sending A Card to Webex Teams",
+                    "value": "6"
+                  },
+                  {
+                    "title": "Lesson 7: How This App Sends Cards",
+                    "value": "7"
+                  },
+                  {
+                    "title": "Lesson 8: Constructing an Action Card",
+                    "value": "8"
+                  },
+                  {
+                    "title": "Lesson 9: Constructing an Action Card",
+                    "value": "9"
+                  },
+                  {
+                    "title": "Lesson 10: Displaying Complex Info",
+                    "value": "10"
                   }
                 ]
               },
@@ -160,40 +162,21 @@
     },
     {
       "type": "Action.ShowCard",
-      "title": "More Resources",
+      "title": "Helpful Resources",
       "card": {
         "type": "AdaptiveCard",
         "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
         "body": [
           {
-            "type": "ActionSet",
-            "actions": [
-              {
-                "type": "Action.OpenUrl",
-                "title": "Buttons and Cards Developers Guide",
-                "url": "https://developer.webex.com/docs/api/guides/cards"
-              },
-              {
-                "type": "Action.OpenUrl",
-                "title": "Buttons and Cards Designer",
-                "url": "https://developer.webex.com/adaptive-cards-designer"
-              },
-              {
-                "type": "Action.OpenUrl",
-                "title": "See this card's source",
-                "url": "https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-5.json"
-              },
-              {
-                "type": "Action.OpenUrl",
-                "title": "See this App's Source",
-                "url": "https://github.com/jpjpjp/webex-card-school"
-              },
-              {
-                "type": "Action.OpenUrl",
-                "title": "Join the Ask B&C School Webex Teams Space",
-                "url": "https://eurl.io/#SJiS9VKTH"
-              }
-            ]
+            "type": "Image",
+            "altText": "",
+            "url": "http://jpshipherd.ngrok.io/images/helpful-resources.jpg",
+            "size": "Medium",
+            "horizontalAlignment": "Center"
+          },
+          {
+            "type": "TextBlock",
+            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-2.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
           },
           {
             "type": "Container",

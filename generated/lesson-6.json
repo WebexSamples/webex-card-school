@@ -1,37 +1,85 @@
 {
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "type": "AdaptiveCard",
   "version": "1.0",
   "body": [
     {
       "type": "TextBlock",
-      "text": "Lesson 1: What is a Card?",
+      "text": "Lesson 6: Sending A Card to Webex Teams",
       "size": "medium",
-      "weight": "bolder"
-    },
-    {
-      "type": "Image",
-      "altText": "",
-      "url": "http://jpshipherd.ngrok.io/images/what-is-a-card.png"
+      "weight": "bolder",
+      "horizontalAlignment": "center"
     },
     {
       "type": "TextBlock",
-      "text": "Cards provide a way for Applications (bots or integrations) to share and collect information in Webex Teams.\n\n",
+      "text": "To generate a Card in Webex Teams, you'll need to include the card's JSON in a new request to the [POST /message API](https://developer.webex.com/docs/api/v1/messages/create-a-message). ",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "Cards can display rich information including images, formatted text and links. They can also be used to collect detailed information from Webex Teams users that would be difficult to obtain using a purely text based interface. ",
+      "text": "A message request to send a card looks very much like a \"regular\" message request, except that the request body will include an `attachments` attribute which includes data that tells Webex how to render a card.",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "Even cards that only show informational messages, such as the current weather conditions, flight statuses, or internal service alerts really stand out over text-only dialogue. ",
+      "text": "The `attachments` field is an array that will include a single object made up of two fields:\n\n* `contentType`: always set to \"application/vnd.microsoft.card.adaptive\"\n\n* `content`: this is your card's design JSON, possibly copied from the designer",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "Where the really standout though, are in the interactions that solicit complex feedback from the user, such as responding to a poll or submitting a registration form.  We'll demonstrate this in the next lesson.",
+      "text": "When sending the card data, the Webex message object must also include either a `text` or `markdown` field for use by clients that cannot render cards. This text should convey information about the card's content and provide an alternative method to interact with the card's actions.\n",
       "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "Click the button below to see a simple example of a message request body with an attachments field.\n",
+      "wrap": true
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "ActionSet",
+          "horizontalAlignment": "Center",
+          "actions": [
+            {
+              "type": "Action.ShowCard",
+              "title": "Show sample Send Card request",
+              "card": {
+                "type": "AdaptiveCard",
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "version": "1.2",
+                "body": [
+                  {
+                    "type": "Container",
+                    "items": [
+                      {
+                        "type": "TextBlock",
+                        "text": "```json\n{\n  \"roomId\": \"{{roomId}}\",\n  \"text\": \"This is the text a user will see if the card cannot be rendered.\",\n  \"attachments\": [\n    {\n      \"contentType\": \"application/vnd.microsoft.card.adaptive\",\n        \"content\": {\n          \"type\": \"AdaptiveCard\",\n          \"version\": \"1.0\",\n          \"body\": [\n            {\n              \"type\": \"TextBlock\",\n              \"text\": \"Here is a logo\"\n            },\n            {\n              \"type\": \"Image\",\n              \"url\": \"https://www.ccsmedia.com/media/WebexTeams_Logo-150x150.png\",\n              \"size\": \"small\"\n            }\n         ]\n       }\n    }\n  ]\n}",
+                        "wrap": true
+                      },
+                      {
+                        "type": "ActionSet",
+                        "horizontalAlignment": "center",
+                        "actions": [
+                          {
+                            "type": "Action.Submit",
+                            "id": "postMessageButton",
+                            "title": "Try Posting This Message...",
+                            "data": {
+                              "customPostMessage": true
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       "type": "Input.ChoiceSet",
@@ -41,7 +89,7 @@
       "choices": [
         {
           "title": "This hidden choice ensures that myCardIndex is returned with every Action.Submit attachmentAction",
-          "value": "1"
+          "value": "6"
         }
       ]
     },
@@ -54,10 +102,10 @@
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Next Lesson: Advantages of Using Cards",
+              "title": "Next Lesson: How This App Sends Cards",
               "data": {
                 "nextLesson": true,
-                "lessonIndex": 2
+                "lessonIndex": 7
               }
             }
           ]
@@ -65,7 +113,6 @@
       ]
     }
   ],
-  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "actions": [
     {
       "type": "Action.ShowCard",
@@ -166,7 +213,7 @@
           },
           {
             "type": "TextBlock",
-            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-1.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
+            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-6.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
           },
           {
             "type": "Container",

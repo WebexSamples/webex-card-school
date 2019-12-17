@@ -22,15 +22,15 @@
                   "value": "0"
                 },
                 {
-                  "title": "Lesson 1: Card Specifications",
+                  "title": "Lesson 1: What is a Card?",
                   "value": "1"
                 },
                 {
-                  "title": "Lesson 2: What is a Card?",
+                  "title": "Lesson 2: Advantages of Using Cards",
                   "value": "2"
                 },
                 {
-                  "title": "Lesson 3: Sending A Card",
+                  "title": "Lesson 3: Card Specifications",
                   "value": "3"
                 },
                 {
@@ -38,8 +38,28 @@
                   "value": "4"
                 },
                 {
-                  "title": "Lesson 5: Displaying Complex Info",
+                  "title": "Lesson 5: Webex Card Designer Tool",
                   "value": "5"
+                },
+                {
+                  "title": "Lesson 6: Sending A Card to Webex Teams",
+                  "value": "6"
+                },
+                {
+                  "title": "Lesson 7: How This App Sends Cards",
+                  "value": "7"
+                },
+                {
+                  "title": "Lesson 8: Constructing an Action Card",
+                  "value": "8"
+                },
+                {
+                  "title": "Lesson 9: Constructing an Action Card",
+                  "value": "9"
+                },
+                {
+                  "title": "Lesson 10: Displaying Complex Info",
+                  "value": "10"
                 }
               ]
             },

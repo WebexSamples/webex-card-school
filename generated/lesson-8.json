@@ -4,34 +4,46 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "Lesson 1: What is a Card?",
+      "text": "Lesson 8: Constructing an Action Card",
       "size": "medium",
       "weight": "bolder"
     },
     {
+      "type": "ColumnSet",
+      "columns": [
+        {
+          "type": "Column",
+          "width": "auto",
+          "items": [
+            {
+              "type": "TextBlock",
+              "text": "Part 1 - Create a Webhook",
+              "spacing": "None",
+              "weight": "Bolder"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "text": "Taking what we learned in Lesson 7, in order to construct a card that users can interact with, the next step would be to create a [webhook](https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook) to notify the application when a user submits data from the Card (such as a button was pressed). ",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "Keep in mind, only one webhook is needed to receive submission notifications for every card created by your app.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "When configuring the webhook , use `attachmentActions` as the resource:",
+      "wrap": true
+    },
+    {
       "type": "Image",
       "altText": "",
-      "url": "http://jpshipherd.ngrok.io/images/what-is-a-card.png"
-    },
-    {
-      "type": "TextBlock",
-      "text": "Cards provide a way for Applications (bots or integrations) to share and collect information in Webex Teams.\n\n",
-      "wrap": true
-    },
-    {
-      "type": "TextBlock",
-      "text": "Cards can display rich information including images, formatted text and links. They can also be used to collect detailed information from Webex Teams users that would be difficult to obtain using a purely text based interface. ",
-      "wrap": true
-    },
-    {
-      "type": "TextBlock",
-      "text": "Even cards that only show informational messages, such as the current weather conditions, flight statuses, or internal service alerts really stand out over text-only dialogue. ",
-      "wrap": true
-    },
-    {
-      "type": "TextBlock",
-      "text": "Where the really standout though, are in the interactions that solicit complex feedback from the user, such as responding to a poll or submitting a registration form.  We'll demonstrate this in the next lesson.",
-      "wrap": true
+      "url": "http://jpshipherd.ngrok.io/images/action-card-webhook.png"
     },
     {
       "type": "Input.ChoiceSet",
@@ -41,7 +53,7 @@
       "choices": [
         {
           "title": "This hidden choice ensures that myCardIndex is returned with every Action.Submit attachmentAction",
-          "value": "1"
+          "value": "8"
         }
       ]
     },
@@ -54,10 +66,10 @@
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Next Lesson: Advantages of Using Cards",
+              "title": "Next Lesson: Constructing an Action Card",
               "data": {
                 "nextLesson": true,
-                "lessonIndex": 2
+                "lessonIndex": 9
               }
             }
           ]
@@ -166,7 +178,7 @@
           },
           {
             "type": "TextBlock",
-            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-1.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
+            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-8.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
           },
           {
             "type": "Container",
