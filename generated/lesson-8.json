@@ -4,46 +4,31 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "Lesson 8: Constructing an Action Card",
+      "text": "Lesson 8: Buttons and Actions",
       "size": "medium",
       "weight": "bolder"
     },
     {
-      "type": "ColumnSet",
-      "columns": [
-        {
-          "type": "Column",
-          "width": "auto",
-          "items": [
-            {
-              "type": "TextBlock",
-              "text": "Part 1 - Create a Webhook",
-              "spacing": "None",
-              "weight": "Bolder"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "TextBlock",
-      "text": "Taking what we learned in Lesson 7, in order to construct a card that users can interact with, the next step would be to create a [webhook](https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook) to notify the application when a user submits data from the Card (such as a button was pressed). ",
-      "wrap": true
-    },
-    {
-      "type": "TextBlock",
-      "text": "Keep in mind, only one webhook is needed to receive submission notifications for every card created by your app.",
-      "wrap": true
-    },
-    {
-      "type": "TextBlock",
-      "text": "When configuring the webhook , use `attachmentActions` as the resource:",
-      "wrap": true
-    },
-    {
       "type": "Image",
-      "altText": "",
-      "url": "http://jpshipherd.ngrok.io/images/action-card-webhook.png"
+      "altText": "Button",
+      "url": "https://cardschool.webexbots.cloud/images/buttons.png",
+      "horizontalAlignment": "Center",
+      "size": "large"
+    },
+    {
+      "type": "TextBlock",
+      "text": "So far we have been talking a lot about cards, but what about Buttons? Buttons are one of the ways that users interact with cards. As a designer, you create buttons by adding an Action to your card. Webex Teams supports three types of Actions:\n",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "* `Action.OpenUrl` - When clicked the client will open the user's browser to the specified URL.\n* `Action.ToggleVisibility` - When clicked the client will \"expand\" the card to show a sub-card associated with the Activity. The \"Helpful Resources\" button on this card is an example of this.\n* `Action.Submit` - When clicked, the application that posted a card will get a notification that includes any data associated with the Action along with the data collected from any of the Input elements in the card.\n",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "In the next lesson, we will cover how to configure your application to process these `Action.Sumbit` button press notications, which are called `attachmentAction` events.",
+      "wrap": true
     },
     {
       "type": "Input.ChoiceSet",
@@ -66,7 +51,7 @@
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Next Lesson: Constructing an Action Card",
+              "title": "Next Lesson: Registering for Button Press Events",
               "data": {
                 "nextLesson": true,
                 "lessonIndex": 9
@@ -130,16 +115,28 @@
                     "value": "7"
                   },
                   {
-                    "title": "Lesson 8: Constructing an Action Card",
+                    "title": "Lesson 8: Buttons and Actions",
                     "value": "8"
                   },
                   {
-                    "title": "Lesson 9: Constructing an Action Card",
+                    "title": "Lesson 9: Registering for Button Press Events",
                     "value": "9"
                   },
                   {
-                    "title": "Lesson 10: Displaying Complex Info",
+                    "title": "Lesson 10: Processing Button Events",
                     "value": "10"
+                  },
+                  {
+                    "title": "Lesson 11: Form with Buttons Demo",
+                    "value": "11"
+                  },
+                  {
+                    "title": "Lesson 12: Buttons and Cards Guidelines & Best Practices",
+                    "value": "12"
+                  },
+                  {
+                    "title": "Lesson 13: Displaying Complex Info",
+                    "value": "13"
                   }
                 ]
               },
@@ -172,7 +169,7 @@
           {
             "type": "Image",
             "altText": "",
-            "url": "http://jpshipherd.ngrok.io/images/helpful-resources.jpg",
+            "url": "https://cardschool.webexbots.cloud/images/helpful-resources.jpg",
             "size": "Medium",
             "horizontalAlignment": "Center"
           },

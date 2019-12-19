@@ -10,7 +10,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "The idea for bots is to make work easier. In reality, text-only chat bots can be cumbersome and tedious to work with, especially when interactions get more complex. Users may need to remember complicated commands or respond to a series of questions in order to complete a task.",
+      "text": "Bot are supposed to make work easier. In reality, text-only chat bots can be cumbersome and tedious to work with, especially when interactions get more complex. Users may need to remember complicated commands or respond to a series of questions in order to complete a task.",
       "wrap": true
     },
     {
@@ -21,7 +21,7 @@
     {
       "type": "Image",
       "altText": "text bot",
-      "url": "http://jpshipherd.ngrok.io/images/jira-text-bot.png"
+      "url": "https://cardschool.webexbots.cloud/images/jira-text-bot.png"
     },
     {
       "type": "TextBlock",
@@ -31,7 +31,7 @@
     {
       "type": "Image",
       "altText": "buttons and cards",
-      "url": "http://jpshipherd.ngrok.io/images/jira-card-bot.png"
+      "url": "https://cardschool.webexbots.cloud/images/jira-card-bot.png"
     },
     {
       "type": "TextBlock",
@@ -128,16 +128,28 @@
                     "value": "7"
                   },
                   {
-                    "title": "Lesson 8: Constructing an Action Card",
+                    "title": "Lesson 8: Buttons and Actions",
                     "value": "8"
                   },
                   {
-                    "title": "Lesson 9: Constructing an Action Card",
+                    "title": "Lesson 9: Registering for Button Press Events",
                     "value": "9"
                   },
                   {
-                    "title": "Lesson 10: Displaying Complex Info",
+                    "title": "Lesson 10: Processing Button Events",
                     "value": "10"
+                  },
+                  {
+                    "title": "Lesson 11: Form with Buttons Demo",
+                    "value": "11"
+                  },
+                  {
+                    "title": "Lesson 12: Buttons and Cards Guidelines & Best Practices",
+                    "value": "12"
+                  },
+                  {
+                    "title": "Lesson 13: Displaying Complex Info",
+                    "value": "13"
                   }
                 ]
               },
@@ -170,7 +182,7 @@
           {
             "type": "Image",
             "altText": "",
-            "url": "http://jpshipherd.ngrok.io/images/helpful-resources.jpg",
+            "url": "https://cardschool.webexbots.cloud/images/helpful-resources.jpg",
             "size": "Medium",
             "horizontalAlignment": "Center"
           },

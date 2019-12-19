@@ -148,22 +148,26 @@ function buildCard(contentIndex, lessonContent, actionContent, nextLessonInfo, n
 
     // Add the "Pick Another Lesson" and "More Resources" buttons shared by all cards
     card.actions = actionContent;
+    let populatedCard = card;
 
     // Now that the complete card has been built, lets update any templatized values
-    var template = new ACData.Template(card);
-    var appSource = process.env.APP_SRC_BASE_URL;
-    var cardSource = (appSource[appSource.length - 1] === '/') ?
-      appSource + `${githubGeneratedDir}/lesson-${contentIndex}.json` :
-      appSource + `/${githubGeneratedDir}/lesson-${contentIndex}.json`;
-    var context = new ACData.EvaluationContext();
-    context.$root = {
-      appSourceUrl: appSource,
-      cardSourceUrl: cardSource,
-      askSpaceUrl: process.env.ASK_SPACE_URL,
-      imageHostingUrl: process.env.IMAGE_HOSTING_URL
-    };
-    // "Expand" any templatized components into the final card
-    let populatedCard = template.expand(context);
+    if (nextLessonInfo) {
+      // We dont expand the template for the graduation card until it is rendered
+      var template = new ACData.Template(card);
+      var appSource = process.env.APP_SRC_BASE_URL;
+      var cardSource = (appSource[appSource.length - 1] === '/') ?
+        appSource + `${githubGeneratedDir}/lesson-${contentIndex}.json` :
+        appSource + `/${githubGeneratedDir}/lesson-${contentIndex}.json`;
+      var context = new ACData.EvaluationContext();
+      context.$root = {
+        appSourceUrl: appSource,
+        cardSourceUrl: cardSource,
+        askSpaceUrl: process.env.ASK_SPACE_URL,
+        imageHostingUrl: process.env.IMAGE_HOSTING_URL
+      };
+      // "Expand" any templatized components into the final card
+      populatedCard = template.expand(context);
+    } 
 
     return populatedCard;
   } catch (e) {

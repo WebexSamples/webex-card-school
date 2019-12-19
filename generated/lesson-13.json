@@ -5,34 +5,23 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "Lesson 6: Sending A Card to Webex Teams",
-      "size": "medium",
-      "weight": "bolder",
-      "horizontalAlignment": "center"
+      "text": "Lesson 13: Displaying Complex Info",
+      "size": "Medium",
+      "weight": "Bolder"
     },
     {
       "type": "TextBlock",
-      "text": "To generate a Card in Webex Teams, you'll need to include the card's JSON in a POST request to the [Webex /messages API](https://developer.webex.com/docs/api/v1/messages/create-a-message). ",
+      "text": "Cards can use images, text, and links to external URLs to display complex information.",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "A message request to send a card looks very much like a \"regular\" message request, except that the request body will include an `attachments` attribute which includes data that tells Webex how to render a card.",
+      "text": "Below we will show an example \"card\" that provides information about you.  It uses schema elements such as the \"Container\", \"ColumnSet\", \"Colum\", \"Image\", \"TextBlock\", and \"FactSet\" to present it in a pleasing format",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "The `attachments` field is an array that will include a single object made up of two fields:\n\n* `contentType`: always set to \"application/vnd.microsoft.card.adaptive\"\n\n* `content`: this is your card's design JSON, possibly copied from the designer",
-      "wrap": true
-    },
-    {
-      "type": "TextBlock",
-      "text": "When sending the card data, the Webex message object must also include either a `text` or `markdown` field for use by clients that cannot render cards. This text should convey information about the card's content and provide an alternative method to interact with the card's actions.\n",
-      "wrap": true
-    },
-    {
-      "type": "TextBlock",
-      "text": "Click the button below to see a simple example of a message request body with an attachments field.\n",
+      "text": "It also uses the \"ActionSet\" and  \"Action.OpenUrl\" elements to provide buttons that will link you to more information.  In this case you can see the card's generic JSON, and the custom renderer function which populates it with your information.",
       "wrap": true
     },
     {
@@ -44,7 +33,7 @@
           "actions": [
             {
               "type": "Action.ShowCard",
-              "title": "Show sample Send Card request",
+              "title": "Show the \"Student Info\" card...",
               "card": {
                 "type": "AdaptiveCard",
                 "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
@@ -55,20 +44,92 @@
                     "items": [
                       {
                         "type": "TextBlock",
-                        "text": "```json\n{\n  \"roomId\": \"{{roomId}}\",\n  \"text\": \"This is the text a user will see if the card cannot be rendered.\",\n  \"attachments\": [\n    {\n      \"contentType\": \"application/vnd.microsoft.card.adaptive\",\n        \"content\": {\n          \"type\": \"AdaptiveCard\",\n          \"version\": \"1.0\",\n          \"body\": [\n            {\n              \"type\": \"TextBlock\",\n              \"text\": \"Here is a logo\"\n            },\n            {\n              \"type\": \"Image\",\n              \"url\": \"https://www.ccsmedia.com/media/WebexTeams_Logo-150x150.png\",\n              \"size\": \"small\"\n            }\n         ]\n       }\n    }\n  ]\n}",
+                        "size": "Medium",
+                        "weight": "Bolder",
+                        "text": "Student Info"
+                      },
+                      {
+                        "type": "ColumnSet",
+                        "columns": [
+                          {
+                            "type": "Column",
+                            "items": [
+                              {
+                                "type": "Image",
+                                "id": "avatar",
+                                "style": "Person",
+                                "size": "Small"
+                              }
+                            ],
+                            "width": "auto"
+                          },
+                          {
+                            "type": "Column",
+                            "items": [
+                              {
+                                "type": "TextBlock",
+                                "id": "name",
+                                "weight": "Bolder",
+                                "wrap": true
+                              },
+                              {
+                                "type": "TextBlock",
+                                "id": "email",
+                                "spacing": "None",
+                                "isSubtle": true,
+                                "wrap": true
+                              },
+                              {
+                                "type": "TextBlock",
+                                "id": "organization",
+                                "spacing": "None",
+                                "isSubtle": true,
+                                "wrap": true
+                              }
+                            ],
+                            "width": "stretch"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Container",
+                    "separator": true,
+                    "items": [
+                      {
+                        "type": "TextBlock",
+                        "text": "Class Activity",
                         "wrap": true
                       },
                       {
+                        "type": "FactSet",
+                        "spacing": "None",
+                        "facts": [
+                          {
+                            "title": "Current Lesson:"
+                          },
+                          {
+                            "title": "Requested via:"
+                          },
+                          {
+                            "title": "Previous Lesson:"
+                          },
+                          {
+                            "title": "Date:"
+                          }
+                        ]
+                      },
+                      {
                         "type": "ActionSet",
-                        "horizontalAlignment": "center",
                         "actions": [
                           {
-                            "type": "Action.Submit",
-                            "id": "postMessageButton",
-                            "title": "Try Posting This Message...",
-                            "data": {
-                              "customPostMessage": true
-                            }
+                            "type": "Action.OpenUrl",
+                            "title": "View Card JSON"
+                          },
+                          {
+                            "type": "Action.OpenUrl",
+                            "title": "View Card's Render Code"
                           }
                         ]
                       }
@@ -89,7 +150,7 @@
       "choices": [
         {
           "title": "This hidden choice ensures that myCardIndex is returned with every Action.Submit attachmentAction",
-          "value": "6"
+          "value": "13"
         }
       ]
     },
@@ -102,10 +163,10 @@
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Next Lesson: How This App Sends Cards",
+              "title": "Next Lesson: Congratulations",
               "data": {
                 "nextLesson": true,
-                "lessonIndex": 7
+                "lessonIndex": 14
               }
             }
           ]
@@ -225,7 +286,7 @@
           },
           {
             "type": "TextBlock",
-            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-6.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
+            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-13.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
           },
           {
             "type": "Container",

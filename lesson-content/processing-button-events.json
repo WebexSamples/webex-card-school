@@ -1,0 +1,38 @@
+{
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Processing Button Events",
+      "size": "medium",
+      "weight": "bolder"
+    },
+    {
+      "type": "TextBlock",
+      "text": "The webhook you created for for the `attachmentActions` resource instructs Webex to post to your app when a user clicks an `Action.Submit` button. This POST request will include a JSON payload, however, just like other API resources that contain encrypted data, the webhook's body will not include the form submission. \n",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "To retrieve the sensitive data, your app will use the `data.id` field's value in a [GET /attachment/actions](https://developer.webex.com/docs/api/v1/attachment-actions/create-an-attachment-action) request to retrieve the decrypted attachmentAction, ie:\n",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "`GET /attachment/actions/__data.id__GOES__HERE__`",
+      "wrap": true
+    },
+    {
+      "type": "Image",
+      "altText": "",
+      "url": "{imageHostingUrl}/handling-submissions.png"
+    },
+    {
+      "type": "TextBlock",
+      "text": "The `inputs` field provides any card specific data.  Other fields like `personId`, `messageId` and `roomId` let you correlate which user pressed the button on which card, in which Webex Teams space.",
+      "wrap": true
+    }
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+}

@@ -25,16 +25,26 @@
     "contentFile": "how-this-app-sends-cards.json"
   },
   {
-    "contentFile": "action-card-webhook.json"
+    "contentFile": "buttons.json"
   },
   {
-    "contentFile": "handling-submissions.json"
+    "contentFile": "registering-for-events.json"
+  },
+  {
+    "contentFile": "processing-button-events.json"
+  },
+  {
+    "contentFile": "form-demo.json"
+  },
+  {
+    "contentFile": "guidelines-bestpractices.json"
   },
   {
     "contentFile": "displaying-complex-info.json",
     "customHandlerFile": "displaying-complex-info-handler"
   },
   {
-    "contentFile": "graduation-content.json"
+    "contentFile": "graduate.json",
+    "customHandlerFile": "graduation-handlers"
   }
 ]

@@ -12,7 +12,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "To generate a Card in Webex Teams, you'll need to include the card's JSON in a new request to the [POST /message API](https://developer.webex.com/docs/api/v1/messages/create-a-message). ",
+      "text": "To generate a Card in Webex Teams, you'll need to include the card's JSON in a POST request to the [Webex /messages API](https://developer.webex.com/docs/api/v1/messages/create-a-message). ",
       "wrap": true
     },
     {

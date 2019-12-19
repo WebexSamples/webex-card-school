@@ -1,0 +1,38 @@
+{
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+        {
+            "type": "TextBlock",
+            "text": "Registering for Button Press Events",
+            "size": "medium",
+            "weight": "bolder"
+        },
+        {
+            "type": "TextBlock",
+            "text": "Based on what we learned in in the previous lesson, the next step would be for your app to create a [webhook](https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook) to be notified of any `attachmentAction` events that occur when a user presses an `Action.Submit` button. ",
+            "wrap": true
+        },
+        {
+            "type": "TextBlock",
+            "text": "Keep in mind, only one webhook is needed to receive submission notifications for every card created by your app.  A best practice is to register for this when your app is statring up, and to remove it when your app is shut down.",
+            "wrap": true
+        },
+        {
+            "type": "TextBlock",
+            "text": "When building your request body for the POST request to the /webhooks API, use `attachmentActions` as the `resource`.  The only event for this resource is `created` so you can specify that for the `events` field",
+            "wrap": true
+        },
+        {
+            "type": "Image",
+            "altText": "",
+            "url": "{imageHostingUrl}/action-card-webhook.png"
+        },
+        {
+          "type": "TextBlock",
+          "text": "If you have an existing bot, you probably are already registering for messaging related webhooks.  Simply add an additional call to the /webhooks API to ask for the `attachmentActions` as well.",
+          "wrap": true
+      }
+    ],
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+}

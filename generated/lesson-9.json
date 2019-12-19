@@ -4,46 +4,34 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "Lesson 9: Constructing an Action Card",
+      "text": "Lesson 9: Registering for Button Press Events",
       "size": "medium",
       "weight": "bolder"
     },
     {
-      "type": "ColumnSet",
-      "columns": [
-        {
-          "type": "Column",
-          "width": "auto",
-          "items": [
-            {
-              "type": "TextBlock",
-              "text": "Part 2 - Handling Submissions",
-              "spacing": "None",
-              "weight": "Bolder"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "type": "TextBlock",
-      "text": "The webhook you created for for the *attachmentActions* resource will alert your app when a user submits a respsonse by sending a JSON payload. However, just like other API resources that contain encrypted data, the webhook's body will not include the form submission. \n",
+      "text": "Based on what we learned in in the previous lesson, the next step would be for your app to create a [webhook](https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook) to be notified of any `attachmentAction` events that occur when a user presses an `Action.Submit` button. ",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "To retrieve the sensitive data, your app will use the *data.id* property in a GET request to retrieve the attachment action:\n",
+      "text": "Keep in mind, only one webhook is needed to receive submission notifications for every card created by your app.  A best practice is to register for this when your app is statring up, and to remove it when your app is shut down.",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "`GET /attachment/actions/__data.id__GOES__HERE__`",
+      "text": "When building your request body for the POST request to the /webhooks API, use `attachmentActions` as the `resource`.  The only event for this resource is `created` so you can specify that for the `events` field",
       "wrap": true
     },
     {
       "type": "Image",
       "altText": "",
-      "url": "http://jpshipherd.ngrok.io/images/handling-submissions.png"
+      "url": "https://cardschool.webexbots.cloud/images/action-card-webhook.png"
+    },
+    {
+      "type": "TextBlock",
+      "text": "If you have an existing bot, you probably are already registering for messaging related webhooks.  Simply add an additional call to the /webhooks API to ask for the `attachmentActions` as well.",
+      "wrap": true
     },
     {
       "type": "Input.ChoiceSet",
@@ -66,7 +54,7 @@
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Next Lesson: Displaying Complex Info",
+              "title": "Next Lesson: Processing Button Events",
               "data": {
                 "nextLesson": true,
                 "lessonIndex": 10
@@ -130,16 +118,28 @@
                     "value": "7"
                   },
                   {
-                    "title": "Lesson 8: Constructing an Action Card",
+                    "title": "Lesson 8: Buttons and Actions",
                     "value": "8"
                   },
                   {
-                    "title": "Lesson 9: Constructing an Action Card",
+                    "title": "Lesson 9: Registering for Button Press Events",
                     "value": "9"
                   },
                   {
-                    "title": "Lesson 10: Displaying Complex Info",
+                    "title": "Lesson 10: Processing Button Events",
                     "value": "10"
+                  },
+                  {
+                    "title": "Lesson 11: Form with Buttons Demo",
+                    "value": "11"
+                  },
+                  {
+                    "title": "Lesson 12: Buttons and Cards Guidelines & Best Practices",
+                    "value": "12"
+                  },
+                  {
+                    "title": "Lesson 13: Displaying Complex Info",
+                    "value": "13"
                   }
                 ]
               },
@@ -172,7 +172,7 @@
           {
             "type": "Image",
             "altText": "",
-            "url": "http://jpshipherd.ngrok.io/images/helpful-resources.jpg",
+            "url": "https://cardschool.webexbots.cloud/images/helpful-resources.jpg",
             "size": "Medium",
             "horizontalAlignment": "Center"
           },

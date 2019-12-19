@@ -15,7 +15,7 @@
       "altText": "Picture of a school",
       "url": "{imageHostingUrl}/school.png",
       "horizontalAlignment": "Center",
-      "size": "medium"
+      "size": "large"
     },
     {
       "type": "TextBlock",

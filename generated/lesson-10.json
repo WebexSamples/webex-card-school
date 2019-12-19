@@ -1,146 +1,37 @@
 {
-  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "type": "AdaptiveCard",
   "version": "1.0",
   "body": [
     {
       "type": "TextBlock",
-      "text": "Lesson 10: Displaying Complex Info",
-      "size": "Medium",
-      "weight": "Bolder"
+      "text": "Lesson 10: Processing Button Events",
+      "size": "medium",
+      "weight": "bolder"
     },
     {
       "type": "TextBlock",
-      "text": "Cards can use images, text, and links to external URLs to display complex information.",
+      "text": "The webhook you created for for the `attachmentActions` resource instructs Webex to post to your app when a user clicks an `Action.Submit` button. This POST request will include a JSON payload, however, just like other API resources that contain encrypted data, the webhook's body will not include the form submission. \n",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "Below we will show an example \"card\" that provides information about you.  It uses schema elements such as the \"Container\", \"ColumnSet\", \"Colum\", \"Image\", \"TextBlock\", and \"FactSet\" to present it in a pleasing format",
+      "text": "To retrieve the sensitive data, your app will use the `data.id` field's value in a [GET /attachment/actions](https://developer.webex.com/docs/api/v1/attachment-actions/create-an-attachment-action) request to retrieve the decrypted attachmentAction, ie:\n",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "It also uses the \"ActionSet\" and  \"Action.OpenUrl\" elements to provide buttons that will link you to more information.  In this case you can see the card's generic JSON, and the custom renderer function which populates it with your information.",
+      "text": "`GET /attachment/actions/__data.id__GOES__HERE__`",
       "wrap": true
     },
     {
-      "type": "Container",
-      "items": [
-        {
-          "type": "ActionSet",
-          "horizontalAlignment": "Center",
-          "actions": [
-            {
-              "type": "Action.ShowCard",
-              "title": "Show the \"Student Info\" card...",
-              "card": {
-                "type": "AdaptiveCard",
-                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-                "version": "1.2",
-                "body": [
-                  {
-                    "type": "Container",
-                    "items": [
-                      {
-                        "type": "TextBlock",
-                        "size": "Medium",
-                        "weight": "Bolder",
-                        "text": "Student Info"
-                      },
-                      {
-                        "type": "ColumnSet",
-                        "columns": [
-                          {
-                            "type": "Column",
-                            "items": [
-                              {
-                                "type": "Image",
-                                "id": "avatar",
-                                "style": "Person",
-                                "size": "Small"
-                              }
-                            ],
-                            "width": "auto"
-                          },
-                          {
-                            "type": "Column",
-                            "items": [
-                              {
-                                "type": "TextBlock",
-                                "id": "name",
-                                "weight": "Bolder",
-                                "wrap": true
-                              },
-                              {
-                                "type": "TextBlock",
-                                "id": "email",
-                                "spacing": "None",
-                                "isSubtle": true,
-                                "wrap": true
-                              },
-                              {
-                                "type": "TextBlock",
-                                "id": "organization",
-                                "spacing": "None",
-                                "isSubtle": true,
-                                "wrap": true
-                              }
-                            ],
-                            "width": "stretch"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "Container",
-                    "separator": true,
-                    "items": [
-                      {
-                        "type": "TextBlock",
-                        "text": "Class Activity",
-                        "wrap": true
-                      },
-                      {
-                        "type": "FactSet",
-                        "spacing": "None",
-                        "facts": [
-                          {
-                            "title": "Current Lesson:"
-                          },
-                          {
-                            "title": "Requested via:"
-                          },
-                          {
-                            "title": "Previous Lesson:"
-                          },
-                          {
-                            "title": "Date:"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "ActionSet",
-                        "actions": [
-                          {
-                            "type": "Action.OpenUrl",
-                            "title": "View Card JSON"
-                          },
-                          {
-                            "type": "Action.OpenUrl",
-                            "title": "View Card's Render Code"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      ]
+      "type": "Image",
+      "altText": "",
+      "url": "https://cardschool.webexbots.cloud/images/handling-submissions.png"
+    },
+    {
+      "type": "TextBlock",
+      "text": "The `inputs` field provides any card specific data.  Other fields like `personId`, `messageId` and `roomId` let you correlate which user pressed the button on which card, in which Webex Teams space.",
+      "wrap": true
     },
     {
       "type": "Input.ChoiceSet",
@@ -163,7 +54,7 @@
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Next Lesson: Congratulations Graduate!",
+              "title": "Next Lesson: Form with Buttons Demo",
               "data": {
                 "nextLesson": true,
                 "lessonIndex": 11
@@ -174,6 +65,7 @@
       ]
     }
   ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "actions": [
     {
       "type": "Action.ShowCard",
@@ -226,16 +118,28 @@
                     "value": "7"
                   },
                   {
-                    "title": "Lesson 8: Constructing an Action Card",
+                    "title": "Lesson 8: Buttons and Actions",
                     "value": "8"
                   },
                   {
-                    "title": "Lesson 9: Constructing an Action Card",
+                    "title": "Lesson 9: Registering for Button Press Events",
                     "value": "9"
                   },
                   {
-                    "title": "Lesson 10: Displaying Complex Info",
+                    "title": "Lesson 10: Processing Button Events",
                     "value": "10"
+                  },
+                  {
+                    "title": "Lesson 11: Form with Buttons Demo",
+                    "value": "11"
+                  },
+                  {
+                    "title": "Lesson 12: Buttons and Cards Guidelines & Best Practices",
+                    "value": "12"
+                  },
+                  {
+                    "title": "Lesson 13: Displaying Complex Info",
+                    "value": "13"
                   }
                 ]
               },
@@ -268,7 +172,7 @@
           {
             "type": "Image",
             "altText": "",
-            "url": "http://jpshipherd.ngrok.io/images/helpful-resources.jpg",
+            "url": "https://cardschool.webexbots.cloud/images/helpful-resources.jpg",
             "size": "Medium",
             "horizontalAlignment": "Center"
           },

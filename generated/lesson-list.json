@@ -41,24 +41,40 @@
     "title": "How This App Sends Cards"
   },
   {
-    "contentFile": "action-card-webhook.json",
+    "contentFile": "buttons.json",
     "index": 8,
-    "title": "Constructing an Action Card"
+    "title": "Buttons and Actions"
   },
   {
-    "contentFile": "handling-submissions.json",
+    "contentFile": "registering-for-events.json",
     "index": 9,
-    "title": "Constructing an Action Card"
+    "title": "Registering for Button Press Events"
+  },
+  {
+    "contentFile": "processing-button-events.json",
+    "index": 10,
+    "title": "Processing Button Events"
+  },
+  {
+    "contentFile": "form-demo.json",
+    "index": 11,
+    "title": "Form with Buttons Demo"
+  },
+  {
+    "contentFile": "guidelines-bestpractices.json",
+    "index": 12,
+    "title": "Buttons and Cards Guidelines & Best Practices"
   },
   {
     "contentFile": "displaying-complex-info.json",
     "customHandlerFile": "displaying-complex-info-handler",
-    "index": 10,
+    "index": 13,
     "title": "Displaying Complex Info"
   },
   {
-    "contentFile": "graduation-content.json",
-    "index": 11,
-    "title": "Congratulations Graduate!"
+    "contentFile": "graduate.json",
+    "customHandlerFile": "graduation-handlers",
+    "index": 14,
+    "title": "Congratulations"
   }
 ]

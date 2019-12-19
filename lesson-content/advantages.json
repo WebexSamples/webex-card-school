@@ -10,7 +10,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "The idea for bots is to make work easier. In reality, text-only chat bots can be cumbersome and tedious to work with, especially when interactions get more complex. Users may need to remember complicated commands or respond to a series of questions in order to complete a task.",
+      "text": "Bot are supposed to make work easier. In reality, text-only chat bots can be cumbersome and tedious to work with, especially when interactions get more complex. Users may need to remember complicated commands or respond to a series of questions in order to complete a task.",
       "wrap": true
     },
     {

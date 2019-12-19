@@ -1,0 +1,35 @@
+{
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+        {
+            "type": "TextBlock",
+            "text": "Buttons and Actions",
+            "size": "medium",
+            "weight": "bolder"
+        },
+        {
+            "type": "Image",
+            "altText": "Button",
+            "url": "{imageHostingUrl}/buttons.png",
+            "horizontalAlignment": "Center",
+            "size": "large"
+        },
+        {
+            "type": "TextBlock",
+            "text": "So far we have been talking a lot about cards, but what about Buttons? Buttons are one of the ways that users interact with cards. As a designer, you create buttons by adding an Action to your card. Webex Teams supports three types of Actions:\n",
+            "wrap": true
+        },
+        {
+            "type": "TextBlock",
+            "text": "* `Action.OpenUrl` - When clicked the client will open the user's browser to the specified URL.\n* `Action.ToggleVisibility` - When clicked the client will \"expand\" the card to show a sub-card associated with the Activity. The \"Helpful Resources\" button on this card is an example of this.\n* `Action.Submit` - When clicked, the application that posted a card will get a notification that includes any data associated with the Action along with the data collected from any of the Input elements in the card.\n",
+            "wrap": true
+        },
+        {
+            "type": "TextBlock",
+            "text": "In the next lesson, we will cover how to configure your application to process these `Action.Sumbit` button press notications, which are called `attachmentAction` events.",
+            "wrap": true
+        }
+    ],
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+}

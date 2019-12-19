@@ -1,25 +1,33 @@
 {
-  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "type": "AdaptiveCard",
   "version": "1.0",
   "body": [
     {
       "type": "TextBlock",
-      "text": "Congratulations Graduate!",
-      "size": "Medium",
-      "weight": "Bolder",
+      "text": "Lesson 12: Buttons and Cards Guidelines & Best Practices",
+      "size": "medium",
+      "weight": "bolder"
+    },
+    {
+      "type": "Image",
+      "altText": "",
+      "url": "https://cardschool.webexbots.cloud/images/guidelines-bestpractices.jpg",
       "horizontalAlignment": "Center"
     },
     {
       "type": "TextBlock",
-      "text": "If you worked your way through all the lessons, congratulations, you are now a graduate of Webex Teams Buttons and Cards School.  Here is a certificate suitable for framing:",
+      "text": "* Webex Teams supports Adaptive Cards 1.1.\n* All card elements are available for use except *Media*.\n* Includes all card properties except *backgroundImage*, *iconUrl*, and *speak*.\n* Messages with cards may include up to 10 images.\n* Only one card can be sent per request.\n* The card's content cannot be changed after it's created. ",
       "wrap": true
     },
     {
-      "type": "Image",
-      "altText": "Picture of a diploma",
-      "url": "http://jpshipherd.ngrok.io/images/diploma.png",
-      "horizontalAlignment": "Center"
+      "type": "TextBlock",
+      "text": "* Since the content  of a Card cannot be changed after it's created, you could instead remove the card and post a message with the result of the action. To remove a card, simply delete the message that contains the card attachment. The card will be removed from the space. \n",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "* In cases where deleting the card is not feasible, such as in a group space where you want multiple people to interact with the Card, you could send each user a 1:1 message after they've interacted with it.\n",
+      "wrap": true
     },
     {
       "type": "Input.ChoiceSet",
@@ -37,124 +45,165 @@
       "type": "Container",
       "items": [
         {
-          "type": "TextBlock",
-          "text": "Do you have questions, comments or suggestions?\n\nWe'd love to get your feedback on this bot or any aspect of the Webex Teams Buttons and Cards feature.",
-          "wrap": true
-        },
-        {
-          "type": "Input.Text",
-          "id": "feedback",
-          "isMultiline": true,
-          "placeholder": "Enter your feedback"
-        },
-        {
           "type": "ActionSet",
+          "horizontalAlignment": "Center",
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Send Feedback",
-              "data": {}
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "Container",
-      "items": [
-        {
-          "type": "ActionSet",
-          "actions": [
-            {
-              "type": "Action.ShowCard",
-              "title": "Review a Previous Lesson",
-              "card": {
-                "type": "AdaptiveCard",
-                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-                "body": [
-                  {
-                    "type": "Container",
-                    "items": [
-                      {
-                        "type": "TextBlock",
-                        "text": "Available Lessons:"
-                      },
-                      {
-                        "type": "Input.ChoiceSet",
-                        "id": "jumpToLessonIndex",
-                        "choices": [
-                          {
-                            "title": "Introduction",
-                            "value": "0"
-                          },
-                          {
-                            "title": "Lesson 1: What is a Card?",
-                            "value": "1"
-                          },
-                          {
-                            "title": "Lesson 2: Advantages of Using Cards",
-                            "value": "2"
-                          },
-                          {
-                            "title": "Lesson 3: Card Specifications",
-                            "value": "3"
-                          },
-                          {
-                            "title": "Lesson 4: How Cards are Sent",
-                            "value": "4"
-                          },
-                          {
-                            "title": "Lesson 5: Sending A Card",
-                            "value": "5"
-                          },
-                          {
-                            "title": "Lesson 6: Designing a Card",
-                            "value": "6"
-                          },
-                          {
-                            "title": "Lesson 7: Webex Card Designer Tool",
-                            "value": "7"
-                          },
-                          {
-                            "title": "Lesson 8: Constructing a Card",
-                            "value": "8"
-                          },
-                          {
-                            "title": "Lesson 9: Constructing an Action Card",
-                            "value": "9"
-                          },
-                          {
-                            "title": "Lesson 10: Constructing an Action Card",
-                            "value": "10"
-                          },
-                          {
-                            "title": "Lesson 11: Displaying Complex Info",
-                            "value": "11"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "ActionSet",
-                        "actions": [
-                          {
-                            "type": "Action.Submit",
-                            "title": "Go To Lesson!",
-                            "id": "gotoLesson",
-                            "data": {
-                              "nextLesson": false,
-                              "pickAnotherLesson": true
-                            }
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
+              "title": "Next Lesson: Displaying Complex Info",
+              "data": {
+                "nextLesson": true,
+                "lessonIndex": 13
               }
             }
           ]
         }
       ]
+    }
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "actions": [
+    {
+      "type": "Action.ShowCard",
+      "title": "Pick Another Lesson",
+      "card": {
+        "type": "AdaptiveCard",
+        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+        "body": [
+          {
+            "type": "Container",
+            "items": [
+              {
+                "type": "TextBlock",
+                "text": "Available Lessons:"
+              },
+              {
+                "type": "Input.ChoiceSet",
+                "id": "jumpToLessonIndex",
+                "choices": [
+                  {
+                    "title": "Introduction",
+                    "value": "0"
+                  },
+                  {
+                    "title": "Lesson 1: What is a Card?",
+                    "value": "1"
+                  },
+                  {
+                    "title": "Lesson 2: Advantages of Using Cards",
+                    "value": "2"
+                  },
+                  {
+                    "title": "Lesson 3: Card Specifications",
+                    "value": "3"
+                  },
+                  {
+                    "title": "Lesson 4: Designing a Card",
+                    "value": "4"
+                  },
+                  {
+                    "title": "Lesson 5: Webex Card Designer Tool",
+                    "value": "5"
+                  },
+                  {
+                    "title": "Lesson 6: Sending A Card to Webex Teams",
+                    "value": "6"
+                  },
+                  {
+                    "title": "Lesson 7: How This App Sends Cards",
+                    "value": "7"
+                  },
+                  {
+                    "title": "Lesson 8: Buttons and Actions",
+                    "value": "8"
+                  },
+                  {
+                    "title": "Lesson 9: Registering for Button Press Events",
+                    "value": "9"
+                  },
+                  {
+                    "title": "Lesson 10: Processing Button Events",
+                    "value": "10"
+                  },
+                  {
+                    "title": "Lesson 11: Form with Buttons Demo",
+                    "value": "11"
+                  },
+                  {
+                    "title": "Lesson 12: Buttons and Cards Guidelines & Best Practices",
+                    "value": "12"
+                  },
+                  {
+                    "title": "Lesson 13: Displaying Complex Info",
+                    "value": "13"
+                  }
+                ]
+              },
+              {
+                "type": "ActionSet",
+                "actions": [
+                  {
+                    "type": "Action.Submit",
+                    "title": "Go To Lesson!",
+                    "id": "gotoLesson",
+                    "data": {
+                      "nextLesson": false,
+                      "pickAnotherLesson": true
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "Action.ShowCard",
+      "title": "Helpful Resources",
+      "card": {
+        "type": "AdaptiveCard",
+        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+        "body": [
+          {
+            "type": "Image",
+            "altText": "",
+            "url": "https://cardschool.webexbots.cloud/images/helpful-resources.jpg",
+            "size": "Medium",
+            "horizontalAlignment": "Center"
+          },
+          {
+            "type": "TextBlock",
+            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-12.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
+          },
+          {
+            "type": "Container",
+            "items": [
+              {
+                "type": "TextBlock",
+                "text": "Do you have questions, comments or suggestions?\n\nWe'd love to get your feedback on this bot or any aspect of the Webex Teams Buttons and Cards feature.",
+                "wrap": true
+              },
+              {
+                "type": "Input.Text",
+                "id": "feedback",
+                "isMultiline": true,
+                "placeholder": "Enter your feedback"
+              },
+              {
+                "type": "ActionSet",
+                "actions": [
+                  {
+                    "type": "Action.Submit",
+                    "title": "Send Feedback",
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }

@@ -65,7 +65,9 @@ class LessonHandler {
         .catch((e) => this.logger.error(`Failed handling a "Send Feedback: ${e.message}`));
     } else {
       bot.reply(attachmentAction,
-        `Unhandled attachmentAction:\n${JSON.stringify(attachmentAction, null, 2)}`)
+        `This bot doesn't currently do any logic for the button that you pressed, but here ` +
+        ` is the body of the attachmentAction so you can see what your app would need to process:\n\n` +
+        '```json\n' + `${JSON.stringify(attachmentAction, null, 2)}`)
         .catch((e) => this.logger.error(`Failed handling a "Send Feedback: ${e.message}`));
     }
   };

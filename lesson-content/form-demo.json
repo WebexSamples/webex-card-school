@@ -1,0 +1,120 @@
+{
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Form with Buttons Demo",
+      "size": "medium",
+      "weight": "bolder"
+    },
+    {
+      "type": "TextBlock",
+      "text": "Let's put everything we've learned into a simple form.   Below is an `Action.ToggleVisibility` button that will display a Form.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "The form is made up of some of the most common ways to collect user input, and an `Action.Submit` button.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "When you press the \"Submit\" button, the app logic that controls this bot, it will post a new message here with the unencrypted `attachmentAction` payload.   This will give you a good idea of the type of data that your app will need to process.\n",
+      "wrap": true
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "ActionSet",
+          "horizontalAlignment": "Center",
+          "actions": [
+            {
+              "type": "Action.ShowCard",
+              "title": "Show the Form Demo...",
+              "card": {
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "type": "AdaptiveCard",
+                "version": "1.0",
+                "body": [
+                  {
+                    "type": "TextBlock",
+                    "text": "Some ways to collect user input",
+                    "size": "medium",
+                    "weight": "bolder"
+                  },
+                                {
+                    "type": "TextBlock",
+                    "text": "This **Input.Text** element collects some free from text.  Designers can use attributes like `isMutiline`, `maxLength` and `placeholder` to shape the way that users enter text in a form.",
+                    "wrap": true
+                  },
+                  {
+                    "type": "Input.Text",
+                    "placeholder": "Text Field",
+                    "style": "text",
+                    "maxLength": 0,
+                    "id": "TextFieldVal"
+                  },
+                  {
+                    "type": "TextBlock",
+                    "text": "This **Input.Number** element collects a number.  Designers can use the `max`, `min` and `placeholder` attributes to control the input options.",
+                    "wrap": true
+                  },
+                  {
+                    "type": "Input.Number",
+                    "placeholder": "Number",
+                    "min": -5,
+                    "max": 5,
+                    "id": "NumberVal"
+                  },
+                  {
+                    "type": "TextBlock",
+                    "text": "The **Input.ChoiceSet** element provides a variety of ways that users can choose from a set of options.   This is the default view, but designers can use the `style`, `isMutiSelect` to change the way it works.  The choices are defined in an array attribute called `choices`.",
+                    "wrap": true
+                  },
+                  {
+                    "type": "Input.ChoiceSet",
+                    "id": "ColorChoiceVal",
+                    "value": "Red",
+                    "choices": [
+                      {
+                        "title": "Red",
+                        "value": "Red"
+                      },
+                      {
+                        "title": "Blue",
+                        "value": "Blue"
+                      },
+                      {
+                        "title": "Green",
+                        "value": "Green"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Input.Toggle",
+                    "title": "This Input.Toggle element gets a true/false input.",
+                    "id": "Toggle",
+                    "wrap": true,
+                    "value": "false"
+                  }
+                ],
+                "actions": [
+                  {
+                    "type": "Action.Submit",
+                    "title": "Submit",
+                    "data": {
+                      "formDemoAction": "Submit"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+}

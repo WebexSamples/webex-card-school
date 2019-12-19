@@ -1,0 +1,49 @@
+{
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+        {
+            "type": "TextBlock",
+            "text": "Congratulations",
+            "size": "medium",
+            "weight": "bolder"
+        },
+        {
+            "type": "ImageSet",
+            "images": [
+                {
+                    "type": "Image",
+                    "size": "Small",
+                    "altText": "Cap",
+                    "url": "{imageHostingUrl}/graduate.jpg",
+                    "horizontalAlignment": "Left",
+                    "height": "stretch"
+                },
+                {
+                    "type": "Image",
+                    "size": "Small",
+                    "altText": "You",
+                    "url": "{avatar}",
+                    "height": "stretch",
+                    "horizontalAlignment": "Right"
+                }
+            ]
+        },
+        {
+            "type": "TextBlock",
+            "text": "This card certifies that {name}, has satisfactorily completed the Webex Buttons and Cards School, and is entitled to use this feature for updating or building new bots & integrations.",
+            "wrap": true,
+            "color": "Good",
+            "size": "Medium",
+            "horizontalAlignment": "Center"
+        },
+        {
+            "type": "Image",
+            "altText": "Gold Seal",
+            "horizontalAlignment": "Right",
+            "url": "{imageHostingUrl}/gold-seal.png",
+            "size": "Small"
+        }
+    ],
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+}

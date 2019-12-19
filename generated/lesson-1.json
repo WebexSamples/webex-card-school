@@ -11,7 +11,7 @@
     {
       "type": "Image",
       "altText": "",
-      "url": "http://jpshipherd.ngrok.io/images/what-is-a-card.png"
+      "url": "https://cardschool.webexbots.cloud/images/what-is-a-card.png"
     },
     {
       "type": "TextBlock",
@@ -118,16 +118,28 @@
                     "value": "7"
                   },
                   {
-                    "title": "Lesson 8: Constructing an Action Card",
+                    "title": "Lesson 8: Buttons and Actions",
                     "value": "8"
                   },
                   {
-                    "title": "Lesson 9: Constructing an Action Card",
+                    "title": "Lesson 9: Registering for Button Press Events",
                     "value": "9"
                   },
                   {
-                    "title": "Lesson 10: Displaying Complex Info",
+                    "title": "Lesson 10: Processing Button Events",
                     "value": "10"
+                  },
+                  {
+                    "title": "Lesson 11: Form with Buttons Demo",
+                    "value": "11"
+                  },
+                  {
+                    "title": "Lesson 12: Buttons and Cards Guidelines & Best Practices",
+                    "value": "12"
+                  },
+                  {
+                    "title": "Lesson 13: Displaying Complex Info",
+                    "value": "13"
                   }
                 ]
               },
@@ -160,7 +172,7 @@
           {
             "type": "Image",
             "altText": "",
-            "url": "http://jpshipherd.ngrok.io/images/helpful-resources.jpg",
+            "url": "https://cardschool.webexbots.cloud/images/helpful-resources.jpg",
             "size": "Medium",
             "horizontalAlignment": "Center"
           },
