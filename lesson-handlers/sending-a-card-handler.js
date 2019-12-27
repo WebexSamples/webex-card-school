@@ -21,7 +21,7 @@ class SendingACardHandlers {
     bot.sendCard(card, "If you see this your client cannot render our Introduction Card.   Try using a different Webex Teams client with this bot.")
       .then((message) => {
         if ('id' in message) {
-          bot.framework.mongoStore.store(bot, 'activeCardMessageId', message.id);
+          bot.store('activeCardMessageId', message.id);
         }
       })
       .catch((err) => {

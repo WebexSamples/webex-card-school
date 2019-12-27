@@ -15,6 +15,9 @@ var webhook = require('webex-node-bot-framework/webhook');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(express.static('public'));
+
 var _ = require('lodash');
 
 // When running locally read environment variables from a .env file
@@ -26,6 +29,22 @@ if (process.env.DOCKER_BUILD) {
   logger.info('\n\n\nSERVICE RESTARTING...\n\n\n');
   logger.info(`Starting app in docker container built: ${process.env.DOCKER_BUILD}`);
 }
+
+// The admin user or 'admin space' get extra notifications about bot usage
+// If both are set we prefer the space
+let adminEmail = '';
+let adminSpaceId = '';
+let adminsBot = null;
+let botEmail = 'the bot';
+if (process.env.METRICS_ROOM_ID) {
+  adminSpaceId = process.env.METRICS_ROOM_ID;
+} else if (process.env.ADMIN_EMAIL) {
+  adminEmail = process.env.ADMIN_EMAIL;
+} else {
+  logger.warn('No METRICS_ROOM_ID or ADMIN_EMAIL environment variable. \n' +
+    'Will not notify anyone about bot activity');
+}
+
 
 // Configure the bot framework for the environment we are running in
 var frameworkConfig = {};
@@ -43,6 +62,36 @@ if ((process.env.WEBHOOK) && (process.env.TOKEN) &&
   process.exit();
 }
 
+// This bot uses the framework's Mongo persistent storage driver
+// Read in the configuration and get it ready to initialize
+var mConfig = {};
+if (process.env.MONGO_URI) {
+  mConfig.mongoUri = process.env.MONGO_URI;
+  if (process.env.MONGO_BOT_STORE) { mConfig.storageCollectionName = process.env.MONGO_BOT_STORE; }
+  if (process.env.MONGO_BOT_METRICS) { mConfig.metricsCollectionName = process.env.MONGO_BOT_METRICS; }
+  if (process.env.MONGO_SINGLE_INSTANCE_MODE) { mConfig.singleInstance = true; }
+  // Setup our default persistent config storage
+  // That will be assigned to any newly created bots
+  frameworkConfig.initBotStorageData = {
+    lessonState: {
+      currentLessonIndex: 0,
+      previousLessonIndex: 0,
+      totalLessons: 0
+    }
+  };
+} else {
+  console.error('The mongo storage driver requires the following environment variables:\n' +
+    '* MONGO_URI -- mongo connection URL see https://docs.mongodb.com/manual/reference/connection-string' +
+    '\n\nThe following optional environment variables will also be used if set:\n' +
+    '* MONGO_BOT_STORE -- name of collection for bot storage elements (will be created if does not exist).  Will use "webexBotFramworkStorage" if not set\n' +
+    '* MONGO_BOT_METRICS -- name of a collection to write bot metrics to (will be created if does not exist). bot.writeMetric() calls will fail if not set\n' +
+    '* MONGO_INIT_STORAGE -- stringified ojbect aassigned as the default startup config if non exists yet\n' +
+    '* MONGO_SINGLE_INSTANCE_MODE -- Optimize lookups speeds when only a single bot server instance is running\n\n' +
+    'Also note, the mongodb module v3.4 or higher must be available (this is not included in the framework\'s default dependencies)');
+  logger.error('Running without having these set will mean that there will be no persistent storage \n' +
+    'across server restarts, and that no metrics will be written.  Generally this is a bad thing.');
+}
+
 // The beta-mode module allows us to restrict our bot to spaces
 // that include a specified list of users
 let betaUsers = [];
@@ -54,57 +103,30 @@ if (process.env.EFT_USER_EMAILS) {
   }
 }
 
-
-// The admin will get extra notifications about bot usage
-let adminEmail = '';
-let adminSpaceId = '';
-let adminsBot = null;
-let botEmail = 'the bot';
-if (process.env.METRICS_ROOM_ID) {
-  adminSpaceId = process.env.METRICS_ROOM_ID;
-}
-else if (process.env.ADMIN_EMAIL) {
-  adminEmail = process.env.ADMIN_EMAIL;
-} else {
-  logger.error('No ADMIN_EMAIL environment variable.  Will not notify author about bot activity');
-}
-if ((process.env.BOTNAME) && (process.env.BOT_EMAIL)) {
-  // TODO see what happens if this never happens
-  botName = process.env.BOTNAME;
-  botEmail = process.env.BOT_EMAIL;
-}
-
-// Read the tables we will write metrics data into
-let metricsTables = [];
-let metricsTable = '';
-if (process.env.MONGO_BOT_METRICS) {
-  metricsTable = process.env.MONGO_BOT_METRICS;
-  metricsTables.push(metricsTable);
-}
-
-// Setup our persistent config storage
-let defaultStoredConfig = {
-  currentLessonIndex: 0,
-  previousLessonIndex: 0
-};
-let MongoStore = require('./storage/mongo.js');
-let mongoStore = new MongoStore(logger, defaultStoredConfig);
-
-
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(express.static('public'));
-
-// init framework
-var framework = new Framework(frameworkConfig);
-// TODO, ideally we would somehow wait until DB is initialized before starting the framework
-framework.mongoStore = mongoStore;
-framework.start()
-  .catch((e) => {
-    logger.error(`Framework.start() failed: ${e.message}.  Exiting`);
-    process.exit(-1);
-  });
+// Wow, that was as lot of setup!
+// Now kick everything off
+let framework = new Framework(frameworkConfig);
 framework.messageFormat = 'markdown';
 logger.info("Starting framework, please wait...");
+if (typeof mConfig.mongoUri === 'string') {
+  // Initialize our mongo storage driver and the the bot framework.
+  //let MongoStore = require('webex-node=bot-framework/storage/mongo');
+  let MongoStore = require('./node_modules/webex-node-bot-framework/storage/mongo.js');
+  let mongoStore = new MongoStore(mConfig);
+  mongoStore.initialize()
+    .then(() => framework.storageDriver(mongoStore))
+    .then(() => framework.start())
+    .catch((e) => {
+      logger.error(`Initialization with mongo storage failed: ${e.message}`)
+      process.exit(-1);
+    });
+} else {
+  framework.start()
+    .catch((e) => {
+      logger.error(`Framework.start() failed: ${e.message}.  Exiting`);
+      process.exit(-1);
+    });
+}
 
 // Read in the lesson cards we'll be using
 // This data is generated via `npm run build`
@@ -128,24 +150,39 @@ try {
       let CustomHandlers = require(`./lesson-handlers/${lessons[i].customHandlerFile}`);
       customHandlers = new CustomHandlers();
     }
-    cardArray.push(new LessonHandler(cardJson, logger, lessons, lessons[i], metricsTables, customHandlers));
+    cardArray.push(new LessonHandler(cardJson, logger, lessons, lessons[i], customHandlers));
   }
 } catch (e) {
   console.error(`During initiatlization error reading in card data: ${e.message}`);
   process.exit(-1);
 }
 
+/*
+ * The "setup" is now complete.   The reminder of this app logic
+ * is all about responding to events coming from the framework
+ *
+ */
+
+// Called after the framework has registerd all necessary webhooks
+// and discovered all the existing spaces that our bot is already in
 framework.on("initialized", function () {
   logger.info("Framework initialized successfully! [Press CTRL-C to quit]");
 });
 
 
+// Called when the framework creates a new bot instance for us
+// At startup, (before the framework is fully initialized), this
+// is called when the framework discovers an existing space that
+// our bot is in.
+// After initialization, if our bot is added to a new space the 
+// framework processes the membership:created event, creates a
+// new bot object and generates a new spawn event.
 framework.on('spawn', async function (bot, id, addedById) {
-  // Save initialization status when this handler was first called
-  let initiatlized = framework.initialized;
+  // Save framework init status when this handler was first called
+  let initialized = framework.initialized;
   let addedByPerson = null;
   // Notify the admin if the bot has been added to a new space
-  if (!initiatlized) {
+  if (!initialized) {
     // An instance of the bot has been added to a room
     logger.info(`Framework startup found bot in existing room: ${bot.room.title}`);
   } else {
@@ -159,7 +196,7 @@ framework.on('spawn', async function (bot, id, addedById) {
   try {
     // Ideally we fetch any existing betamode config from a database
     // before configuring it for this run of our server
-    await framework.mongoStore.onSpawn(bot, initiatlized, metricsTables);
+    // await framework.mongoStore.onSpawn(bot, initiatlized, metricsTables);
     if (addedById) {
       addedByPerson = await this.webex.people.get(addedById);
     }
@@ -174,7 +211,8 @@ framework.on('spawn', async function (bot, id, addedById) {
   } catch (e) {
     logger.error(`Failed to init stored configuration and beta mode. Error:${e.message}`);
   }
-  // See if this instance is the 1-1 space with the admin
+
+  // See if this is the bot that belongs to our admin space
   if ((!adminsBot) && (bot.isDirect) && (adminEmail) &&
     (bot.isDirectTo.toLocaleLowerCase() === adminEmail.toLocaleLowerCase())) {
     adminsBot = bot;
@@ -184,7 +222,7 @@ framework.on('spawn', async function (bot, id, addedById) {
     this.adminsBot = adminsBot;
   }
 
-  if (initiatlized) {
+  if (initialized) {
     // Our bot has just been added to a new space!
     if (adminsBot) {
       let msg = `${bot.person.displayName} was added to a space: "${bot.room.title}"`;
@@ -196,11 +234,11 @@ framework.on('spawn', async function (bot, id, addedById) {
     }
 
     // Write to our metrics DB
-    framework.mongoStore.writeMetric(metricsTable, 'botAddedToSpace', bot, addedByPerson);
+    bot.writeMetric({ 'event': 'botAddedToSpace' }, addedByPerson);
 
     // Since we just got added, say hello
     showHelp(bot)
-      .then(() => cardArray[0].renderCard(bot, { message: {text: 'Initial Add Action'}, person: addedByPerson })
+      .then(() => cardArray[0].renderCard(bot, { message: { text: 'Initial Add Action' }, person: addedByPerson })
         .catch((e) => logger.error(`Error starting up in space "${bot.room.title}": ${e.message}`)));
   }
 });
@@ -251,14 +289,19 @@ framework.hears(/lesson ./, function (bot, trigger) {
 });
 
 // send a lesson card in response to any input
-framework.hears(/.*/, function (bot, trigger) {
+framework.hears(/.*/, async function (bot, trigger) {
   if (!responded) {
-    let currentLessonIndex =
-      parseInt(bot.framework.mongoStore.recall(bot, 'currentLessonIndex'));
-    if ((currentLessonIndex >= 0) && (currentLessonIndex < cardArray.length)) {
-      cardArray[currentLessonIndex].renderCard(bot, trigger);
-    } else {
-      logger.error(`Got invalid index for current lesson: ${currentLessonIndex}.  Displaying intro lesson.`);
+    try {
+      let lessonState = await bot.recall('lessonState');
+      let currentLessonIndex = parseInt(lessonState.currentLessonIndex);
+      if ((currentLessonIndex >= 0) && (currentLessonIndex < cardArray.length)) {
+        cardArray[currentLessonIndex].renderCard(bot, trigger, lessonState);
+      } else {
+        logger.error(`Got invalid index for current lesson: ${currentLessonIndex}.  Displaying intro lesson.`);
+        cardArray[0].renderCard(bot, trigger);
+      }
+    } catch (e) {
+      logger.error(`Failed looking up  current lesson: ${e.message}.  Displaying intro lesson.`);
       cardArray[0].renderCard(bot, trigger);
     }
   }
@@ -272,16 +315,22 @@ framework.hears(/.*/, function (bot, trigger) {
  * Note that Action.ShowCard and Action.OpenUrl are handled directly
  * in the Webex Teams client.  Our bot is not notified
  */
-framework.on('attachmentAction', function (bot, trigger) {
+framework.on('attachmentAction', async function (bot, trigger) {
   try {
     let attachmentAction = trigger.attachmentAction;
     logger.verbose(`Got an attachmentAction:\n${JSON.stringify(attachmentAction, null, 2)}`);
-    // Only process input from most recently displayed card
-    if (attachmentAction.messageId !== bot.framework.mongoStore.recall(bot, 'activeCardMessageId')) {
-      return bot.reply(attachmentAction, 'I do not process button clicks from old lessons.  Scroll down to the most recent lesson card, or post any message to get me to display a new lesson.');
+    try {
+      // Only process input from most recently displayed card
+      let activeCardMessageId = await bot.recall('activeCardMessageId');
+      if (attachmentAction.messageId !== activeCardMessageId) {
+        return bot.reply(attachmentAction, 'I do not process button clicks from old lessons.  Scroll down to the most recent lesson card, or post any message to get me to display a new lesson.');
+      }
+    } catch (e) {
+      logger.error(`${e.message}` +
+        'DB State may be out of wack. Will process button click and try to recover...');
     }
+
     // Go to next card (or ask this card to handle input)
-    // TODO store info about the previous lesson for the Displaying Info lesson
     if (attachmentAction.inputs.nextLesson) {
       cardArray[attachmentAction.inputs.lessonIndex].renderCard(bot, trigger);
     } else if (attachmentAction.inputs.pickAnotherLesson) {
@@ -341,4 +390,3 @@ process.on('SIGINT', function () {
     process.exit();
   });
 });
-

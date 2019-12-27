@@ -3,41 +3,53 @@
  **/
 
 class LessonHandler {
-  constructor(card, logger, lessons, thisLessonInfo, metricsTables, customHandlers) {
+  constructor(card, logger, lessons, thisLessonInfo, customHandlers) {
     this.cardJSON = card;
     this.logger = logger;
     this.lessons = lessons;
     this.lessonInfo = thisLessonInfo;
 
-    this.metricsTable = '';
-    if ((typeof metricsTables === "object") && (metricsTables.length > 0)) {
-      this.metricsTable = metricsTables[0];
-      if (metricsTables.length > 1) {
-        this.logger.warn(`Unexpected Metrics DB Table names including ${metricsTables[1]} passed to LessonHandler constructor`);
-      }
-    }
-
     this.customHandlers = customHandlers;
   }
 
-  async renderCard(bot, trigger) {
-    // Update the indices for the current and previous lesson
-    bot.framework.mongoStore.store(bot, 'previousLessonIndex',
-      bot.framework.mongoStore.recall(bot, 'currentLessonIndex'));
-    bot.framework.mongoStore.store(bot, 'currentLessonIndex', this.lessonInfo.index);
-
-    // Write metrics that this card was loaded
-    bot.framework.mongoStore.writeMetric(this.metricsTable, 'cardRendered', bot, trigger.person, this, trigger);
-
-    if ((this.customHandlers) && (typeof this.customHandlers.customRenderCard == 'function')) {
-      return this.customHandlers.customRenderCard(bot, trigger, this, this.logger);
+  async renderCard(bot, trigger, lessonState) {
+    if (typeof lessonState === 'undefined') {
+      try {
+        lessonState = await bot.recall('lessonState');
+      } catch (e) {
+        this.logger.error(`In renderCard Failed to get lessonState: ${e.message}.\n`);
+        let previousLessonIndex = 'unknown';
+        if ((trigger.type === 'attachmentAction') &&
+          (typeof trigger.attachmentAction.inputs === 'object') &&
+          (typeof trigger.attachmentAction.inputs.myCardIndex !== 'undefined' )) {
+          previousLessonIndex = parseInt(trigger.attachmentAction.inputs.myCardIndex);
+        }
+        lessonState = { 
+          currentLessonIndex: previousLessonIndex,
+          totalLessons: 0
+        };
+      }
     }
-    bot.sendCard(this.cardJSON, 
+    // Update the lesson activity data for this space
+    lessonState.previousLessonIndex = lessonState.currentLessonIndex;
+    lessonState.currentLessonIndex = this.lessonInfo.index;
+    lessonState.totalLessons += 1;
+    lessonState.lastActivity = new Date().toISOString();
+    await bot.store('lessonState', lessonState);
+
+    // Capture metrics and logs for this transition
+    this.writeCardMetric(bot, 'cardRendered', trigger, lessonState);
+
+    // Render the new card (using a custom renderer if necessary...)
+    if ((this.customHandlers) && (typeof this.customHandlers.customRenderCard == 'function')) {
+      return this.customHandlers.customRenderCard(bot, trigger, this, this.logger, lessonState);
+    }
+    bot.sendCard(this.cardJSON,
       `If you see this your client cannot render the card for ${this.lessonInfo.title}.\n` +
       `Try using a different Webex Teams client with this bot.`)
       .then((message) => {
         if ('id' in message) {
-          bot.framework.mongoStore.store(bot, 'activeCardMessageId', message.id);
+          bot.store('activeCardMessageId', message.id);
         }
       })
       .catch((err) => {
@@ -59,45 +71,93 @@ class LessonHandler {
     }
     if (attachmentAction.inputs.feedback) {
       this.handleFeedback(bot, trigger, this.lessonInfo);
-    } else if (attachmentAction.inputs.showCardSource) {
-      bot.reply(attachmentAction,
-        `Show Card Source not implmented.  Need to post or show a link`)
-        .catch((e) => this.logger.error(`Failed handling a "Send Feedback: ${e.message}`));
     } else {
-      bot.reply(attachmentAction,
-        `This bot doesn't currently do any logic for the button that you pressed, but here ` +
+      let msg = `This bot doesn't currently do any logic for the button that you pressed, but here ` +
         ` is the body of the attachmentAction so you can see what your app would need to process:\n\n` +
-        '```json\n' + `${JSON.stringify(attachmentAction, null, 2)}`)
-        .catch((e) => this.logger.error(`Failed handling a "Send Feedback: ${e.message}`));
+        '```json\n' + `${JSON.stringify(attachmentAction, null, 2)}`;
+      if (this.lessonInfo.title = "Form with Buttons Demo") {
+        msg += '\n\n```\n\n' + 'It is worth noting that the `inputs` object ' +
+          'captures data for the entire card, and not just the sub-card ' +
+          'with the form on it.  The `myCardIndex`, `jumpToLessonIndex`, ' +
+          'and `feedback` fields are used by this bot and exist for all the lessons.' +
+          '\n\nClick the "Next Lesson" button in the card above to move on...';
+      }
+      bot.reply(attachmentAction, msg)
+        .catch((e) => this.logger.error(`Failed handling a button press: ${e.message}`));
     }
   };
 
   handleFeedback(bot, trigger, lessonInfo) {
     let attachmentAction = trigger.attachmentAction;
-    let submitter = trigger.person; 
+    let submitter = trigger.person;
     // Write metrics that feedback was provided
-    bot.framework.mongoStore.writeMetric(this.metricsTable, 'feedbackProvided', bot, submitter, this, trigger);
-  
+    this.writeCardMetric(bot, 'feedbackProvided', trigger);
+
     if (bot.framework.adminsBot) {
-      return bot.framework.adminsBot.say('markdown', 'Feedback sumbitted:\n' +
+      bot.framework.adminsBot.say('markdown', 'Feedback sumbitted:\n' +
         `* User: ${submitter.emails[0]} - ${submitter.displayName} \n` +
         `* Space: ${bot.room.title}\n` +
         `* Lesson: ${lessonInfo.title}\n` +
         `* Date: ${attachmentAction.created} \n` +
-        `* feedback: ${attachmentAction.inputs.feedback}`)
-        .then(() => bot.reply(attachmentAction, 
-          `Your feedback: "${attachmentAction.inputs.feedback}", has been captured.  THANK YOU!`))
-        .catch((e) => this.logger.error(`Failed handling a "Send Feedback: ${e.message}`));
+        `* feedback: ${attachmentAction.inputs.feedback}`);
     }
-    bot.reply(attachmentAction, 'Feedback not implmented.  Want to store:\n' +
-      `* User: ${submitter.displayName} \n` +
-      `* Email: ${submitter.emails[0]} \n` +
-      `* Space: ${bot.room.title}\n` +
-      `* Lesson: ${lessonInfo.title}\n` +
-      `* Date: ${attachmentAction.created} \n` +
-      `* feedback: ${attachmentAction.inputs.feedback}`)
+    bot.reply(attachmentAction,
+      `Your feedback: "${attachmentAction.inputs.feedback}", has been captured.  THANK YOU!`)
       .catch((e) => this.logger.error(`Failed handling a "Send Feedback: ${e.message}`));
-  };  
+  };
+
+  async writeCardMetric(bot, event, trigger, lessonState) {
+    // Write metrics that this card was loaded or used to send feedback
+    let data = { event: event };
+    let actorId = null;
+    try {
+      data.cardName = this.lessonInfo.title;
+      data.cardIndex = this.lessonInfo.index;
+      data.previousLesson = (lessonState.previousLessonIndex !== 'unknown') ?
+        this.lessons[parseInt(lessonState.previousLessonIndex)].title : 'unknown';
+      if (trigger.type === 'attachmentAction') {
+        actorId = trigger.attachmentAction.personId;
+      } else {
+        actorId = trigger.message.personId;
+      }
+      if (event === 'cardRendered') {
+        if (trigger.type != 'attachmentAction') {
+          data.requestedVia = `Message to Bot: ${trigger.message.text}`;
+        } else {
+          let inputs = trigger.attachmentAction.inputs;
+          if (inputs.nextLesson) {
+            data.requestedVia = 'Next Lesson Button';
+          } else if (inputs.pickAnotherLesson) {
+            data.requestedVia = 'Pick Another Lesson Button';
+          } else {
+            data.requestedVia = 'Unknown';
+          }
+        }
+      } else if (event === 'feedbackProvided') {
+        data.feedback = trigger.attachmentAction.inputs.feedback;
+      }
+    } catch (e) {
+      debug(`Error getting card info for ${event}: ${e.message}.  Will write metric with what we have.`);
+    }
+    bot.writeMetric(data, actorId)
+      // TODO turn this into a nicer log message
+      .then((data) => {
+        let msg = `Processing a "${data.event}" event in spaceID:"${data.spaceId}":\n` +
+        `-- Space Name:    "${data.spaceName}"\n`;
+        if (data.event === 'cardRendered') {
+          msg += `-- Previous Card: "${data.previousLesson}"\n` + 
+          `-- Requested via: "${data.requestedVia}"\n` + 
+          `-- New card name: "${data.cardName}"\n`;
+        } else if (data.event === 'feedbackProvided') {
+          msg += `-- From Card: "${data.previousLesson}"\n`;
+        } 
+        if (data.actorDisplayName) {
+          msg += `-- Student Name:  "${data.actorDisplayName}"\n`;
+        }
+        this.logger.info(msg);
+      })
+      .catch((e) => this.logger.error(`Failed writing metric to DB about event ${event}: ${e.message}`));
+  };
 
 };
 

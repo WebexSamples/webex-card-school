@@ -13,7 +13,7 @@ class GraduationHandlers {
    * to dynamically populate the values in the "name" and "avatar" fields
    * in the graduation card's design JSON
    **/
-  async customRenderCard(bot, trigger, cardObj, logger) {
+  async customRenderCard(bot, trigger, cardObj, logger, lessonState) {
     try {
       // Create a Template instance from the graduation cards design JSON
       var template = new ACData.Template(cardObj.cardJSON);
@@ -38,7 +38,9 @@ class GraduationHandlers {
       bot.sendCard(card, `If you see this your client cannot render the card for ${cardObj.lessonInfo.title}.   Try using a different Webex Teams client with this bot.`)
         .then((message) => {
           if ('id' in message) {
-            bot.framework.mongoStore.store(bot, 'activeCardMessageId', message.id);
+            bot.store('activeCardMessageId', message.id);
+            lessonState.seenGraduation = true;
+            bot.store('lessonState', lessonState);
           }
         })
         .catch((err) => {
