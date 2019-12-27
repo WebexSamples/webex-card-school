@@ -26,7 +26,7 @@
 * [ ] Write the following "metrics" data
   * [x] Bot Added/Removed from Space
   * [x] Action.Submit button pressed
-  * [ ] Command entered
+  * [x] Command entered
   * [x] Feedback Provided
   * [ ] Figure out how to best index this data so that we can run queries such as:
   * [ ] How many spaces is our bot in
@@ -34,10 +34,12 @@
   * [ ] How many users got to the graduation card
   * [ ] How many users interacted with more than X lessons
 * [x] Write Add/Remove feedback to a space.  Perhaps create an AdminRoomId instead of AdminEmail for group control
+* [ ] Prevous and Current lesson indexes don't always seem to be correct when using text commands, debug
+* [ ] Is lessonsSeen counter getting updated in all circumstances?  Seems low in some cases
 
 ## Lesson Content
-* [ ] Show an Input Form
-* [ ] Handling Attachments
+* [x] Show an Input Form
+* [x] Handling Attachments
 * [ ] Best Practices for when a card is "expired"
 
 ## Persistent store
@@ -48,11 +50,14 @@ Research mongo to see if its better to update a single field in a dictionary or
 * [x] on bot.store, write to local copy, lazy return from database write with error messages for DB write fails
 * [x] on bot.recall read syncronously from local copy
 * [x] on bot.forget, update db lazily
+* [x] switch over to framework suported persistent store
+* [ ] Write some one-time-only code to move from storage v1 to storage v2
 * [ ] Add "announce" logic so that bots added to 1-1 spaces during the EFT announce that they are working 1 TIME ONLY!
+  
 
 ## Framework improvements
 * [ ] reimplment beta-mode as a core frameowrk feature
-* [ ] reimplement mongoStore as a framework store
+* [x] reimplement mongoStore as a framework store
 
 
 ## Ask Buttons and Cards School

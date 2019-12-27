@@ -200,6 +200,10 @@ framework.on('spawn', async function (bot, id, addedById) {
     if (addedById) {
       addedByPerson = await this.webex.people.get(addedById);
     }
+    // Look for the "old style" db entries and convert them
+    // It should only be necessary to do this once
+    await updateBotStorageFromV1toV2(bot, initialized);
+
     // If we specified EFT users, register the beta-mode module
     if (betaUsers) {
       bot.betaMode = new BetaMode(bot, logger, true, betaUsers);
@@ -223,7 +227,13 @@ framework.on('spawn', async function (bot, id, addedById) {
   }
 
   if (initialized) {
-    // Our bot has just been added to a new space!
+    // Our bot has just been added to a new space!  
+    // Since we just got added, say hello
+    showHelp(bot)
+      .then(() => cardArray[0].renderCard(bot, { message: { text: 'Initial Add Action' }, person: addedByPerson })
+        .catch((e) => logger.error(`Error starting up in space "${bot.room.title}": ${e.message}`)));
+
+    // Notify any admins via Webex Teams
     if (adminsBot) {
       let msg = `${bot.person.displayName} was added to a space: "${bot.room.title}"`;
       if (addedByPerson) {
@@ -232,20 +242,74 @@ framework.on('spawn', async function (bot, id, addedById) {
       adminsBot.say(msg)
         .catch((e) => logger.error(`Failed to update to Admin about a new bot. Error:${e.message}`));
     }
+    // Add some info to this bot's config
+    let spaceInfo = {
+      origTitle: bot.room.title
+    };
+    if (addedByPerson) {
+      spaceInfo.addedBy = addedByPerson.displayName;
+      spaceInfo.addedByEmail = addedByPerson.emails[0];
+    }
+    await bot.store('spaceInfo', spaceInfo);
 
     // Write to our metrics DB
     bot.writeMetric({ 'event': 'botAddedToSpace' }, addedByPerson);
-
-    // Since we just got added, say hello
-    showHelp(bot)
-      .then(() => cardArray[0].renderCard(bot, { message: { text: 'Initial Add Action' }, person: addedByPerson })
-        .catch((e) => logger.error(`Error starting up in space "${bot.room.title}": ${e.message}`)));
   }
 });
 
+// Look for old (v1) flat data and convert it
+// to the new (v2) object style that reduces DB reads
+async function updateBotStorageFromV1toV2(bot, initialized) {
+  try {
+    let currentLessonIndex = await bot.recall('currentLessonIndex');
+    let previousLessonIndex = await bot.recall('previousLessonIndex');
+    logger.info(`Converting to lessonState for spaceId: ${bot.room.id}`);
+    let lessonState = {
+      currentLessonIndex,
+      previousLessonIndex,
+      totalLessons: 0
+    };
+    await bot.forget('currentLessonIndex');
+    await bot.forget('previousLessonIndex');
+    await bot.store('lessonState', lessonState);
+  } catch (e) {
+    logger.info(`Did not find old style lesson indices for spaceId: ${bot.room.id}`);
+  }
+  try {
+    let betaModeEnabled = await bot.recall('betaModeEnabled');
+    let betaModeValidUser = await bot.recall('betaModeValidUser');
+    let betaModeAllowed = await bot.recall('betaModeAllowed');
+    logger.info(`Converting to betaModeState for spaceId: ${bot.room.id}`);
+    let betaModeState = {
+      validUser: betaModeValidUser,
+      enabled: betaModeEnabled,
+      allowed: betaModeAllowed
+    };
+    await bot.forget('betaModeEnabled');
+    await bot.forget('betaModeValidUser');
+    await bot.forget('betaModeAllowed');
+    await bot.store('betaModeState', betaModeState);
+  } catch (e) {
+    logger.info(`Did not find old style betaMode info for spaceId: ${bot.room.id}`);
+  }
+  if (!initialized) {
+    let spaceInfo = {};
+    try {
+      spaceInfo = await bot.recall('spaceInfo');
+    } catch (e) {
+      // Add some info to this bot's config
+      spaceInfo = {
+        origTitle: bot.room.title
+      };
+      await bot.store('spaceInfo', spaceInfo);
+    }
+  }
+}
+
+
 framework.on('despawn', async function (bot, id, removedById) {
   logger.info(`Bot has been removed from space "${bot.room.title}"`);
-  framework.mongoStore.writeMetric(metricsTable, 'botRemovedFromSpace', bot, removedById);
+  bot.writeMetric({ 'event': 'botRemovedFromSpace' }, removedById);
 });
 
 
