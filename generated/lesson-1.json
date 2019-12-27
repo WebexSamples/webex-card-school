@@ -11,7 +11,7 @@
     {
       "type": "Image",
       "altText": "",
-      "url": "https://cardschool.webexbots.cloud/images/what-is-a-card.png"
+      "url": "http://jpshipherd.ngrok.io/images/what-is-a-card.png"
     },
     {
       "type": "TextBlock",
@@ -30,7 +30,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "Where the really standout though, are in the interactions that solicit complex feedback from the user, such as responding to a poll or submitting a registration form.  We'll demonstrate this in the next lesson.",
+      "text": "Where they really shine though, are in the interactions that solicit complex feedback from the user, such as responding to a poll or submitting a registration form.  We'll demonstrate this in the next lesson.",
       "wrap": true
     },
     {
@@ -118,28 +118,32 @@
                     "value": "7"
                   },
                   {
-                    "title": "Lesson 8: Buttons and Actions",
+                    "title": "Lesson 8: Displaying Dynamic Content",
                     "value": "8"
                   },
                   {
-                    "title": "Lesson 9: Registering for Button Press Events",
+                    "title": "Lesson 9: Buttons and Actions",
                     "value": "9"
                   },
                   {
-                    "title": "Lesson 10: Processing Button Events",
+                    "title": "Lesson 10: Registering for Button Press Events",
                     "value": "10"
                   },
                   {
-                    "title": "Lesson 11: Form with Buttons Demo",
+                    "title": "Lesson 11: Processing Button Events",
                     "value": "11"
                   },
                   {
-                    "title": "Lesson 12: Buttons and Cards Guidelines & Best Practices",
+                    "title": "Lesson 12: How This App Handles Events",
                     "value": "12"
                   },
                   {
-                    "title": "Lesson 13: Displaying Complex Info",
+                    "title": "Lesson 13: Form with Buttons Demo",
                     "value": "13"
+                  },
+                  {
+                    "title": "Lesson 14: Guidelines & Best Practices",
+                    "value": "14"
                   }
                 ]
               },
@@ -169,13 +173,6 @@
         "type": "AdaptiveCard",
         "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
         "body": [
-          {
-            "type": "Image",
-            "altText": "",
-            "url": "https://cardschool.webexbots.cloud/images/helpful-resources.jpg",
-            "size": "Medium",
-            "horizontalAlignment": "Center"
-          },
           {
             "type": "TextBlock",
             "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-1.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "

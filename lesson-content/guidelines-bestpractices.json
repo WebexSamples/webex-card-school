@@ -4,7 +4,7 @@
     "body": [
         {
             "type": "TextBlock",
-            "text": "Buttons and Cards Guidelines & Best Practices",
+            "text": "Guidelines & Best Practices",
             "size": "medium",
             "weight": "bolder"
         },

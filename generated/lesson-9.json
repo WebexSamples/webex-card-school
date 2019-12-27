@@ -4,33 +4,35 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "Lesson 9: Registering for Button Press Events",
+      "text": "Lesson 9: Buttons and Actions",
       "size": "medium",
       "weight": "bolder"
     },
     {
-      "type": "TextBlock",
-      "text": "Based on what we learned in in the previous lesson, the next step would be for your app to create a [webhook](https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook) to be notified of any `attachmentAction` events that occur when a user presses an `Action.Submit` button. ",
-      "wrap": true
-    },
-    {
-      "type": "TextBlock",
-      "text": "Keep in mind, only one webhook is needed to receive submission notifications for every card created by your app.  A best practice is to register for this when your app is statring up, and to remove it when your app is shut down.",
-      "wrap": true
-    },
-    {
-      "type": "TextBlock",
-      "text": "When building your request body for the POST request to the /webhooks API, use `attachmentActions` as the `resource`.  The only event for this resource is `created` so you can specify that for the `events` field",
-      "wrap": true
-    },
-    {
       "type": "Image",
-      "altText": "",
-      "url": "https://cardschool.webexbots.cloud/images/action-card-webhook.png"
+      "altText": "Button",
+      "url": "http://jpshipherd.ngrok.io/images/buttons.png",
+      "horizontalAlignment": "Center",
+      "size": "large"
     },
     {
       "type": "TextBlock",
-      "text": "If you have an existing bot, you probably are already registering for messaging related webhooks.  Simply add an additional call to the /webhooks API to ask for the `attachmentActions` as well.",
+      "text": "OK. We have been talking a lot about Cards, but what about Buttons? Buttons are one of the ways that users interact with cards, and the only way your application will get notified about this interaction.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "As a designer, you create buttons by adding an Action to your card. Webex Teams supports three types of Actions:",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "* `Action.OpenUrl` - When clicked the client will open the user's browser to the specified URL.\n* `Action.ToggleVisibility` - When clicked the client will \"expand\" the card to show a sub-card associated with the Activity. The \"Helpful Resources\" button on this card is an example of this.\n* `Action.Submit` - When clicked, the application that posted a card will get a notification that includes any data associated with the Action along with the data collected from any of the Input elements in the card.\n",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "In the next lesson, we will cover how to configure your application to process these `Action.Sumbit` button press notifications, which are called `attachmentAction` events.",
       "wrap": true
     },
     {
@@ -54,7 +56,7 @@
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Next Lesson: Processing Button Events",
+              "title": "Next Lesson: Registering for Button Press Events",
               "data": {
                 "nextLesson": true,
                 "lessonIndex": 10
@@ -118,28 +120,32 @@
                     "value": "7"
                   },
                   {
-                    "title": "Lesson 8: Buttons and Actions",
+                    "title": "Lesson 8: Displaying Dynamic Content",
                     "value": "8"
                   },
                   {
-                    "title": "Lesson 9: Registering for Button Press Events",
+                    "title": "Lesson 9: Buttons and Actions",
                     "value": "9"
                   },
                   {
-                    "title": "Lesson 10: Processing Button Events",
+                    "title": "Lesson 10: Registering for Button Press Events",
                     "value": "10"
                   },
                   {
-                    "title": "Lesson 11: Form with Buttons Demo",
+                    "title": "Lesson 11: Processing Button Events",
                     "value": "11"
                   },
                   {
-                    "title": "Lesson 12: Buttons and Cards Guidelines & Best Practices",
+                    "title": "Lesson 12: How This App Handles Events",
                     "value": "12"
                   },
                   {
-                    "title": "Lesson 13: Displaying Complex Info",
+                    "title": "Lesson 13: Form with Buttons Demo",
                     "value": "13"
+                  },
+                  {
+                    "title": "Lesson 14: Guidelines & Best Practices",
+                    "value": "14"
                   }
                 ]
               },
@@ -169,13 +175,6 @@
         "type": "AdaptiveCard",
         "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
         "body": [
-          {
-            "type": "Image",
-            "altText": "",
-            "url": "https://cardschool.webexbots.cloud/images/helpful-resources.jpg",
-            "size": "Medium",
-            "horizontalAlignment": "Center"
-          },
           {
             "type": "TextBlock",
             "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-9.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "

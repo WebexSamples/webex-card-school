@@ -1,34 +1,151 @@
 {
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "type": "AdaptiveCard",
   "version": "1.0",
   "body": [
     {
       "type": "TextBlock",
-      "text": "Lesson 8: Buttons and Actions",
-      "size": "medium",
-      "weight": "bolder"
-    },
-    {
-      "type": "Image",
-      "altText": "Button",
-      "url": "https://cardschool.webexbots.cloud/images/buttons.png",
-      "horizontalAlignment": "Center",
-      "size": "large"
+      "text": "Lesson 8: Displaying Dynamic Content",
+      "size": "Medium",
+      "weight": "Bolder"
     },
     {
       "type": "TextBlock",
-      "text": "So far we have been talking a lot about cards, but what about Buttons? Buttons are one of the ways that users interact with cards. As a designer, you create buttons by adding an Action to your card. Webex Teams supports three types of Actions:\n",
+      "text": "So far we have talked about how to design a card's look and feel by creating a JSON object that conforms to the Adaptive Card specification.  But what about times where you want to have a static design, but content that will change depending on what is happening in your Webex Teams space?",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "* `Action.OpenUrl` - When clicked the client will open the user's browser to the specified URL.\n* `Action.ToggleVisibility` - When clicked the client will \"expand\" the card to show a sub-card associated with the Activity. The \"Helpful Resources\" button on this card is an example of this.\n* `Action.Submit` - When clicked, the application that posted a card will get a notification that includes any data associated with the Action along with the data collected from any of the Input elements in the card.\n",
+      "text": "To make this work, your application logic needs to dynamically modify the appropriate field values in your JSON before you submit it to Webex to be displayed.   Since these JSON objects are complex this can be a challenging (but not impossible!) task.",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "In the next lesson, we will cover how to configure your application to process these `Action.Sumbit` button press notications, which are called `attachmentAction` events.",
+      "text": "The Adaptive Card specification is still very new, but there are now early versions of an [Adaptive Card Templating SDK](https://docs.microsoft.com/en-us/adaptive-cards/templating/sdk), that helps simplify this task.  These SDKs provide functions that will dynamically replace templatized values, named between curly braces, with similarly named object data provided to the SDK.",
       "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "This is a bit hard to explain in a card, but click on the button below to show a card populated with dynamic info and access buttons that will take you to the original card design and the source code that updates the template, to get a better sense for how this works.",
+      "wrap": true
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "ActionSet",
+          "horizontalAlignment": "Center",
+          "actions": [
+            {
+              "type": "Action.ShowCard",
+              "title": "Show the Dynamic \"Student Info\" card",
+              "card": {
+                "type": "AdaptiveCard",
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "version": "1.2",
+                "body": [
+                  {
+                    "type": "Container",
+                    "items": [
+                      {
+                        "type": "TextBlock",
+                        "size": "Medium",
+                        "weight": "Bolder",
+                        "text": "Student Info"
+                      },
+                      {
+                        "type": "ColumnSet",
+                        "columns": [
+                          {
+                            "type": "Column",
+                            "items": [
+                              {
+                                "type": "Image",
+                                "id": "avatar",
+                                "style": "Person",
+                                "size": "Small"
+                              }
+                            ],
+                            "width": "auto"
+                          },
+                          {
+                            "type": "Column",
+                            "items": [
+                              {
+                                "type": "TextBlock",
+                                "id": "name",
+                                "weight": "Bolder",
+                                "wrap": true
+                              },
+                              {
+                                "type": "TextBlock",
+                                "id": "email",
+                                "spacing": "None",
+                                "isSubtle": true,
+                                "wrap": true
+                              },
+                              {
+                                "type": "TextBlock",
+                                "id": "organization",
+                                "spacing": "None",
+                                "isSubtle": true,
+                                "wrap": true
+                              }
+                            ],
+                            "width": "stretch"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Container",
+                    "separator": true,
+                    "items": [
+                      {
+                        "type": "TextBlock",
+                        "text": "Class Activity",
+                        "wrap": true
+                      },
+                      {
+                        "type": "FactSet",
+                        "spacing": "None",
+                        "facts": [
+                          {
+                            "title": "Current Lesson:"
+                          },
+                          {
+                            "title": "Requested via:"
+                          },
+                          {
+                            "title": "Previous Lesson:"
+                          },
+                          {
+                            "title": "Date:"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "ActionSet",
+                        "actions": [
+                          {
+                            "type": "Action.OpenUrl",
+                            "title": "View Card JSON"
+                          },
+                          {
+                            "type": "Action.OpenUrl",
+                            "title": "View Card's Render Code"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       "type": "Input.ChoiceSet",
@@ -51,7 +168,7 @@
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Next Lesson: Registering for Button Press Events",
+              "title": "Next Lesson: Buttons and Actions",
               "data": {
                 "nextLesson": true,
                 "lessonIndex": 9
@@ -62,7 +179,6 @@
       ]
     }
   ],
-  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "actions": [
     {
       "type": "Action.ShowCard",
@@ -115,28 +231,32 @@
                     "value": "7"
                   },
                   {
-                    "title": "Lesson 8: Buttons and Actions",
+                    "title": "Lesson 8: Displaying Dynamic Content",
                     "value": "8"
                   },
                   {
-                    "title": "Lesson 9: Registering for Button Press Events",
+                    "title": "Lesson 9: Buttons and Actions",
                     "value": "9"
                   },
                   {
-                    "title": "Lesson 10: Processing Button Events",
+                    "title": "Lesson 10: Registering for Button Press Events",
                     "value": "10"
                   },
                   {
-                    "title": "Lesson 11: Form with Buttons Demo",
+                    "title": "Lesson 11: Processing Button Events",
                     "value": "11"
                   },
                   {
-                    "title": "Lesson 12: Buttons and Cards Guidelines & Best Practices",
+                    "title": "Lesson 12: How This App Handles Events",
                     "value": "12"
                   },
                   {
-                    "title": "Lesson 13: Displaying Complex Info",
+                    "title": "Lesson 13: Form with Buttons Demo",
                     "value": "13"
+                  },
+                  {
+                    "title": "Lesson 14: Guidelines & Best Practices",
+                    "value": "14"
                   }
                 ]
               },
@@ -166,13 +286,6 @@
         "type": "AdaptiveCard",
         "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
         "body": [
-          {
-            "type": "Image",
-            "altText": "",
-            "url": "https://cardschool.webexbots.cloud/images/helpful-resources.jpg",
-            "size": "Medium",
-            "horizontalAlignment": "Center"
-          },
           {
             "type": "TextBlock",
             "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-8.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "

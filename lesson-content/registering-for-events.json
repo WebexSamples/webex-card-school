@@ -15,7 +15,7 @@
         },
         {
             "type": "TextBlock",
-            "text": "Keep in mind, only one webhook is needed to receive submission notifications for every card created by your app.  A best practice is to register for this when your app is statring up, and to remove it when your app is shut down.",
+            "text": "Keep in mind, only one webhook is needed to receive submission notifications for every card created by your app.  A best practice is to register for this when your app is starting up, and to remove it when your app is shut down.",
             "wrap": true
         },
         {

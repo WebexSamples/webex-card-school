@@ -31,6 +31,11 @@
       "type": "TextBlock",
       "text": "Click **Pick Another Lesson** to browse through the lessons available, or **Helpful Resources** to see what else is available.",
       "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "Oh, and remember that it can take a moment for cards to render!  Be patient after clicking the buttons, and take the time to absorb the previous lesson.",
+      "wrap": true
     }
   ]
 }

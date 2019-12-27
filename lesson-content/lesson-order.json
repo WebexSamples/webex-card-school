@@ -25,6 +25,10 @@
     "contentFile": "how-this-app-sends-cards.json"
   },
   {
+    "contentFile": "displaying-dynamic-content.json",
+    "customHandlerFile": "displaying-dynamic-content-handler"
+  },
+  {
     "contentFile": "buttons.json"
   },
   {
@@ -34,14 +38,13 @@
     "contentFile": "processing-button-events.json"
   },
   {
+    "contentFile": "how-this-app-handles-events.json"
+  },
+  {
     "contentFile": "form-demo.json"
   },
   {
     "contentFile": "guidelines-bestpractices.json"
-  },
-  {
-    "contentFile": "displaying-complex-info.json",
-    "customHandlerFile": "displaying-complex-info-handler"
   },
   {
     "contentFile": "graduate.json",

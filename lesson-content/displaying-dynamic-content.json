@@ -5,23 +5,28 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "Displaying Complex Info",
+      "text": "Displaying Dynamic Content",
       "size": "Medium",
       "weight": "Bolder"
     },
     {
       "type": "TextBlock",
-      "text": "Cards can use images, text, and links to external URLs to display complex information.",
+      "text": "So far we have talked about how to design a card's look and feel by creating a JSON object that conforms to the Adaptive Card specification.  But what about times where you want to have a static design, but content that will change depending on what is happening in your Webex Teams space?",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "Below we will show an example \"card\" that provides information about you.  It uses schema elements such as the \"Container\", \"ColumnSet\", \"Colum\", \"Image\", \"TextBlock\", and \"FactSet\" to present it in a pleasing format",
+      "text": "To make this work, your application logic needs to dynamically modify the appropriate field values in your JSON before you submit it to Webex to be displayed.   Since these JSON objects are complex this can be a challenging (but not impossible!) task.",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "It also uses the \"ActionSet\" and  \"Action.OpenUrl\" elements to provide buttons that will link you to more information.  In this case you can see the card's generic JSON, and the custom renderer function which populates it with your information.",
+      "text": "The Adaptive Card specification is still very new, but there are now early versions of an [Adaptive Card Templating SDK](https://docs.microsoft.com/en-us/adaptive-cards/templating/sdk), that helps simplify this task.  These SDKs provide functions that will dynamically replace templatized values, named between curly braces, with similarly named object data provided to the SDK.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "This is a bit hard to explain in a card, but click on the button below to show a card populated with dynamic info and access buttons that will take you to the original card design and the source code that updates the template, to get a better sense for how this works.",
       "wrap": true
     },
     {
@@ -33,7 +38,7 @@
           "actions": [
             {
               "type": "Action.ShowCard",
-              "title": "Show the \"Student Info\" card...",
+              "title": "Show the Dynamic \"Student Info\" card",
               "card": {
                 "type": "AdaptiveCard",
                 "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",

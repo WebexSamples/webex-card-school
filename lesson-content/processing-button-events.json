@@ -15,7 +15,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "To retrieve the sensitive data, your app will use the `data.id` field's value in a [GET /attachment/actions](https://developer.webex.com/docs/api/v1/attachment-actions/create-an-attachment-action) request to retrieve the decrypted attachmentAction, ie:\n",
+      "text": "To retrieve the sensitive data, your app will use the `data.id` field from the webhook's JSON payload as part of a [GET /attachment/actions](https://developer.webex.com/docs/api/v1/attachment-actions/create-an-attachment-action) request to retrieve the decrypted attachmentAction, ie:\n",
       "wrap": true
     },
     {

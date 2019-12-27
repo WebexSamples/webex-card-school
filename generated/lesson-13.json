@@ -1,27 +1,31 @@
 {
-  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "type": "AdaptiveCard",
   "version": "1.0",
   "body": [
     {
       "type": "TextBlock",
-      "text": "Lesson 13: Displaying Complex Info",
-      "size": "Medium",
-      "weight": "Bolder"
+      "text": "Lesson 13: Form with Buttons Demo",
+      "size": "medium",
+      "weight": "bolder"
     },
     {
       "type": "TextBlock",
-      "text": "Cards can use images, text, and links to external URLs to display complex information.",
+      "text": "Let's put everything we've learned into a simple form.   Below is an `Action.ToggleVisibility` button that will display a Form.",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "Below we will show an example \"card\" that provides information about you.  It uses schema elements such as the \"Container\", \"ColumnSet\", \"Colum\", \"Image\", \"TextBlock\", and \"FactSet\" to present it in a pleasing format",
+      "text": "The form is made up of some of the most common ways to collect user input, and an `Action.Submit` button.",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "It also uses the \"ActionSet\" and  \"Action.OpenUrl\" elements to provide buttons that will link you to more information.  In this case you can see the card's generic JSON, and the custom renderer function which populates it with your information.",
+      "text": "When you press the \"Submit\" button, the app logic that controls this bot will post a new message here with the unencrypted `attachmentAction` payload.   This will give you a good idea of the type of data that your app will need to process.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "Ready to try it?  Click the button below to display the form...",
       "wrap": true
     },
     {
@@ -33,107 +37,81 @@
           "actions": [
             {
               "type": "Action.ShowCard",
-              "title": "Show the \"Student Info\" card...",
+              "title": "Show the Form Demo",
               "card": {
-                "type": "AdaptiveCard",
                 "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-                "version": "1.2",
+                "type": "AdaptiveCard",
+                "version": "1.0",
                 "body": [
                   {
-                    "type": "Container",
-                    "items": [
+                    "type": "TextBlock",
+                    "text": "Some ways to collect user input",
+                    "size": "medium",
+                    "weight": "bolder"
+                  },
+                  {
+                    "type": "TextBlock",
+                    "text": "This **Input.Text** element collects some free from text.  Designers can use attributes like `isMutiline`, `maxLength` and `placeholder` to shape the way that users enter text in a form.",
+                    "wrap": true
+                  },
+                  {
+                    "type": "Input.Text",
+                    "placeholder": "Text Field",
+                    "style": "text",
+                    "maxLength": 0,
+                    "id": "TextFieldVal"
+                  },
+                  {
+                    "type": "TextBlock",
+                    "text": "This **Input.Number** element collects a number.  Designers can use the `max`, `min` and `placeholder` attributes to control the input options.",
+                    "wrap": true
+                  },
+                  {
+                    "type": "Input.Number",
+                    "placeholder": "Number",
+                    "min": -5,
+                    "max": 5,
+                    "id": "NumberVal"
+                  },
+                  {
+                    "type": "TextBlock",
+                    "text": "The **Input.ChoiceSet** element provides a variety of ways that users can choose from a set of options.   This is the default view, but designers can use the `style` and `isMutiSelect` attributes to change the way it works.  The choices are defined in an array attribute called `choices`.",
+                    "wrap": true
+                  },
+                  {
+                    "type": "Input.ChoiceSet",
+                    "id": "ColorChoiceVal",
+                    "value": "Red",
+                    "choices": [
                       {
-                        "type": "TextBlock",
-                        "size": "Medium",
-                        "weight": "Bolder",
-                        "text": "Student Info"
+                        "title": "Red",
+                        "value": "Red"
                       },
                       {
-                        "type": "ColumnSet",
-                        "columns": [
-                          {
-                            "type": "Column",
-                            "items": [
-                              {
-                                "type": "Image",
-                                "id": "avatar",
-                                "style": "Person",
-                                "size": "Small"
-                              }
-                            ],
-                            "width": "auto"
-                          },
-                          {
-                            "type": "Column",
-                            "items": [
-                              {
-                                "type": "TextBlock",
-                                "id": "name",
-                                "weight": "Bolder",
-                                "wrap": true
-                              },
-                              {
-                                "type": "TextBlock",
-                                "id": "email",
-                                "spacing": "None",
-                                "isSubtle": true,
-                                "wrap": true
-                              },
-                              {
-                                "type": "TextBlock",
-                                "id": "organization",
-                                "spacing": "None",
-                                "isSubtle": true,
-                                "wrap": true
-                              }
-                            ],
-                            "width": "stretch"
-                          }
-                        ]
+                        "title": "Blue",
+                        "value": "Blue"
+                      },
+                      {
+                        "title": "Green",
+                        "value": "Green"
                       }
                     ]
                   },
                   {
-                    "type": "Container",
-                    "separator": true,
-                    "items": [
-                      {
-                        "type": "TextBlock",
-                        "text": "Class Activity",
-                        "wrap": true
-                      },
-                      {
-                        "type": "FactSet",
-                        "spacing": "None",
-                        "facts": [
-                          {
-                            "title": "Current Lesson:"
-                          },
-                          {
-                            "title": "Requested via:"
-                          },
-                          {
-                            "title": "Previous Lesson:"
-                          },
-                          {
-                            "title": "Date:"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "ActionSet",
-                        "actions": [
-                          {
-                            "type": "Action.OpenUrl",
-                            "title": "View Card JSON"
-                          },
-                          {
-                            "type": "Action.OpenUrl",
-                            "title": "View Card's Render Code"
-                          }
-                        ]
-                      }
-                    ]
+                    "type": "Input.Toggle",
+                    "title": "This Input.Toggle element gets a true/false input.",
+                    "id": "Toggle",
+                    "wrap": true,
+                    "value": "false"
+                  }
+                ],
+                "actions": [
+                  {
+                    "type": "Action.Submit",
+                    "title": "Submit",
+                    "data": {
+                      "formDemoAction": "Submit"
+                    }
                   }
                 ]
               }
@@ -163,7 +141,7 @@
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Next Lesson: Congratulations",
+              "title": "Next Lesson: Guidelines & Best Practices",
               "data": {
                 "nextLesson": true,
                 "lessonIndex": 14
@@ -174,6 +152,7 @@
       ]
     }
   ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "actions": [
     {
       "type": "Action.ShowCard",
@@ -226,28 +205,32 @@
                     "value": "7"
                   },
                   {
-                    "title": "Lesson 8: Buttons and Actions",
+                    "title": "Lesson 8: Displaying Dynamic Content",
                     "value": "8"
                   },
                   {
-                    "title": "Lesson 9: Registering for Button Press Events",
+                    "title": "Lesson 9: Buttons and Actions",
                     "value": "9"
                   },
                   {
-                    "title": "Lesson 10: Processing Button Events",
+                    "title": "Lesson 10: Registering for Button Press Events",
                     "value": "10"
                   },
                   {
-                    "title": "Lesson 11: Form with Buttons Demo",
+                    "title": "Lesson 11: Processing Button Events",
                     "value": "11"
                   },
                   {
-                    "title": "Lesson 12: Buttons and Cards Guidelines & Best Practices",
+                    "title": "Lesson 12: How This App Handles Events",
                     "value": "12"
                   },
                   {
-                    "title": "Lesson 13: Displaying Complex Info",
+                    "title": "Lesson 13: Form with Buttons Demo",
                     "value": "13"
+                  },
+                  {
+                    "title": "Lesson 14: Guidelines & Best Practices",
+                    "value": "14"
                   }
                 ]
               },
@@ -277,13 +260,6 @@
         "type": "AdaptiveCard",
         "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
         "body": [
-          {
-            "type": "Image",
-            "altText": "",
-            "url": "https://cardschool.webexbots.cloud/images/helpful-resources.jpg",
-            "size": "Medium",
-            "horizontalAlignment": "Center"
-          },
           {
             "type": "TextBlock",
             "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-13.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "

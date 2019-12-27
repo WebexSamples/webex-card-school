@@ -4,116 +4,34 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "Lesson 11: Form with Buttons Demo",
+      "text": "Lesson 11: Processing Button Events",
       "size": "medium",
       "weight": "bolder"
     },
     {
       "type": "TextBlock",
-      "text": "Let's put everything we've learned into a simple form.   Below is an `Action.ToggleVisibility` button that will display a Form.",
+      "text": "The webhook you created for for the `attachmentActions` resource instructs Webex to post to your app when a user clicks an `Action.Submit` button. This POST request will include a JSON payload, however, just like other API resources that contain encrypted data, the webhook's body will not include the form submission. \n",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "The form is made up of some of the most common ways to collect user input, and an `Action.Submit` button.",
+      "text": "To retrieve the sensitive data, your app will use the `data.id` field from the webhook's JSON payload as part of a [GET /attachment/actions](https://developer.webex.com/docs/api/v1/attachment-actions/create-an-attachment-action) request to retrieve the decrypted attachmentAction, ie:\n",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "When you press the \"Submit\" button, the app logic that controls this bot, it will post a new message here with the unencrypted `attachmentAction` payload.   This will give you a good idea of the type of data that your app will need to process.\n",
+      "text": "`GET /attachment/actions/__data.id__GOES__HERE__`",
       "wrap": true
     },
     {
-      "type": "Container",
-      "items": [
-        {
-          "type": "ActionSet",
-          "horizontalAlignment": "Center",
-          "actions": [
-            {
-              "type": "Action.ShowCard",
-              "title": "Show the Form Demo...",
-              "card": {
-                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-                "type": "AdaptiveCard",
-                "version": "1.0",
-                "body": [
-                  {
-                    "type": "TextBlock",
-                    "text": "Some ways to collect user input",
-                    "size": "medium",
-                    "weight": "bolder"
-                  },
-                  {
-                    "type": "TextBlock",
-                    "text": "This **Input.Text** element collects some free from text.  Designers can use attributes like `isMutiline`, `maxLength` and `placeholder` to shape the way that users enter text in a form.",
-                    "wrap": true
-                  },
-                  {
-                    "type": "Input.Text",
-                    "placeholder": "Text Field",
-                    "style": "text",
-                    "maxLength": 0,
-                    "id": "TextFieldVal"
-                  },
-                  {
-                    "type": "TextBlock",
-                    "text": "This **Input.Number** element collects a number.  Designers can use the `max`, `min` and `placeholder` attributes to control the input options.",
-                    "wrap": true
-                  },
-                  {
-                    "type": "Input.Number",
-                    "placeholder": "Number",
-                    "min": -5,
-                    "max": 5,
-                    "id": "NumberVal"
-                  },
-                  {
-                    "type": "TextBlock",
-                    "text": "The **Input.ChoiceSet** element provides a variety of ways that users can choose from a set of options.   This is the default view, but designers can use the `style`, `isMutiSelect` to change the way it works.  The choices are defined in an array attribute called `choices`.",
-                    "wrap": true
-                  },
-                  {
-                    "type": "Input.ChoiceSet",
-                    "id": "ColorChoiceVal",
-                    "value": "Red",
-                    "choices": [
-                      {
-                        "title": "Red",
-                        "value": "Red"
-                      },
-                      {
-                        "title": "Blue",
-                        "value": "Blue"
-                      },
-                      {
-                        "title": "Green",
-                        "value": "Green"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "Input.Toggle",
-                    "title": "This Input.Toggle element gets a true/false input.",
-                    "id": "Toggle",
-                    "wrap": true,
-                    "value": "false"
-                  }
-                ],
-                "actions": [
-                  {
-                    "type": "Action.Submit",
-                    "title": "Submit",
-                    "data": {
-                      "formDemoAction": "Submit"
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      ]
+      "type": "Image",
+      "altText": "",
+      "url": "http://jpshipherd.ngrok.io/images/handling-submissions.png"
+    },
+    {
+      "type": "TextBlock",
+      "text": "The `inputs` field provides any card specific data.  Other fields like `personId`, `messageId` and `roomId` let you correlate which user pressed the button on which card, in which Webex Teams space.",
+      "wrap": true
     },
     {
       "type": "Input.ChoiceSet",
@@ -136,7 +54,7 @@
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Next Lesson: Buttons and Cards Guidelines & Best Practices",
+              "title": "Next Lesson: How This App Handles Events",
               "data": {
                 "nextLesson": true,
                 "lessonIndex": 12
@@ -200,28 +118,32 @@
                     "value": "7"
                   },
                   {
-                    "title": "Lesson 8: Buttons and Actions",
+                    "title": "Lesson 8: Displaying Dynamic Content",
                     "value": "8"
                   },
                   {
-                    "title": "Lesson 9: Registering for Button Press Events",
+                    "title": "Lesson 9: Buttons and Actions",
                     "value": "9"
                   },
                   {
-                    "title": "Lesson 10: Processing Button Events",
+                    "title": "Lesson 10: Registering for Button Press Events",
                     "value": "10"
                   },
                   {
-                    "title": "Lesson 11: Form with Buttons Demo",
+                    "title": "Lesson 11: Processing Button Events",
                     "value": "11"
                   },
                   {
-                    "title": "Lesson 12: Buttons and Cards Guidelines & Best Practices",
+                    "title": "Lesson 12: How This App Handles Events",
                     "value": "12"
                   },
                   {
-                    "title": "Lesson 13: Displaying Complex Info",
+                    "title": "Lesson 13: Form with Buttons Demo",
                     "value": "13"
+                  },
+                  {
+                    "title": "Lesson 14: Guidelines & Best Practices",
+                    "value": "14"
                   }
                 ]
               },
@@ -251,13 +173,6 @@
         "type": "AdaptiveCard",
         "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
         "body": [
-          {
-            "type": "Image",
-            "altText": "",
-            "url": "https://cardschool.webexbots.cloud/images/helpful-resources.jpg",
-            "size": "Medium",
-            "horizontalAlignment": "Center"
-          },
           {
             "type": "TextBlock",
             "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-11.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "

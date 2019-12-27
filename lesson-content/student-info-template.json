@@ -8,8 +8,8 @@
       "items": [
         {
           "type": "TextBlock",
-          "size": "Medium",
-          "weight": "Bolder",
+          "size": "medium",
+          "weight": "bolder",
           "text": "Student Info"
         },
         {
@@ -45,14 +45,6 @@
                   "text": "{email}",
                   "isSubtle": true,
                   "wrap": true
-                },
-                {
-                  "type": "TextBlock",
-                  "id": "organization",
-                  "spacing": "None",
-                  "text": "{organization}",
-                  "isSubtle": true,
-                  "wrap": true
                 }
               ],
               "width": "stretch"
@@ -67,6 +59,8 @@
       "items": [
         {
           "type": "TextBlock",
+          "size": "medium",
+          "weight": "bolder",
           "text": "Class Activity",
           "wrap": true
         },

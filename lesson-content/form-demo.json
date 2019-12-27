@@ -20,7 +20,12 @@
     },
     {
       "type": "TextBlock",
-      "text": "When you press the \"Submit\" button, the app logic that controls this bot, it will post a new message here with the unencrypted `attachmentAction` payload.   This will give you a good idea of the type of data that your app will need to process.\n",
+      "text": "When you press the \"Submit\" button, the app logic that controls this bot will post a new message here with the unencrypted `attachmentAction` payload.   This will give you a good idea of the type of data that your app will need to process.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "Ready to try it?  Click the button below to display the form...",
       "wrap": true
     },
     {
@@ -32,7 +37,7 @@
           "actions": [
             {
               "type": "Action.ShowCard",
-              "title": "Show the Form Demo...",
+              "title": "Show the Form Demo",
               "card": {
                 "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
                 "type": "AdaptiveCard",
@@ -70,7 +75,7 @@
                   },
                   {
                     "type": "TextBlock",
-                    "text": "The **Input.ChoiceSet** element provides a variety of ways that users can choose from a set of options.   This is the default view, but designers can use the `style`, `isMutiSelect` to change the way it works.  The choices are defined in an array attribute called `choices`.",
+                    "text": "The **Input.ChoiceSet** element provides a variety of ways that users can choose from a set of options.   This is the default view, but designers can use the `style` and `isMutiSelect` attributes to change the way it works.  The choices are defined in an array attribute called `choices`.",
                     "wrap": true
                   },
                   {

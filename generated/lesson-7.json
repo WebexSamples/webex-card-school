@@ -12,12 +12,12 @@
     },
     {
       "type": "TextBlock",
-      "text": "This open source sample application is built using the [webex-node-bot-framework](https://github.com/jpjpjp/webex-node-bot-framework), which abstracts away some of the complexity of calling the Webex APIs.",
+      "text": "This open source sample application is built using the [webex-node-bot-framework](https://github.com/webex/webex-bot-node-framework), which abstracts away some of the complexity of calling the Webex APIs. If you are planning on looking at this bot's source code, its helpful to have some background on this.  If you are just trying to get an overview of Buttons and Cards, you can jump to the next lesson.",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "The [README](https://github.com/jpjpjp/webex-card-school/blob/master/README.md) for this app provides more information for developers who are interested in understanding the specifics of this app, but in a nutshell, the framework provides our app with a `bot` object each time our bot is added to a space.  The app logic can then call helper methods like `bot.say()` to send messages to the appropriate space.",
+      "text": "This bot's [README](https://github.com/webex/webex-bot-node-framework/master/README.md) about how it works, but in a nutshell, the framework provides our app with a `bot` object each time our bot is added to a space.  The app logic can then call helper methods like `bot.say()` to send messages to the appropriate space.",
       "wrap": true
     },
     {
@@ -28,7 +28,7 @@
     {
       "type": "Image",
       "altText": "Picture of a bot.sendCard()",
-      "url": "https://cardschool.webexbots.cloud/images/bot-send-card.png",
+      "url": "http://jpshipherd.ngrok.io/images/bot-send-card.png",
       "horizontalAlignment": "Center"
     },
     {
@@ -62,7 +62,7 @@
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Next Lesson: Buttons and Actions",
+              "title": "Next Lesson: Displaying Dynamic Content",
               "data": {
                 "nextLesson": true,
                 "lessonIndex": 8
@@ -125,28 +125,32 @@
                     "value": "7"
                   },
                   {
-                    "title": "Lesson 8: Buttons and Actions",
+                    "title": "Lesson 8: Displaying Dynamic Content",
                     "value": "8"
                   },
                   {
-                    "title": "Lesson 9: Registering for Button Press Events",
+                    "title": "Lesson 9: Buttons and Actions",
                     "value": "9"
                   },
                   {
-                    "title": "Lesson 10: Processing Button Events",
+                    "title": "Lesson 10: Registering for Button Press Events",
                     "value": "10"
                   },
                   {
-                    "title": "Lesson 11: Form with Buttons Demo",
+                    "title": "Lesson 11: Processing Button Events",
                     "value": "11"
                   },
                   {
-                    "title": "Lesson 12: Buttons and Cards Guidelines & Best Practices",
+                    "title": "Lesson 12: How This App Handles Events",
                     "value": "12"
                   },
                   {
-                    "title": "Lesson 13: Displaying Complex Info",
+                    "title": "Lesson 13: Form with Buttons Demo",
                     "value": "13"
+                  },
+                  {
+                    "title": "Lesson 14: Guidelines & Best Practices",
+                    "value": "14"
                   }
                 ]
               },
@@ -176,13 +180,6 @@
         "type": "AdaptiveCard",
         "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
         "body": [
-          {
-            "type": "Image",
-            "altText": "",
-            "url": "https://cardschool.webexbots.cloud/images/helpful-resources.jpg",
-            "size": "Medium",
-            "horizontalAlignment": "Center"
-          },
           {
             "type": "TextBlock",
             "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-7.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "

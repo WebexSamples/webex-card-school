@@ -4,33 +4,33 @@
   "body": [
     {
       "type": "TextBlock",
-      "text": "Lesson 10: Processing Button Events",
+      "text": "Lesson 10: Registering for Button Press Events",
       "size": "medium",
       "weight": "bolder"
     },
     {
       "type": "TextBlock",
-      "text": "The webhook you created for for the `attachmentActions` resource instructs Webex to post to your app when a user clicks an `Action.Submit` button. This POST request will include a JSON payload, however, just like other API resources that contain encrypted data, the webhook's body will not include the form submission. \n",
+      "text": "Based on what we learned in in the previous lesson, the next step would be for your app to create a [webhook](https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook) to be notified of any `attachmentAction` events that occur when a user presses an `Action.Submit` button. ",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "To retrieve the sensitive data, your app will use the `data.id` field's value in a [GET /attachment/actions](https://developer.webex.com/docs/api/v1/attachment-actions/create-an-attachment-action) request to retrieve the decrypted attachmentAction, ie:\n",
+      "text": "Keep in mind, only one webhook is needed to receive submission notifications for every card created by your app.  A best practice is to register for this when your app is starting up, and to remove it when your app is shut down.",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "`GET /attachment/actions/__data.id__GOES__HERE__`",
+      "text": "When building your request body for the POST request to the /webhooks API, use `attachmentActions` as the `resource`.  The only event for this resource is `created` so you can specify that for the `events` field",
       "wrap": true
     },
     {
       "type": "Image",
       "altText": "",
-      "url": "https://cardschool.webexbots.cloud/images/handling-submissions.png"
+      "url": "http://jpshipherd.ngrok.io/images/action-card-webhook.png"
     },
     {
       "type": "TextBlock",
-      "text": "The `inputs` field provides any card specific data.  Other fields like `personId`, `messageId` and `roomId` let you correlate which user pressed the button on which card, in which Webex Teams space.",
+      "text": "If you have an existing bot, you probably are already registering for messaging related webhooks.  Simply add an additional call to the /webhooks API to ask for the `attachmentActions` as well.",
       "wrap": true
     },
     {
@@ -54,7 +54,7 @@
           "actions": [
             {
               "type": "Action.Submit",
-              "title": "Next Lesson: Form with Buttons Demo",
+              "title": "Next Lesson: Processing Button Events",
               "data": {
                 "nextLesson": true,
                 "lessonIndex": 11
@@ -118,28 +118,32 @@
                     "value": "7"
                   },
                   {
-                    "title": "Lesson 8: Buttons and Actions",
+                    "title": "Lesson 8: Displaying Dynamic Content",
                     "value": "8"
                   },
                   {
-                    "title": "Lesson 9: Registering for Button Press Events",
+                    "title": "Lesson 9: Buttons and Actions",
                     "value": "9"
                   },
                   {
-                    "title": "Lesson 10: Processing Button Events",
+                    "title": "Lesson 10: Registering for Button Press Events",
                     "value": "10"
                   },
                   {
-                    "title": "Lesson 11: Form with Buttons Demo",
+                    "title": "Lesson 11: Processing Button Events",
                     "value": "11"
                   },
                   {
-                    "title": "Lesson 12: Buttons and Cards Guidelines & Best Practices",
+                    "title": "Lesson 12: How This App Handles Events",
                     "value": "12"
                   },
                   {
-                    "title": "Lesson 13: Displaying Complex Info",
+                    "title": "Lesson 13: Form with Buttons Demo",
                     "value": "13"
+                  },
+                  {
+                    "title": "Lesson 14: Guidelines & Best Practices",
+                    "value": "14"
                   }
                 ]
               },
@@ -169,13 +173,6 @@
         "type": "AdaptiveCard",
         "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
         "body": [
-          {
-            "type": "Image",
-            "altText": "",
-            "url": "https://cardschool.webexbots.cloud/images/helpful-resources.jpg",
-            "size": "Medium",
-            "horizontalAlignment": "Center"
-          },
           {
             "type": "TextBlock",
             "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-10.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "

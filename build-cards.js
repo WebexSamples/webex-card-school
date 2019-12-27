@@ -85,7 +85,7 @@ async function doIt(resourceDir, sharedResourceDir, generatedDir) {
     // Providing fewer of the "more resources" buttons
     let fileContent = `${resourceDir}/${lessonList[i].contentFile}`;
     let graduationJson = buildCard(i, fileContent, generatedActions);
-    let submitFeedback = graduationJson.actions[1].card.body[2];
+    let submitFeedback = graduationJson.actions[1].card.body[1];
     let pickALesson = graduationJson.actions[0];
     pickALesson.title = "Review a Previous Lesson";
     let pickALessonContainer = {

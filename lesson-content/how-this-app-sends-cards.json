@@ -12,12 +12,12 @@
     },
     {
       "type": "TextBlock",
-      "text": "This open source sample application is built using the [webex-node-bot-framework](https://github.com/jpjpjp/webex-node-bot-framework), which abstracts away some of the complexity of calling the Webex APIs.",
+      "text": "This open source sample application is built using the [webex-node-bot-framework](https://github.com/webex/webex-bot-node-framework), which abstracts away some of the complexity of calling the Webex APIs. If you are planning on looking at this bot's source code, its helpful to have some background on this.  If you are just trying to get an overview of Buttons and Cards, you can jump to the next lesson.",
       "wrap": true
     },
     {
       "type": "TextBlock",
-      "text": "The [README](https://github.com/jpjpjp/webex-card-school/blob/master/README.md) for this app provides more information for developers who are interested in understanding the specifics of this app, but in a nutshell, the framework provides our app with a `bot` object each time our bot is added to a space.  The app logic can then call helper methods like `bot.say()` to send messages to the appropriate space.",
+      "text": "This bot's [README](https://github.com/webex/webex-bot-node-framework/master/README.md) about how it works, but in a nutshell, the framework provides our app with a `bot` object each time our bot is added to a space.  The app logic can then call helper methods like `bot.say()` to send messages to the appropriate space.",
       "wrap": true
     },
     {
@@ -33,7 +33,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "[View this on github](https://github.com/jpjpjp/webex-card-school/blob/master/lesson-handlers/common-lesson-handler.js)",
+      "text": "[View this on github]({appSourceUrl}/blob/master/lesson-handlers/common-lesson-handler.js)",
       "wrap": true
     },
     {
