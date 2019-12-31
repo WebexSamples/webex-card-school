@@ -151,12 +151,10 @@ class BetaMode {
             await bot.store('betaModeState', betaModeState);
             this.logger.verbose(`Found another EFT user ${validUser} in room  ${bot.room.title}.`);
           } else {
-            this.logger.verbose(`No other EFT users in in room ${bot.room.title}. Will deactiveate `);
-            bot.origSay('This bot is still in beta mode and no more authorized beta users are members of this space.  I will ignore input until I go GA')
-              .catch((e) => this.logger.error(`Failed to notify space that bot is disabling while in beta mode: ${e.message}`));
-            delete betaModeState.validUser;
-            betaModeState.allowed = false;
-            await bot.store('betaModeState', betaModeState);
+            this.logger.verbose(`No other EFT users in in room ${bot.room.title}. Will deactiveate and leave space.`);
+            bot.origSay('This bot is still in beta mode and no more authorized beta users are members of this space.  Leaving space')
+              .then(() => bot.exit())
+              .catch((e) => this.logger.error(`Failed to notify space that bot is exiting space while in beta mode: ${e.message}`));
           }
         }
       } catch (e) {
@@ -177,7 +175,7 @@ class BetaMode {
     } else {
       betaModeState.allowed = false;
     }
-    this.bot.store('betaModeState', betaModeState)
+    return this.bot.store('betaModeState', betaModeState)
       .catch((e) => this.logger.error(`Failed saving initial betaMode state: ${e.message}`));
   }
 
