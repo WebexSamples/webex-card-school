@@ -32,7 +32,7 @@ class DisplayingDynamicContentHandlers {
         email: trigger.person.emails[0],
         currentLesson: cardObj.lessonInfo.title,
         previousLesson: cardObj.lessons[parseInt(lessonState.previousLessonIndex)].title,
-        studentInfoTemplate: `${process.env.APP_SRC_BASE_URL}/blob/master/lesson-content/student-info-template.json` ,
+        studentInfoTemplate: `${process.env.APP_SRC_BASE_URL}/blob/master/lesson-content/student-info-template.json`,
         customRenderSource: `${process.env.APP_SRC_BASE_URL}/blob/master/lesson-handlers/displaying-complex-info-handler.js`
       };
       if (trigger.type != 'attachmentAction') {
@@ -65,7 +65,8 @@ class DisplayingDynamicContentHandlers {
       bot.sendCard(theCard, `If you see this your client cannot render the card for ${cardObj.lessonInfo.title}.   Try using a different Webex Teams client with this bot.`)
         .then((message) => {
           if ('id' in message) {
-            bot.store('activeCardMessageId', message.id);
+            bot.store('activeCardMessageId', message.id)
+              .catch((e) => logger.error(`Failed to store active card message ID. Error:${e.message}`));
           }
         })
         .catch((err) => {

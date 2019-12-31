@@ -21,10 +21,10 @@ class LessonHandler {
         let previousLessonIndex = 'unknown';
         if ((trigger.type === 'attachmentAction') &&
           (typeof trigger.attachmentAction.inputs === 'object') &&
-          (typeof trigger.attachmentAction.inputs.myCardIndex !== 'undefined' )) {
+          (typeof trigger.attachmentAction.inputs.myCardIndex !== 'undefined')) {
           previousLessonIndex = parseInt(trigger.attachmentAction.inputs.myCardIndex);
         }
-        lessonState = { 
+        lessonState = {
           currentLessonIndex: previousLessonIndex,
           totalLessons: 0
         };
@@ -34,11 +34,13 @@ class LessonHandler {
     lessonState.previousLessonIndex = lessonState.currentLessonIndex;
     lessonState.currentLessonIndex = this.lessonInfo.index;
     lessonState.totalLessons += 1;
-    lessonState.lastActivity = new Date().toISOString();
-    await bot.store('lessonState', lessonState);
 
     // Capture metrics and logs for this transition
     this.writeCardMetric(bot, 'cardRendered', trigger, lessonState);
+    bot.store('lessonState', lessonState)
+      .then(() => bot.store('lastActivity', new Date().toISOString())
+        .catch((e) => this.logger.error(`renderCard(): failed writing lessonState to db: ${e.message}`)));
+
 
     // Render the new card (using a custom renderer if necessary...)
     if ((this.customHandlers) && (typeof this.customHandlers.customRenderCard == 'function')) {
@@ -49,11 +51,12 @@ class LessonHandler {
       `Try using a different Webex Teams client with this bot.`)
       .then((message) => {
         if ('id' in message) {
-          bot.store('activeCardMessageId', message.id);
+          bot.store('activeCardMessageId', message.id)
+            .catch((e) => logger.error(`Failed to store active card message ID. Error:${e.message}`));
         }
       })
       .catch((err) => {
-        let msg = 'Failed to render Introduction card.';
+        let msg = `Failed to render ${this.lessonInfo.title} card.`;
         this.logger.error(`${msg} Error:${err.message}`);
         bot.say(`${msg} Please contact the Webex Developer Support: https://developer.webex.com/support`)
           .catch((e) => this.logger.error(`Failed to post error message to space. Error:${e.message}`));
@@ -93,20 +96,39 @@ class LessonHandler {
     // Write metrics that feedback was provided
     this.writeCardMetric(bot, 'feedbackProvided', trigger);
 
+    bot.reply(attachmentAction,
+      `Your feedback: "${attachmentAction.inputs.feedback}", has been captured.  THANK YOU!`)
+      .catch((e) => this.logger.error(`Failed handling a "Send Feedback: ${e.message}`));
+
     if (bot.framework.adminsBot) {
       bot.framework.adminsBot.say('markdown', 'Feedback sumbitted:\n' +
         `* User: ${submitter.emails[0]} - ${submitter.displayName} \n` +
         `* Space: ${bot.room.title}\n` +
         `* Lesson: ${lessonInfo.title}\n` +
         `* Date: ${attachmentAction.created} \n` +
-        `* feedback: ${attachmentAction.inputs.feedback}`);
+        `* feedback: ${attachmentAction.inputs.feedback}`)
+        .catch((e) => this.logger.error(`Failed sending feedback to admin space: ${e.message}`));
     }
-    bot.reply(attachmentAction,
-      `Your feedback: "${attachmentAction.inputs.feedback}", has been captured.  THANK YOU!`)
-      .catch((e) => this.logger.error(`Failed handling a "Send Feedback: ${e.message}`));
   };
 
   async writeCardMetric(bot, event, trigger, lessonState) {
+    if (typeof lessonState === 'undefined') {
+      try {
+        lessonState = await bot.recall('lessonState');
+      } catch (e) {
+        this.logger.error(`In renderCard Failed to get lessonState: ${e.message}.\n`);
+        let previousLessonIndex = 'unknown';
+        if ((trigger.type === 'attachmentAction') &&
+          (typeof trigger.attachmentAction.inputs === 'object') &&
+          (typeof trigger.attachmentAction.inputs.myCardIndex !== 'undefined')) {
+          previousLessonIndex = parseInt(trigger.attachmentAction.inputs.myCardIndex);
+        }
+        lessonState = {
+          currentLessonIndex: previousLessonIndex,
+          totalLessons: 0
+        };
+      }
+    }
     // Write metrics that this card was loaded or used to send feedback
     let data = { event: event };
     let actorId = null;
@@ -137,20 +159,21 @@ class LessonHandler {
         data.feedback = trigger.attachmentAction.inputs.feedback;
       }
     } catch (e) {
-      debug(`Error getting card info for ${event}: ${e.message}.  Will write metric with what we have.`);
+      this.logger.error(`Error getting card info for ${event}: ${e.message}.  Will write metric with what we have.`);
     }
     bot.writeMetric(data, actorId)
       // TODO turn this into a nicer log message
       .then((data) => {
         let msg = `Processing a "${data.event}" event in spaceID:"${data.spaceId}":\n` +
-        `-- Space Name:    "${data.spaceName}"\n`;
+          `-- Space Name:    "${data.spaceName}"\n`;
         if (data.event === 'cardRendered') {
-          msg += `-- Previous Card: "${data.previousLesson}"\n` + 
-          `-- Requested via: "${data.requestedVia}"\n` + 
-          `-- New card name: "${data.cardName}"\n`;
+          msg += `-- Previous Card: "${data.previousLesson}"\n` +
+            `-- Requested via: "${data.requestedVia}"\n` +
+            `-- New card name: "${data.cardName}"\n`;
         } else if (data.event === 'feedbackProvided') {
-          msg += `-- From Card: "${data.previousLesson}"\n`;
-        } 
+          msg += `-- From Card:     "${data.previousLesson}"\n` +
+            `-- Feedback: "${data.feedback}"\n`;
+        }
         if (data.actorDisplayName) {
           msg += `-- Student Name:  "${data.actorDisplayName}"\n`;
         }
