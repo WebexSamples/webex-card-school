@@ -56,7 +56,8 @@ if ((process.env.WEBHOOK) && (process.env.TOKEN) &&
   // Adaptive Card with images can take a long time to render
   // Extend the timeout when waiting for a webex API request to return
   frameworkConfig.requestTimeout = 60000;
-
+  // Don't try to discover all bots during startup, just discover them as they are messaged
+  frameworkConfig.maxStartupSpaces = 25;
 } else {
   logger.error('Cannot start server.  Missing required environment varialbles WEBHOOK, TOKEN or PORT');
   process.exit();
@@ -117,7 +118,7 @@ if (typeof mConfig.mongoUri === 'string') {
     .then(() => framework.storageDriver(mongoStore))
     .then(() => framework.start())
     .catch((e) => {
-      logger.error(`Initialization with mongo storage failed: ${e.message}`)
+      logger.error(`Initialization with mongo storage failed: ${e.message}`);
       process.exit(-1);
     });
 } else {
@@ -178,13 +179,18 @@ framework.on("initialized", function () {
 // framework processes the membership:created event, creates a
 // new bot object and generates a new spawn event.
 framework.on('spawn', async function (bot, id, addedById) {
-  // Save framework init status when this handler was first called
-  let initialized = framework.initialized;
   let addedByPerson = null;
+  // If we have an addedById this was spawned in response to 
+  // a membership event and is a "new room"
   // Notify the admin if the bot has been added to a new space
-  if (!initialized) {
+  if (!addedById) {
     // An instance of the bot has been added to a room
-    logger.info(`Framework startup found bot in existing room: ${bot.room.title}`);
+    if (framework.initialized) {
+      logger.info(`Just-in-time bot spawn() in existing room: "${bot.room.title}" ` +
+        `because a message was sent in this space to our bot since our server started`);
+    } else {
+      logger.info(`During startup framework spawned bot in existing room: ${bot.room.title}`);
+    }
   } else {
     logger.info(`Our bot was added to a new room: ${bot.room.title}`);
   }
@@ -198,11 +204,9 @@ framework.on('spawn', async function (bot, id, addedById) {
     // before configuring it for this run of our server
     // await framework.mongoStore.onSpawn(bot, initiatlized, metricsTables);
     if (addedById) {
+      // TODO do this below if we ever get rid of beta mode
       addedByPerson = await this.webex.people.get(addedById);
     }
-    // Look for the "old style" db entries and convert them
-    // It should only be necessary to do this once
-    await updateBotStorageFromV1toV2(bot, initialized);
 
     // If we specified EFT users, register the beta-mode module
     if (betaUsers) {
@@ -226,7 +230,7 @@ framework.on('spawn', async function (bot, id, addedById) {
     this.adminsBot = adminsBot;
   }
 
-  if (initialized) {
+  if (addedById) {
     // Our bot has just been added to a new space!  
     // Since we just got added, say hello
     showHelp(bot)
@@ -242,76 +246,27 @@ framework.on('spawn', async function (bot, id, addedById) {
       adminsBot.say(msg)
         .catch((e) => logger.error(`Failed to update to Admin about a new bot. Error:${e.message}`));
     }
-    // Add some info to this bot's config
-    let spaceInfo = {
-      origTitle: bot.room.title
-    };
-    if (addedByPerson) {
-      spaceInfo.addedBy = addedByPerson.displayName;
-      spaceInfo.addedByEmail = addedByPerson.emails[0];
-    }
-    await bot.store('spaceInfo', spaceInfo);
 
+    // TODO -- validate addedByPerson exists if we ever get rid of beta mode
     // Write to our metrics DB
-    bot.writeMetric({ 'event': 'botAddedToSpace' }, addedByPerson);
+    bot.writeMetric({ 'event': 'botAddedToSpace' }, addedByPerson)
+      // Add some info to this bot's config
+      .then(() => bot.store('titleWhenAdded', bot.room.title))
+      .then(() => {
+        if (addedByPerson) {
+          bot.store('addedBy', addedByPerson.displayName)
+            .then(() => bot.store('addedByEmail', addedByPerson.emails[0]))
+            .catch((e) => logger.error(`During spawn handler, failed writing new bot details to data store: ${e.message}`));
+        }
+      })
+      .catch((e) => logger.error(`During spawn handler, failed writing new bot details to data store: ${e.message}`));
   }
 });
-
-// Look for old (v1) flat data and convert it
-// to the new (v2) object style that reduces DB reads
-async function updateBotStorageFromV1toV2(bot, initialized) {
-  try {
-    let currentLessonIndex = await bot.recall('currentLessonIndex');
-    let previousLessonIndex = await bot.recall('previousLessonIndex');
-    logger.info(`Converting to lessonState for spaceId: ${bot.room.id}`);
-    let lessonState = {
-      currentLessonIndex,
-      previousLessonIndex,
-      totalLessons: 0
-    };
-    await bot.forget('currentLessonIndex');
-    await bot.forget('previousLessonIndex');
-    await bot.store('lessonState', lessonState);
-  } catch (e) {
-    logger.info(`Did not find old style lesson indices for spaceId: ${bot.room.id}`);
-  }
-  try {
-    let betaModeEnabled = await bot.recall('betaModeEnabled');
-    let betaModeValidUser = await bot.recall('betaModeValidUser');
-    let betaModeAllowed = await bot.recall('betaModeAllowed');
-    logger.info(`Converting to betaModeState for spaceId: ${bot.room.id}`);
-    let betaModeState = {
-      validUser: betaModeValidUser,
-      enabled: betaModeEnabled,
-      allowed: betaModeAllowed
-    };
-    await bot.forget('betaModeEnabled');
-    await bot.forget('betaModeValidUser');
-    await bot.forget('betaModeAllowed');
-    await bot.store('betaModeState', betaModeState);
-  } catch (e) {
-    logger.info(`Did not find old style betaMode info for spaceId: ${bot.room.id}`);
-  }
-  if (!initialized) {
-    let spaceInfo = {};
-    try {
-      spaceInfo = await bot.recall('spaceInfo');
-    } catch (e) {
-      // Add some info to this bot's config
-      spaceInfo = {
-        origTitle: bot.room.title
-      };
-      await bot.store('spaceInfo', spaceInfo);
-    }
-  }
-}
-
 
 framework.on('despawn', async function (bot, id, removedById) {
   logger.info(`Bot has been removed from space "${bot.room.title}"`);
   bot.writeMetric({ 'event': 'botRemovedFromSpace' }, removedById);
 });
-
 
 /*
  * framework.hears() events will process text based messages to our bot
