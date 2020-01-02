@@ -172,7 +172,7 @@ class LessonHandler {
             `-- New card name: "${data.cardName}"\n`;
         } else if (data.event === 'feedbackProvided') {
           msg += `-- From Card:     "${data.previousLesson}"\n` +
-            `-- Feedback: "${data.feedback}"\n`;
+            `-- Feedback:     "${data.feedback}"\n`;
         }
         if (data.actorDisplayName) {
           msg += `-- Student Name:  "${data.actorDisplayName}"\n`;
