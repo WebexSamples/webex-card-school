@@ -50,14 +50,14 @@ if (process.env.METRICS_ROOM_ID) {
 var frameworkConfig = {};
 if ((process.env.WEBHOOK) && (process.env.TOKEN) &&
   (process.env.PORT)) {
-  frameworkConfig.webhookUrl = process.env.WEBHOOK;
   frameworkConfig.token = process.env.TOKEN;
-  frameworkConfig.port = process.env.PORT;
+  // Try using the web socket method
+  //frameworkConfig.webhookUrl = process.env.WEBHOOK;
+  //frameworkConfig.port = process.env.PORT;
+
   // Adaptive Card with images can take a long time to render
   // Extend the timeout when waiting for a webex API request to return
   frameworkConfig.requestTimeout = 60000;
-  // Don't try to discover all bots during startup, just discover them as they are messaged
-  frameworkConfig.maxStartupSpaces = 25;
 } else {
   logger.error('Cannot start server.  Missing required environment varialbles WEBHOOK, TOKEN or PORT');
   process.exit();
@@ -164,30 +164,43 @@ try {
  *
  */
 
-// Called after the framework has registerd all necessary webhooks
-// and discovered all the existing spaces that our bot is already in
+// Called after the framework has registered all necessary webhooks
+// and discovered up to the number of bots specified in maxStartupSpaces
 framework.on("initialized", function () {
   logger.info("Framework initialized successfully! [Press CTRL-C to quit]");
+  if ((adminSpaceId) && (adminSpaceId)) {
+    // Our admin space was not one of the ones found during initialization
+    logger.verbose('Attempting to force spawn of the bot for the Admin space');
+    framework.webex.memberships.list({
+      roomId: adminSpaceId,
+      personId: framework.person.id
+    })
+      .then((memberships) => {
+        if ((memberships.items) && (memberships.items.length)) {
+          framework.spawn(memberships.items[0]);
+        }
+      })
+      .catch((e) => logger.error(`Failed trying to force spawn of admin bot: ${e.message}`));
+  }
 });
 
 
-// Called when the framework creates a new bot instance for us
+// Called when the framework discovers a space our bot is in
 // At startup, (before the framework is fully initialized), this
-// is called when the framework discovers an existing space that
-// our bot is in.
+// is called when the framework discovers an existing spaces.
 // After initialization, if our bot is added to a new space the 
 // framework processes the membership:created event, creates a
-// new bot object and generates a new spawn event.
+// new bot object and generates this event with the addedById param
+// The framework can also "lazily" discover spaces that it missed
+// during startup when any kind of activity occurs there.  In these
+// cases addedById will always be null
 framework.on('spawn', async function (bot, id, addedById) {
   let addedByPerson = null;
-  // If we have an addedById this was spawned in response to 
-  // a membership event and is a "new room"
-  // Notify the admin if the bot has been added to a new space
   if (!addedById) {
     // An instance of the bot has been added to a room
     if (framework.initialized) {
       logger.info(`Just-in-time bot spawn() in existing room: "${bot.room.title}" ` +
-        `because a message was sent in this space to our bot since our server started`);
+        `because our bot is in a space where activity has occured since our server started`);
     } else {
       logger.info(`During startup framework spawned bot in existing room: ${bot.room.title}`);
     }
@@ -251,7 +264,8 @@ framework.on('spawn', async function (bot, id, addedById) {
     // Write to our metrics DB
     bot.writeMetric({ 'event': 'botAddedToSpace' }, addedByPerson)
       // Add some info to this bot's config
-      .then(() => bot.store('titleWhenAdded', bot.room.title))
+      .then(() => bot.store('spaceTitle', bot.room.title))
+      .then(() => bot.store('addedDate', bot.lastActivity))
       .then(() => {
         if (addedByPerson) {
           bot.store('addedBy', addedByPerson.displayName)
@@ -263,9 +277,30 @@ framework.on('spawn', async function (bot, id, addedById) {
   }
 });
 
-framework.on('despawn', async function (bot, id, removedById) {
-  logger.info(`Bot has been removed from space "${bot.room.title}"`);
-  bot.writeMetric({ 'event': 'botRemovedFromSpace' }, removedById);
+framework.on('roomRenamed', function (bot) {
+  return bot.recall('titleWhenAdded')
+    .then((oldTitle) => {
+      if (oldTitle != bot.room.title) {
+        logger.info(`Bot spaceId:"${bot.room.id}" has been renamed:  "${bot.room.title}"`);
+        return bot.store('titleWhenAdded', bot.room.title);
+      } else {
+        return when(true);
+      }
+    })
+    .catch((e) => {
+      logger.warn(`Failed to to update bot store with new room title: ${e.message}`);
+      return when(false);
+    });
+});
+
+
+framework.on('despawn', function (bot, id, removedById) {
+  return bot.writeMetric({ 'event': 'botRemovedFromSpace' }, removedById)
+    .then(() => logger.info(`Bot has been removed from space "${bot.room.title}"`))
+    .catch((e) => {
+      logger.warn(`Failed to write metric about bot being despawned: ${e.message}`);
+      return when(false);
+    });
 });
 
 /*
@@ -393,11 +428,14 @@ app.get('/', function (req, res) {
 });
 
 // start express server
-var server = app.listen(frameworkConfig.port, function () {
+//frameworkConfig.webhookUrl = process.env.WEBHOOK;
+//frameworkConfig.port = process.env.PORT;
+
+var server = app.listen(process.env.PORT, function () {
   if (frameworkConfig.webhookUrl) {
-    logger.info('Server started at %s listening on port %s', frameworkConfig.webhookUrl, frameworkConfig.port);
+    logger.info('Server started at %s listening on port %s', frameworkConfig.webhookUrl, process.env.PORT);
   } else {
-    logger.info('Server listening on port %s', frameworkConfig.port);
+    logger.info('Server listening on port %s', process.env.PORT);
   }
 });
 
