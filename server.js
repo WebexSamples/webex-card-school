@@ -278,11 +278,11 @@ framework.on('spawn', async function (bot, id, addedById) {
 });
 
 framework.on('roomRenamed', function (bot) {
-  return bot.recall('titleWhenAdded')
+  return bot.recall('spaceTitle')
     .then((oldTitle) => {
       if (oldTitle != bot.room.title) {
         logger.info(`Bot spaceId:"${bot.room.id}" has been renamed:  "${bot.room.title}"`);
-        return bot.store('titleWhenAdded', bot.room.title);
+        return bot.store('spaceTitle', bot.room.title);
       } else {
         return when(true);
       }
