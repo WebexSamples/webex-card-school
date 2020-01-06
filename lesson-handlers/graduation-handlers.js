@@ -16,25 +16,28 @@ class GraduationHandlers {
   async customRenderCard(bot, trigger, cardObj, logger) {
     try {
       // Create a Template instance from the graduation cards design JSON
-      var template = new ACData.Template(cardObj.cardJSON);
-
-      // Create a data binding context, and set its $root property to the
-      // data object to bind the template to, in this case our student info
-      var context = new ACData.EvaluationContext();
-      context.$root = {
-        avatar: trigger.person.avatar,
-        name: trigger.person.displayName,
-        imageHostingUrl: process.env.IMAGE_HOSTING_URL
-      };
+      let template = new ACData.Template(cardObj.cardJSON);
+      let imageHostingUrl = process.env.IMAGE_HOSTING_URL;
 
       if (!process.env.IMAGE_HOSTING_URL) {
         logger.error(`graduation card customerRenderCard() is going to fail ` +
           `because the IMAGE_HOSTING_URL environment variable is not set.`);
+        bot.say('Cannot send graduation card.  Please contact the Webex Developer Support:' +
+          ' https://developer.webex.com/support` and report that IMAGE_HOSTING_URL is not' +
+          ' properly set for this bot.');
       }
 
-      // "Expand" the template - to generate user specific sub-card
-      var card = template.expand(context);
+      // Create a data binding context, and set its $root property to the
+      // data object to bind the template to, in this case our student info
+      let context = new ACData.EvaluationContext();
+      context.$root = {
+        avatar: (trigger.person.avatar) ? trigger.person.avatar : `${imageHostingUrl}/missing-avatar.jpg`,
+        name: trigger.person.displayName,
+        imageHostingUrl: imageHostingUrl
+      };
 
+      // "Expand" the template - to generate user specific sub-card
+      let card = template.expand(context);
       bot.sendCard(card, `If you see this your client cannot render the card for ${cardObj.lessonInfo.title}.   Try using a different Webex Teams client with this bot.`)
         .then((message) => {
           if ('id' in message) {

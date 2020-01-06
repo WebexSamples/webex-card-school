@@ -19,21 +19,30 @@ class DisplayingDynamicContentHandlers {
   async customRenderCard(bot, trigger, cardObj, logger, lessonState) {
     try {
       // Read in the generic "contact card" and populate it
-      var templatePayload = require('../lesson-content/student-info-template.json');
+      let templatePayload = require('../lesson-content/student-info-template.json');
       // Create a Template instamce from the template payload
-      var template = new ACData.Template(templatePayload);
+      let template = new ACData.Template(templatePayload);
+      let imageHostingUrl = process.env.IMAGE_HOSTING_URL;
+
+      if (!process.env.IMAGE_HOSTING_URL) {
+        logger.error(`graduation card customerRenderCard() is going to fail ` +
+          `because the IMAGE_HOSTING_URL environment variable is not set.`);
+        bot.say('Cannot send graduation card.  Please contact the Webex Developer Support:' +
+          ' https://developer.webex.com/support` and report that IMAGE_HOSTING_URL is not' +
+          ' properly set for this bot.');
+      }
 
       // Create a data binding context, and set its $root property to the
       // data object to bind the template to, in this case our student info
-      var context = new ACData.EvaluationContext();
+      let context = new ACData.EvaluationContext();
       context.$root = {
-        avatar: trigger.person.avatar,
+        avatar: (trigger.person.avatar) ? trigger.person.avatar : `${imageHostingUrl}/missing-avatar.jpg`,
         name: trigger.person.displayName,
         email: trigger.person.emails[0],
         currentLesson: cardObj.lessonInfo.title,
         previousLesson: cardObj.lessons[parseInt(lessonState.previousLessonIndex)].title,
         studentInfoTemplate: `${process.env.APP_SRC_BASE_URL}/blob/master/lesson-content/student-info-template.json`,
-        customRenderSource: `${process.env.APP_SRC_BASE_URL}/blob/master/lesson-handlers/displaying-complex-info-handler.js`
+        customRenderSource: `${process.env.APP_SRC_BASE_URL}/blob/master/lesson-handlers/displaying-dynamic-content-handler.js`
       };
       if (trigger.type != 'attachmentAction') {
         context.$root.date =
@@ -53,10 +62,10 @@ class DisplayingDynamicContentHandlers {
       }
 
       // "Expand" the template - to generate user specific sub-card
-      var card = template.expand(context);
+      let card = template.expand(context);
 
-      // Make a copy of the genereted lesson card and insert this
-      // dynamic student info into it
+      // Make a copy of the generated student inf card and insert this
+      // into the Action.ShowCard in the overall lesson card
       let theCard = JSON.parse(JSON.stringify(cardObj.cardJSON));
       // Update the Action.ShowCard elements card attribute
       // This is a bit brittle as it will break if the lesson changes

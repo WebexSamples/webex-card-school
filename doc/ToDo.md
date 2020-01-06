@@ -51,14 +51,12 @@ Research mongo to see if its better to update a single field in a dictionary or
 * [x] on bot.recall read syncronously from local copy
 * [x] on bot.forget, update db lazily
 * [x] switch over to framework suported persistent store
-* [ ] Write some one-time-only code to move from storage v1 to storage v2
+* [x] Write some one-time-only code to move from storage v1 to storage v2
 * [ ] Add "announce" logic so that bots added to 1-1 spaces during the EFT announce that they are working 1 TIME ONLY!
-  
 
 ## Framework improvements
 * [ ] reimplment beta-mode as a core frameowrk feature
 * [x] reimplement mongoStore as a framework store
-
 
 ## Ask Buttons and Cards School
 * [x] Create an Ask Buttons and Cards School Space

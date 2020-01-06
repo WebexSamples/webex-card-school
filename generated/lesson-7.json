@@ -17,7 +17,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "This bot's [README](https://github.com/webex/webex-bot-node-framework/master/README.md) talks more about how it works, but in a nutshell, the framework provides our app with a `bot` object each time our bot is added to a space.  The app logic can then call helper methods like `bot.say()` to send messages to the appropriate space.",
+      "text": "This bot's [README](https://github.com/WebexSamples/webex-card-school/blob/master/README.md) talks more about how it works, but in a nutshell, the framework provides our app with a `bot` object each time our bot is added to a space.  The app logic can then call helper methods like `bot.say()` to send messages to the appropriate space.",
       "wrap": true
     },
     {
@@ -33,7 +33,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "[View this on github](https://github.com/jpjpjp/webex-card-school/blob/master/lesson-handlers/common-lesson-handler.js)",
+      "text": "[View this on github](https://github.com/WebexSamples/webex-card-school/blob/master/lesson-handlers/common-lesson-handler.js)",
       "wrap": true
     },
     {
@@ -182,7 +182,8 @@
         "body": [
           {
             "type": "TextBlock",
-            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/jpjpjp/webex-card-school/blob/master/generated/lesson-7.json)\n* [View the Source for This App](https://github.com/jpjpjp/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) "
+            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/WebexSamples/webex-card-school/blob/master/generated/lesson-7.json)\n* [View the Source for This App](https://github.com/WebexSamples/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) ",
+            "wrap": true
           },
           {
             "type": "Container",
