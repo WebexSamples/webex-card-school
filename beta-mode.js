@@ -84,6 +84,7 @@ class BetaMode {
         }
       } else {
         // Check the users in this space to see if this bot should be active here
+        // TODO Optimize by looking up the existing config and passing it into this method
         validUser = await this.checkForValidUsers();
       }
 
@@ -113,7 +114,9 @@ class BetaMode {
       return when(true);
     }
 
-    this.initConfig(validUser);
+    // TODO Optimize by calling this only if no existing config or 
+    // if the beta user has changed.  If we don;t call it set the promise to resolved.
+    let configIsInitialized = this.initConfig(validUser);
 
     // Register a handlers for membership changes
     this.bot.on('memberEnters', async (bot, membership) => {
@@ -162,7 +165,7 @@ class BetaMode {
       }
     });
 
-    return when(true);
+    return when(configIsInitialized);
   };
 
   initConfig(validUser) {
@@ -183,6 +186,9 @@ class BetaMode {
     if (!this.validUsers.length) {
       return when('');
     }
+    // TODO this could be optimized by seeing what the current state is
+    // and if one exists validating that the beta user is still a member of the space
+    // Ony if that isnt the case do we need to do the full walk done here..
     return this.bot.framework.webex.memberships.list({ roomId: this.bot.room.id })
       .then((memberships) => {
         for (let validUserEmail of this.validUsers) {
