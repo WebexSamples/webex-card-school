@@ -2,7 +2,7 @@
 Cisco Webex Bot to teach users about buttons and cards
 
 This bot is built on the webex-node-bot-framework
-https://github.com/jpjpjp/webex-node-bot-framework
+https://github.com/WebexSamples/webex-node-bot-framework
 
 This framework provides many conveniences for building
 a Webex Teams bot in node.js and all functions with names
@@ -14,11 +14,12 @@ var Framework = require('webex-node-bot-framework');
 var webhook = require('webex-node-bot-framework/webhook');
 var express = require('express');
 var bodyParser = require('body-parser');
+var _ = require('lodash');
+
+// We will create an express server to serve images for our cards
 var app = express();
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(express.static('public'));
-
-var _ = require('lodash');
 
 // When running locally read environment variables from a .env file
 require('dotenv').config();
@@ -30,8 +31,8 @@ if (process.env.DOCKER_BUILD) {
   logger.info(`Starting app in docker container built: ${process.env.DOCKER_BUILD}`);
 }
 
-// The admin user or 'admin space' get extra notifications about bot usage
-// If both are set we prefer the space
+// The admin user or 'admin space' gets extra notifications about bot 
+// usage and feedback. If both are set we prefer the space
 let adminEmail = '';
 let adminSpaceId = '';
 let adminsBot = null;
@@ -48,18 +49,13 @@ if (process.env.METRICS_ROOM_ID) {
 
 // Configure the bot framework for the environment we are running in
 var frameworkConfig = {};
-if ((process.env.WEBHOOK) && (process.env.TOKEN) &&
-  (process.env.PORT)) {
+if ((process.env.TOKEN) && (process.env.PORT)) {
   frameworkConfig.token = process.env.TOKEN;
-  // Try using the web socket method
-  //frameworkConfig.webhookUrl = process.env.WEBHOOK;
-  //frameworkConfig.port = process.env.PORT;
-
   // Adaptive Card with images can take a long time to render
   // Extend the timeout when waiting for a webex API request to return
   frameworkConfig.requestTimeout = 60000;
 } else {
-  logger.error('Cannot start server.  Missing required environment varialbles WEBHOOK, TOKEN or PORT');
+  logger.error('Cannot start server.  Missing required environment varialbles TOKEN or PORT');
   process.exit();
 }
 
@@ -129,7 +125,7 @@ if (typeof mConfig.mongoUri === 'string') {
     });
 }
 
-// Read in the lesson cards we'll be using
+// While the framework initializes, read in the lesson cards we'll be using
 // This data is generated via `npm run build`
 let generatedDir = './generated';
 let lessons;
@@ -168,7 +164,7 @@ try {
 // and discovered up to the number of bots specified in maxStartupSpaces
 framework.on("initialized", function () {
   logger.info("Framework initialized successfully! [Press CTRL-C to quit]");
-  if ((adminSpaceId) && (adminSpaceId)) {
+  if ((adminSpaceId) && (!adminsBot)) {
     // Our admin space was not one of the ones found during initialization
     logger.verbose('Attempting to force spawn of the bot for the Admin space');
     framework.webex.memberships.list({
@@ -194,31 +190,27 @@ framework.on("initialized", function () {
 // The framework can also "lazily" discover spaces that it missed
 // during startup when any kind of activity occurs there.  In these
 // cases addedById will always be null
+// TL;DR we use the addedById param to see if this is a new space for our bot
 framework.on('spawn', async function (bot, id, addedById) {
-  let addedByPerson = null;
-  if (!addedById) {
-    // An instance of the bot has been added to a room
-    if (framework.initialized) {
-      logger.info(`Just-in-time bot spawn() in existing room: "${bot.room.title}" ` +
-        `because our bot is in a space where activity has occured since our server started`);
-    } else {
-      logger.info(`During startup framework spawned bot in existing room: ${bot.room.title}`);
-    }
-  } else {
-    logger.info(`Our bot was added to a new room: ${bot.room.title}`);
-  }
-  // Set our bot's email -- this is used by our health check endpoint
-  if (botEmail === 'the bot') {  // should only happen once
-    botEmail = bot.person.emails[0];
-  }
-
   try {
-    // Ideally we fetch any existing betamode config from a database
-    // before configuring it for this run of our server
-    // await framework.mongoStore.onSpawn(bot, initiatlized, metricsTables);
-    if (addedById) {
-      // TODO do this below if we ever get rid of beta mode
+    let addedByPerson = null;
+    if (!addedById) {
+      // Framework discovered an existing space with our bot, log it
+      if (!framework.initialized) {
+        logger.info(`During startup framework spawned bot in existing room: ${bot.room.title}`);
+      } else {
+        logger.info(`Bot object spawn() in existing room: "${bot.room.title}" ` +
+          `where activity has occured since our server started`);
+      }
+    } else {
+      logger.info(`Our bot was added to a new room: ${bot.room.title}`);
+      // Get details of the user who added our bot to this space
       addedByPerson = await this.webex.people.get(addedById);
+    }
+
+    // Do some housekeeping if the bot for our admin space hasn't spawned yet
+    if (!adminsBot) {
+      tryToInitAdminBot(bot, framework);
     }
 
     // If we specified EFT users, register the beta-mode module
@@ -226,54 +218,34 @@ framework.on('spawn', async function (bot, id, addedById) {
       bot.betaMode = new BetaMode(bot, logger, true, betaUsers);
       let validBetaSpace = await bot.betaMode.onSpawn(addedByPerson);
       if (!validBetaSpace) {
+        if (addedById) {
+          // Capture metrics for this new space, but we aren't going to operate in 
+          // this space because there are no users in the beta program there
+          notifyAllOfNewSpawn(bot, addedByPerson);
+        }
         return;
       }
     }
-  } catch (e) {
-    logger.error(`Failed to init stored configuration and beta mode. Error:${e.message}`);
-  }
 
-  // See if this is the bot that belongs to our admin space
-  if ((!adminsBot) && (bot.isDirect) && (adminEmail) &&
-    (bot.isDirectTo.toLocaleLowerCase() === adminEmail.toLocaleLowerCase())) {
-    adminsBot = bot;
-    this.adminsBot = adminsBot;
-  } else if ((!adminsBot) && (adminSpaceId) && (bot.room.id === adminSpaceId)) {
-    adminsBot = bot;
-    this.adminsBot = adminsBot;
-  }
+    if (addedById) {
+      // Our bot has just been added to a new space!  
+      // Since we just got added, say hello
+      showHelp(bot)
+        .then(() => {
+          if (!bot.isDirect) {
+            // skip the card for 1-1 space, since we also will send it in 
+            // response to the message the user sent in order to create the space
+            cardArray[0].renderCard(bot, { message: { text: 'Initial Add Action' }, person: addedByPerson })
+              .catch((e) => logger.error(`Error initial lesson in space "${bot.room.title}": ${e.message}`));
+          }
+        })
+        .catch((e) => logger.error(`Error sending initial help in space "${bot.room.title}": ${e.message}`));
 
-  if (addedById) {
-    // Our bot has just been added to a new space!  
-    // Since we just got added, say hello
-    showHelp(bot)
-      .then(() => cardArray[0].renderCard(bot, { message: { text: 'Initial Add Action' }, person: addedByPerson })
-        .catch((e) => logger.error(`Error starting up in space "${bot.room.title}": ${e.message}`)));
-
-    // Notify any admins via Webex Teams
-    if (adminsBot) {
-      let msg = `${bot.person.displayName} was added to a space: "${bot.room.title}"`;
-      if (addedByPerson) {
-        msg += ` by ${addedByPerson.displayName}`;
-      }
-      adminsBot.say(msg)
-        .catch((e) => logger.error(`Failed to update to Admin about a new bot. Error:${e.message}`));
+      notifyAllOfNewSpawn(bot, addedByPerson);
     }
 
-    // TODO -- validate addedByPerson exists if we ever get rid of beta mode
-    // Write to our metrics DB
-    bot.writeMetric({ 'event': 'botAddedToSpace' }, addedByPerson)
-      // Add some info to this bot's config
-      .then(() => bot.store('spaceTitle', bot.room.title))
-      .then(() => bot.store('addedDate', bot.lastActivity))
-      .then(() => {
-        if (addedByPerson) {
-          bot.store('addedBy', addedByPerson.displayName)
-            .then(() => bot.store('addedByEmail', addedByPerson.emails[0]))
-            .catch((e) => logger.error(`During spawn handler, failed writing new bot details to data store: ${e.message}`));
-        }
-      })
-      .catch((e) => logger.error(`During spawn handler, failed writing new bot details to data store: ${e.message}`));
+  } catch (e) {
+    logger.error(`Failed to init stored configuration and beta mode. Error:${e.message}`);
   }
 });
 
@@ -306,7 +278,7 @@ framework.on('despawn', function (bot, id, removedById) {
 /*
  * framework.hears() events will process text based messages to our bot
  *
- * Most of the "action" for this bot will happend via Button presses 
+ * Most of the "action" for this bot will happen via Button presses 
  * see framework.on('attachmentAction',..) below
  */
 var responded = false;
@@ -324,7 +296,7 @@ framework.hears(/start over/i, function (bot, trigger) {
 });
 
 // go to a lesson
-framework.hears(/lesson ./, function (bot, trigger) {
+framework.hears(/lesson ./i, function (bot, trigger) {
   console.log(trigger.args);
   const args = _.toLower(trigger.text).split(' ');
   let lessonIndex = args.indexOf('lesson');
@@ -342,7 +314,7 @@ framework.hears(/lesson ./, function (bot, trigger) {
   }
 });
 
-// send a lesson card in response to any input
+// resend the current lesson card in response to any input
 framework.hears(/.*/, async function (bot, trigger) {
   if (!responded) {
     try {
@@ -351,11 +323,15 @@ framework.hears(/.*/, async function (bot, trigger) {
       if ((currentLessonIndex >= 0) && (currentLessonIndex < cardArray.length)) {
         cardArray[currentLessonIndex].renderCard(bot, trigger, lessonState);
       } else {
-        logger.error(`Got invalid index for current lesson: ${currentLessonIndex}.  Displaying intro lesson.`);
+        logger.error(`Got invalid index for current lesson: ${currentLessonIndex}` +
+          ` in response to ${trigger.text} in space "${bot.space.title}".` +
+          `  Displaying intro lesson.`);
         cardArray[0].renderCard(bot, trigger);
       }
     } catch (e) {
-      logger.error(`Failed looking up  current lesson: ${e.message}.  Displaying intro lesson.`);
+      logger.error(`Failed bot.recall('lessonState'): ${e.message}.` +
+        ` in response to ${trigger.text} in space "${bot.space.title}".` +
+        `  Displaying intro lesson.`);
       cardArray[0].renderCard(bot, trigger);
     }
   }
@@ -363,8 +339,8 @@ framework.hears(/.*/, async function (bot, trigger) {
 });
 
 /*
- * framework.on('attachmentAction',..) processes Action.Submit
- * button requests 
+ * framework.on('attachmentAction',..) processes events generated
+ * when a user clicks on an Action.Submit button
  *
  * Note that Action.ShowCard and Action.OpenUrl are handled directly
  * in the Webex Teams client.  Our bot is not notified
@@ -377,11 +353,12 @@ framework.on('attachmentAction', async function (bot, trigger) {
       // Only process input from most recently displayed card
       let activeCardMessageId = await bot.recall('activeCardMessageId');
       if (attachmentAction.messageId !== activeCardMessageId) {
-        return bot.reply(attachmentAction, 'I do not process button clicks from old lessons.  Scroll down to the most recent lesson card, or post any message to get me to display a new lesson.');
+        return bot.reply(attachmentAction, 'I do not process button clicks from old lessons.' +
+          ' Scroll down to the most recent lesson card, or post any message to get me to display a new lesson.');
       }
     } catch (e) {
-      logger.error(`${e.message}` +
-        'DB State may be out of wack. Will process button click and try to recover...');
+      logger.error(`on attachmentAction handler failed bot.recall('activeCardMessageId'): ${e.message} ` +
+        '\nDB State may be out of wack. Will process button click and try to recover...');
     }
 
     // Go to next card (or ask this card to handle input)
@@ -399,6 +376,9 @@ framework.on('attachmentAction', async function (bot, trigger) {
   }
 });
 
+/*
+ * Helper functions used above
+ */
 async function showHelp(bot) {
   return bot.say('This bot provides Webex Teams users and developers with an ' +
     'opportunity to experience ' +
@@ -414,6 +394,52 @@ async function showHelp(bot) {
     '* any other text input will re-render the current lesson card.');
 }
 
+function notifyAllOfNewSpawn(bot, addedByPerson) {
+  // Notify any admins via Webex Teams
+  if (adminsBot) {
+    let msg = `${bot.person.displayName} was added to a space: "${bot.room.title}"`;
+    if (addedByPerson) {
+      msg += ` by ${addedByPerson.displayName}`;
+    }
+    adminsBot.say(msg)
+      .catch((e) => logger.error(`Failed to update to Admin about a new bot. Error:${e.message}`));
+  }
+
+  // Write to our metrics DB
+  bot.writeMetric({ 'event': 'botAddedToSpace' }, addedByPerson)
+    // Add some info to this bot's stored information
+    .then(() => bot.store('spaceTitle', bot.room.title))
+    .then(() => bot.store('addedDate', bot.lastActivity))
+    .then(() => {
+      if (addedByPerson) {
+        bot.store('addedBy', addedByPerson.displayName)
+          .then(() => bot.store('addedByEmail', addedByPerson.emails[0]))
+          .catch((e) => logger.error(`During spawn handler, failed writing new bot details to data store: ${e.message}`));
+      }
+    })
+    .catch((e) => logger.error(`During spawn handler, failed writing new bot details to data store: ${e.message}`));
+}
+
+function tryToInitAdminBot(bot, framework) {
+  // Set our bot's email -- this is used by our health check endpoint
+  if (botEmail === 'the bot') {  // should only happen once
+    botEmail = bot.person.emails[0];
+  }
+  // See if this is the bot that belongs to our admin space
+  if ((!adminsBot) && (bot.isDirect) && (adminEmail) &&
+    (bot.isDirectTo.toLocaleLowerCase() === adminEmail.toLocaleLowerCase())) {
+    adminsBot = bot;
+    framework.adminsBot = adminsBot;
+  } else if ((!adminsBot) && (adminSpaceId) && (bot.room.id === adminSpaceId)) {
+    adminsBot = bot;
+    framework.adminsBot = adminsBot;
+  }
+}
+
+
+/*
+ * Basic express server routes and handling
+ */
 
 // define express path for incoming webhooks
 app.post('/', webhook(framework));
@@ -426,10 +452,6 @@ app.get('/', function (req, res) {
     res.send(`I'm alive.  To use this app add ${botEmail} to a Webex Teams space.`);
   }
 });
-
-// start express server
-//frameworkConfig.webhookUrl = process.env.WEBHOOK;
-//frameworkConfig.port = process.env.PORT;
 
 var server = app.listen(process.env.PORT, function () {
   if (frameworkConfig.webhookUrl) {
