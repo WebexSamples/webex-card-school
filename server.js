@@ -368,6 +368,8 @@ framework.on('attachmentAction', async function (bot, trigger) {
       cardArray[attachmentAction.inputs.jumpToLessonIndex].renderCard(bot, trigger);
     } else {
       // Handle card specific actions
+      logger.info("Handling a non-navigation button press with the following inputs...");
+      logger.info(attachmentAction.inputs);
       let index = parseInt(attachmentAction.inputs.myCardIndex);
       cardArray[index].handleSubmit(trigger, bot);
     }
