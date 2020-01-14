@@ -7,17 +7,18 @@ To simply interact with this bot, add cardSchool@webex.bot to a teams space.
 
 ## UNDER DEVELOPMENT
 
-This project is still under development and not meant to be broadly used yet.  For more details see the [To Do List](./ToDo.md)
+This project is still under development and not meant to be broadly used yet.  For more details see the [To Do List](./doc/ToDo.md)
 
 ## Checklist to run your own bot (absolute bare minimum to get a local cardSchool bot working)
 
 Prerequisites:
 
-- [ ] node.js (minimum supported v8.15.1 )
+- [ ] node.js (minimum supported v10.15.3)
 
-- [ ] Sign up for Webex Teams (logged in with your web browser)
+- [ ] a Webex Teams account
 
 ----
+- [ ] Download this project as a zip file via the green "Clone or download" button (or if you are familiar with git, fork this repo and run `git clone` with to download your forked copy).
 
 - [ ] Sign up for nGrok (save API key) and start it on your machine (save the port number and public web address): https://ngrok.com/download
 
