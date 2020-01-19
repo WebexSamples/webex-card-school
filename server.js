@@ -346,8 +346,8 @@ framework.hears(/.*/, async function (bot, trigger) {
  * in the Webex Teams client.  Our bot is not notified
  */
 framework.on('attachmentAction', async function (bot, trigger) {
+  let attachmentAction = trigger.attachmentAction;
   try {
-    let attachmentAction = trigger.attachmentAction;
     logger.verbose(`Got an attachmentAction:\n${JSON.stringify(attachmentAction, null, 2)}`);
     try {
       // Only process input from most recently displayed card
@@ -375,6 +375,10 @@ framework.on('attachmentAction', async function (bot, trigger) {
     }
   } catch (e) {
     logger.error(`Error processing AttachmentAction: ${e.message}`);
+    if ((typeof attachmentAction === 'object') && (typeof attachmentAction.inputs == 'object')) {
+      logger.error('inputs object from attachmentAction:');
+      logger.error(attachmentAction.inputs);
+    }
   }
 });
 
@@ -386,7 +390,7 @@ async function showHelp(bot) {
     'opportunity to experience ' +
     '[Buttons and Cards](https://developer.webex.com/docs/api/guides/cards) ' +
     'and to learn more about them.\n\n' +
-    'Through a series of lessons, presented using Buttons and Cards,' +
+    'Through a series of lessons, presented using Buttons and Cards, ' +
     'users will experience working with Cards, learn about how they are created ' +
     'and gain access to more resources to take their learning further.\n\n ' +
     'Most interaction takes place via buttons and cards but I do support a few text commands:\n\n ' +
