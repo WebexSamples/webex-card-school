@@ -56,6 +56,8 @@ class BetaMode {
 
   async onSpawn(addedByPerson) {
     let validUser = '';
+    let betaModeState = {};
+    let configIsInitialized;
     try {
       if (!this.betaMode) {
         this.logger.warning('Unneeded call to BetaMode.onSpawn() when not in beta mode');
@@ -70,53 +72,70 @@ class BetaMode {
           return (addedByEmail === _.toLower(userEmail));
         });
         if (!validUser) {
-          if (this.bot.isDirect) {
-            this.logger.info(`Bot was added to a one-on-one space by non EFT user ${addedByEmail}.  Sending EFT Message.`);
-            this.bot.origSay('I am not yet generally available and will ignore all input until I am. I will message this space when I become available.')
-              .catch((e) => this.logger.error(`BetaMode:onSpawn unable to send non-GA message to space "${this.bot.room.title}": ${e.message}`));
-          } else {
-            this.logger.info(`Bot was added to a space "${this.bot.room.title}" by non EFT user ${addedByEmail}.  Leaving space.`);
-            this.bot.origSay('I am not yet generally available. Try adding me again later.')
-              .catch((e) => this.logger.error(`BetaMode:onSpawn unable to send non-GA message to space "${this.bot.room.title}": ${e.message}`));
-            this.bot.exit();
-            return when(false);
-          }
+          this.notifyOfNonBetaSpace()
+            .then(() => {
+              if (!this.bot.isDirect) {
+                this.bot.exit();
+                return when(false);
+              }
+            })
+            .catch((e) => this.logger.error(`BetaMode:onSpawn unable to send non-GA message to space "${this.bot.room.title}": ${e.message}`));
         }
+        // Set persistenet store with this new space's beta mode config
+        configIsInitialized = this.initConfig(validUser);
       } else {
         // Check the users in this space to see if this bot should be active here
         // TODO Optimize by looking up the existing config and passing it into this method
-        validUser = await this.checkForValidUsers();
+        try {
+          betaModeState = await this.bot.recall('betaModeState');
+          if ((betaModeState.validUser) && (betaModeState.validUser)) {
+            configIsInitialized = Promise.resolve(validUser);
+            validUser = await this.validateBetaState(betaModeState);
+            if (!validUser) {
+              this.notifyOfNonBetaSpace()
+                .then(() => {
+                  if (!this.bot.isDirect) {
+                    this.bot.exit();
+                    return when(false);
+                  }
+                })
+                .catch((e) => this.logger.error(`BetaMode:onSpawn unable to send non-GA message to space "${this.bot.room.title}": ${e.message}`));
+              // Update persistenet store with this space's new beta mode config
+              configIsInitialized = this.initConfig(validUser);
+            }
+          } else {
+            configIsInitialized = Promise.resolve('');
+            // This is an existing 1-1 space with a non beta user
+            this.logger.verbose(`Found an existing space "${this.bot.room.title}" with non beta user.`);
+            if (!this.bot.isDirect) {
+              this.logger.warn(`Found an existing non-beta space "${this.bot.room.title} that is not 1-1!`);
+            }
+            // We COULD see if the user has been added to the list here
+            // We COULD check to see if beta mode is now off and announce that we are ready to go
+            validUser = await this.checkForValidUsers();
+            if (validUser) {
+              this.bot.origSay('I am now available and will respond to messages and button presses.')
+                .catch((e) => {
+                  this.logger.warn(`Unable to notify user in space ${this.bot.room.title}" `
+                    `that bot is now availble:${e.message}`);
+                });
+              // Update persistenet store with this space's new beta mode config
+              configIsInitialized = this.initConfig(validUser);
+            }
+          }
+        } catch (e) {
+          this.logger.warn(`Unable to find stored betaMode config for existing space ` +
+            `"${this.bot.room.title}": ${e.message}\n Will recalculate...`);
+          validUser = await this.checkForValidUsers();
+          configIsInitialized = this.initConfig(validUser);
+        }
       }
-
-      // TODO figure this out -- want to announce when beta mode is over in existing spaces, but only once!
-      // If this bot did not have a stored betaModeConfig we assume this is the 
-      // first time it was spawned.  If there are no valid users in the space,
-      // send a one time message letting the user(s) know we aren't available yet
-      // Ideally this should only happen once
-      // if ((!("betaModeConfig" in this.bot)) && (this.betaMode) && (!validUser)) {
-      //   // Comment this out until we are ready to carefully test it
-      //   //bot.say('I am not yet generally available and will ignore all input until I am. I will message this space when I become available.');
-      //   console.log('I would spam existing spaces here');
-      // }
-
-      // Check if this bot has prevously been in betaMode and now isn't
-      // In this case we want to announce that the bot is available
-      // Ideally this should only happen once
-      // if ((!this.betaMode) && (this.bot.betaModeConfig) && (this.bot.betaModeConfig.enabled)) {
-      //   // Comment this out until we are ready to carefully test it
-      //   //bot.say('I am now available. Send me a "help" message to see what I can do');
-      //   console.log('I would spam existing spaces here');
-      // }
     } catch (e) {
       this.logger.error(`Failed to set up beta mode for bot spawned in room "${this.bot.room.title}`);
       this.betaMode = false;
       this.initConfig('');
       return when(true);
     }
-
-    // TODO Optimize by calling this only if no existing config or 
-    // if the beta user has changed.  If we don;t call it set the promise to resolved.
-    let configIsInitialized = this.initConfig(validUser);
 
     // Register a handlers for membership changes
     this.bot.on('memberEnters', async (bot, membership) => {
@@ -128,7 +147,7 @@ class BetaMode {
             return (_.toLower(membership.personEmail) === _.toLower(userEmail));
           });
           if (foundUserEmail) {
-            this.logger.verbose(`EFT User ${membership.personDisplayName} joined previously deactivated room ${bot.room.title}`);
+            this.logger.info(`EFT User ${membership.personDisplayName} joined previously deactivated room ${bot.room.title}`);
             bot.origSay(`EFT User ${membership.personDisplayName} joined the spaces, so I am now active. Send me a "help" message to see what I can do!`)
               .catch((e) => this.logger.error(`Failed to notify space that bot is enabled while in beta mode: ${e.message}`));
             betaModeState.allowed = true;
@@ -168,6 +187,16 @@ class BetaMode {
     return when(configIsInitialized);
   };
 
+  async notifyOfNonBetaSpace(addedByEmail) {
+    if (this.bot.isDirect) {
+      this.logger.info(`Bot was added to a one-on-one space by non EFT user ${addedByEmail}.  Sending EFT Message.`);
+      return this.bot.origSay('I am not yet generally available and will ignore all input until I am. I will message this space when I become available.');
+    } else {
+      this.logger.info(`Bot was added to a space "${this.bot.room.title}" by non EFT user ${addedByEmail}.  Leaving space.`);
+      return this.bot.origSay('I am not yet generally available. Try adding me again later.');
+    }
+  }
+
   initConfig(validUser) {
     let betaModeState = {
       validUser: validUser,
@@ -179,7 +208,31 @@ class BetaMode {
       betaModeState.allowed = false;
     }
     return this.bot.store('betaModeState', betaModeState)
+      .then(() => validUser)
       .catch((e) => this.logger.error(`Failed saving initial betaMode state: ${e.message}`));
+  }
+
+  async validateBetaState(betaMode) {
+    if (betaMode.validUser) {
+      return this.bot.framework.webex.memberships.list({ roomId: this.bot.room.id })
+        .then((memberships) => {
+          var found = _.find(memberships.items, member => {
+            return (betaMode.validUser === _.toLower(member.personEmail));
+          });
+          if (found) {
+            this.logger.verbose(`Room "${this.bot.room.title}" has expected EFT user: ${betaMode.validUser}`);
+            return when(betaMode.validUser);
+          }
+          this.logger.warn(`Missing expected EFT user ${betaMode.validUser} in Room "${this.bot.room.title}"`);
+          return when('');
+        })
+        .catch((e) => {
+          this.logger.error(`BetaMode:validateBetaState failed: ${e.message} will assume EFT user is there.`);
+          return when(betaMode.validUser);
+        });
+    } else {
+      return when('');
+    }
   }
 
   async checkForValidUsers() {
@@ -191,13 +244,15 @@ class BetaMode {
     // Ony if that isnt the case do we need to do the full walk done here..
     return this.bot.framework.webex.memberships.list({ roomId: this.bot.room.id })
       .then((memberships) => {
-        for (let validUserEmail of this.validUsers) {
-          var found = _.find(memberships.items, membership => {
-            return (_.toLower(membership.personEmail) === _.toLower(validUserEmail));
+        for (let member of memberships.items) {
+          let memberEmail = _.toLower(member.personEmail);
+          if (memberEmail === _.toLower(this.bot.membership.personEmail)) { continue; }
+          var found = _.find(this.validUsers, betaParticipant => {
+            return (memberEmail === _.toLower(betaParticipant));
           });
           if (found) {
-            this.logger.verbose(`Room "${this.bot.room.title}" has an EFT user: ${validUserEmail}`);
-            return when(validUserEmail);
+            this.logger.verbose(`Room "${this.bot.room.title}" has an EFT user: ${memberEmail}`);
+            return when(memberEmail);
           }
         }
         this.logger.verbose(`No EFT Users in Room "${this.bot.room.title}"`);
@@ -224,7 +279,7 @@ class BetaMode {
     if (betaModeState.allowed) {
       return this.origSay(format, message);
     } else {
-      logger.verbose(`BetaMode: Supressing message from bot in space "${this.room.title}"`);
+      logger.info(`BetaMode: Supressing message from bot in space "${this.room.title}"`);
       return when({});
     }
   };
@@ -240,7 +295,7 @@ class BetaMode {
     if (betaModeState.allowed) {
       return this.origSendCard(cardJson, fallbackText);
     } else {
-      logger.verbose(`BetaMode: Supressing card from bot in space "${this.room.title}"`);
+      logger.info(`BetaMode: Supressing card from bot in space "${this.room.title}"`);
       return when({});
     }
   };
@@ -256,7 +311,7 @@ class BetaMode {
     if (betaModeState.allowed) {
       return this.origReply(replyTo, message, format);
     } else {
-      logger.verbose(`BetaMode: Supressing reply from bot in space "${this.room.title}"`);
+      logger.info(`BetaMode: Supressing reply from bot in space "${this.room.title}"`);
       return when({});
     }
   };
@@ -272,7 +327,7 @@ class BetaMode {
     if (betaModeState.allowed) {
       return this.origDm(person, format, message);
     } else {
-      logger.verbose(`BetaMode: Supressing dm from bot in space "${this.room.title}"`);
+      logger.info(`BetaMode: Supressing dm from bot in space "${this.room.title}"`);
       return when({});
     }
   };
@@ -288,7 +343,7 @@ class BetaMode {
     if (betaModeState.allowed) {
       return this.origUploadStream(filename, stream);
     } else {
-      logger.verbose(`BetaMode: Supressing uploadStream from bot in space "${this.room.title}"`);
+      logger.info(`BetaMode: Supressing uploadStream from bot in space "${this.room.title}"`);
       return when({});
     }
   };
@@ -304,7 +359,7 @@ class BetaMode {
     if (betaModeState.allowed) {
       return this.origMessageStreamRoom(roomId, message);
     } else {
-      logger.verbose(`BetaMode: Supressing uploadStream from bot in space "${this.room.title}"`);
+      logger.info(`BetaMode: Supressing uploadStream from bot in space "${this.room.title}"`);
       return when({});
     }
   };
@@ -320,7 +375,7 @@ class BetaMode {
     if (betaModeState.allowed) {
       return this.origUpload(filepath);
     } else {
-      logger.verbose(`BetaMode: Supressing uploadStream from bot in space "${this.room.title}"`);
+      logger.info(`BetaMode: Supressing uploadStream from bot in space "${this.room.title}"`);
       return when({});
     }
   };
