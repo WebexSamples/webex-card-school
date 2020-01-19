@@ -30,6 +30,11 @@ if (!process.env.APP_SRC_BASE_URL) {
   console.error('The lesson cards were NOT updated!\n');
   process.exit(0);
 }
+if (!process.env.CARD_SRC_BASE_URL) {
+  console.error('Cannot read the environment variable CARD_SRC_BASE_URL, needed to configure the buttons with links to the card source.');
+  console.error('The lesson cards were NOT updated!\n');
+  process.exit(0);
+}
 if (!process.env.ASK_SPACE_URL) {
   console.error('Cannot read the environment variable ASK_SPACE_URL, needed to configure the buttons with links to the app and card source.');
   console.error('The lesson cards were NOT updated!\n');
@@ -56,9 +61,9 @@ if (!semver.satisfies(process.version, version)) {
   process.exit(0);
 }
 
-doIt(resourceDir, sharedResourceDir, generatedDir);
+buildAllLessons(resourceDir, sharedResourceDir, generatedDir);
 
-async function doIt(resourceDir, sharedResourceDir, generatedDir) {
+async function buildAllLessons(resourceDir, sharedResourceDir, generatedDir) {
   try {
     console.log(`Looking for lesson content...`);
 
@@ -125,6 +130,7 @@ function buildCard(contentIndex, lessonContent, actionContent, nextLessonInfo, n
     card.body.push({
       type: "Input.ChoiceSet",
       id: "myCardIndex",
+      value: `${contentIndex}`,
       isMultiSelect: false,
       isVisible: false,
       choices: [
@@ -155,19 +161,21 @@ function buildCard(contentIndex, lessonContent, actionContent, nextLessonInfo, n
       // We dont expand the template for the graduation card until it is rendered
       var template = new ACData.Template(card);
       var appSource = process.env.APP_SRC_BASE_URL;
-      var cardSource = (appSource[appSource.length - 1] === '/') ?
-        appSource + `${githubGeneratedDir}/lesson-${contentIndex}.json` :
-        appSource + `/${githubGeneratedDir}/lesson-${contentIndex}.json`;
+      var cardSource = process.env.CARD_SRC_BASE_URL;
+      var cardSource = (cardSource[cardSource.length - 1] === '/') ?
+        cardSource + `lesson-${contentIndex}` :
+        cardSource + `/lesson-${contentIndex}`;
       var context = new ACData.EvaluationContext();
       context.$root = {
         appSourceUrl: appSource,
         cardSourceUrl: cardSource,
         askSpaceUrl: process.env.ASK_SPACE_URL,
-        imageHostingUrl: process.env.IMAGE_HOSTING_URL
+        imageHostingUrl: process.env.IMAGE_HOSTING_URL,
+        nextLessonIndex: `${nextLessonInfo.index}`
       };
       // "Expand" any templatized components into the final card
       populatedCard = template.expand(context);
-    } 
+    }
 
     return populatedCard;
   } catch (e) {
