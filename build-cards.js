@@ -122,6 +122,7 @@ function buildCard(contentIndex, lessonContent, actionContent, nextLessonInfo, n
     let card = require(lessonContent);
 
     // Include the Lesson Index in the title (except for Welcome and Graduation)
+    // This is a bit brittle as it assumes the title is the first element in the body
     if ((contentIndex > 0) && (nextLessonInfo)) {
       card.body[0].text = `Lesson ${contentIndex}: ${card.body[0].text}`;
     }
@@ -145,6 +146,7 @@ function buildCard(contentIndex, lessonContent, actionContent, nextLessonInfo, n
 
     if (nextLessonInfo) {
       // Build the "Next Lesson" button
+      // This is a bit brittle as it assumes the JSON structure of nextLessonButton
       let nextLessonButton = nextLessonTemplate;
       if ((nextLessonButton.items[0].type !== 'ActionSet') || (nextLessonButton.items[0].actions[0].type !== 'Action.Submit')) {
         throw new Error(`${nextLessonTemplate} did not define the expected ActionSet and Action.Sumbit schema elements`);
@@ -226,6 +228,7 @@ async function generateLessonList(contentPath, generatedPath) {
 
 // Based on the updated lesson list which includes each lessons title and index
 // Build the "Pick Another Lesson" button that will be shared by all lessons
+// This is a bit brittle as it assumes the JSON structure of Pick Another Lesson design
 async function generateActions(actionsTemplate, lessonList, generatedPath) {
   actions = {};
   try {
