@@ -63,3 +63,10 @@ Research mongo to see if its better to update a single field in a dictionary or
 * [x] Make avaialble with EURL for Cisco only
 * [x] Add link to Ask space in More Resources
 * [x] Ask EURL to make link publically avaialble after GA
+
+## More Information
+
+* [Main README for project](../README.md)
+* [How this app works](.doc/overview.md)
+* [Creating your own lessons](.doc/lessons.md)
+* [Ask Buttons and Cards School](https://eurl.io/#SJiS9VKTH) Webex Teams space.
