@@ -4,7 +4,7 @@
 * [x] Generate a list of lessons for the "Pick a Lesson" button by reading all of the ./res/#-content.json files.
 * [x] Generate complete cards that include the Lesson number, and the generated list from the lesson picker
 * [x] Create an npm command to generate lessons so they don't get generated each time the server restarts
-* [ ] Complete Readme that describes how to generate lesson content
+* [X] Complete Readme that describes how to generate lesson content
 * [x] Build a class for lesson specific Action.Submit buttons
 * [x] Create links for Show Source based on an environment variable
 
@@ -15,6 +15,7 @@
 * [x]  Add a persistent store for information about the bots
   * [x]  Store operative/inopareative status
   * [x]  Store current lesson
+* [ ]  Design a way to go "GA" an notify users in 1-1 spaces that the bot is operational now. (But make sure notification only happens one time)
 
 ## Core functionality
 * [x]  Add logic to know the most recent card presented.  Respond to submit actions from other cards with a reply that only the most current card's input is processed.
@@ -28,11 +29,11 @@
   * [x] Action.Submit button pressed
   * [x] Command entered
   * [x] Feedback Provided
-  * [ ] Figure out how to best index this data so that we can run queries such as:
-  * [ ] How many spaces is our bot in
-  * [ ] How many users have interacted with our bot (ever, this week)
-  * [ ] How many users got to the graduation card
-  * [ ] How many users interacted with more than X lessons
+  * [x] Figure out how to best index this data so that we can run queries such as:
+  * [x] How many spaces is our bot in
+  * [x] How many users have interacted with our bot (ever, this week)
+  * [x] How many users got to the graduation card
+  * [x] How many users interacted with more than X lessons
 * [x] Write Add/Remove feedback to a space.  Perhaps create an AdminRoomId instead of AdminEmail for group control
 * [ ] Prevous and Current lesson indexes don't always seem to be correct when using text commands, debug
 * [ ] Is lessonsSeen counter getting updated in all circumstances?  Seems low in some cases
@@ -52,7 +53,6 @@ Research mongo to see if its better to update a single field in a dictionary or
 * [x] on bot.forget, update db lazily
 * [x] switch over to framework suported persistent store
 * [x] Write some one-time-only code to move from storage v1 to storage v2
-* [ ] Add "announce" logic so that bots added to 1-1 spaces during the EFT announce that they are working 1 TIME ONLY!
 
 ## Framework improvements
 * [ ] reimplment beta-mode as a core frameowrk feature
@@ -62,4 +62,4 @@ Research mongo to see if its better to update a single field in a dictionary or
 * [x] Create an Ask Buttons and Cards School Space
 * [x] Make avaialble with EURL for Cisco only
 * [x] Add link to Ask space in More Resources
-* [ ] Ask EURL to make link publically avaialble after GA
+* [x] Ask EURL to make link publically avaialble after GA
