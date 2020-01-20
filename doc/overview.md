@@ -56,9 +56,9 @@ While the framework is performing its initialization our application reads the c
   }
 ```
 
-Most cards provide only basic navigation and feedback options, and share [common code](../shared-lesson-content/common-actions.json) to handle these requests.   Certain cards may have custom logic that is also loaded.   The order of the lessons and information about custom button handler logic is specified in [lesson-order.json](../lesson-content/lesson-order.json), which helps drive the lesson generation process described in more details in [Creating your own lessons](.doc/lessons.md).
+Most cards provide only basic navigation and feedback options, and share [common code](../shared-lesson-content/common-actions.json) to handle these requests.   Certain cards may have custom logic that is also loaded.   The order of the lessons and information about custom button handler logic is specified in [lesson-order.json](../lesson-content/lesson-order.json). The lesson creation and generation process is described in more detail in [Creating your own lessons](.doc/lessons.md).
 
-Our [server](./server.js) implements a `framework.on('spawn',..)` handler which is called whenever the framework discovers our bot in a Webex Teams space.  At startup the framework typically finds all the existing spaces that the bot is already a member of.  When running, if our bot is added to a new space, this handler is also called.   Our application differentiates between these two use cases, by checking if an actorId parameter was passed to our handler.   When present, this will be the personId of the user who added our bot to a space.  When our bot is added to a new space we show the help message.  We don't send any messages when actorId is not set so as to avoid spamming users when our server is restarted.
+After initialization, most of our app logic is driven from events.  Our [server](./server.js) implements a `framework.on('spawn',..)` handler which is called whenever the framework discovers our bot in a Webex Teams space.  At startup the framework typically finds all the existing spaces that the bot is already a member of.  When running, if our bot is added to a new space, this handler is also called.   Our application differentiates between these two use cases, by checking if an actorId parameter was passed to our handler.   When present, this will be the personId of the user who added our bot to a new space.  When our bot is first added to a space, we show the help message.  We don't send any messages when actorId is not set so as to avoid spamming users when our server is restarted.
 
 ```javascript
 framework.on('spawn', async (bot, id, addedById) => {
@@ -66,7 +66,7 @@ framework.on('spawn', async (bot, id, addedById) => {
     let addedByPerson = null;
     if (!addedById) {
       // Framework discovered an existing space with our bot, log it
-      logger.info(`During startup framework spawned bot in existing room: ${bot.room.title}`);
+      logger.info(`Framework spawned bot object in an existing room: ${bot.room.title}`);
     } else {
       logger.info(`Our bot was added to a new room: ${bot.room.title}`);
       // Get details of the user who added our bot to this space
@@ -78,7 +78,7 @@ framework.on('spawn', async (bot, id, addedById) => {
 
 ## Handling messages to our bot
 
-When users send messages to our bot, the framework calls any `framework.hears('pattern',...)` handlers when the provided message matches the pattern. Patterns can be text or regular expressions.  When the framework calls our handler, it passes to us the appropriate `bot` instance for the space where the message occured, along with a `trigger` object which provides us with details about the message itself, as well as the user who sent the message.
+When users send messages to our bot, the framework calls any `framework.hears('pattern',...)` handlers when the message matches the provided pattern. Patterns can be text or regular expressions.  When the framework calls our handler, it passes to us the appropriate `bot` instance for the space where the message occured, along with a `trigger` object which provides us with details about the message itself, as well as the user who sent the message.
 
 Our app provides handlers for the following patterns:
 
@@ -124,38 +124,39 @@ Much like a Webex Teams `messages:created` event an `attachmentAction:created` e
 
 The `inputs` object is populated by card specific data.  Card designers can specify key/value pairs to be returned that are specific to the button that was pressed.   The `inputs` field will also provide the values associated with any Input elements in the card.  For example, users may have been asked to enter text, or select from drop down option boxes.
 
-The buttons used in our applciation provide the following inputs:
+The buttons used in our applciation provide the following data in the `attachmentAction.inputs`:
 
 If the "Next Lesson" button is pressed:
 * `nextLesson` - set to true
 * `lessonIndex` - index of the next lesson
 
 If the "Pick a Lesson" button is pressed
-* `pickaAnotherLesson` - set to true
-* `jumpToLessonIndex` - index of the lsson to jump to
+* `pickAnotherLesson` - set to true
+* `jumpToLessonIndex` - index of the lesson to jump to
 
 Using this information our handler logic can determine if the user is asking to load another card, and can call the `renderCard()` method for the appropriate card.
 
-If the `attachementAction` was generated by a button push not associated by one of the navigation buttons, our handler will call the `handleSubmit()` method for the current card.   It discovers the current card by inspecting the `inputs` object for the `myCardIndex` attribute which is set via a hidden Input.Choice field this is returned with every button press.
+If the `attachementAction` was generated by a button push not associated by one of the navigation buttons, our handler will call the `handleSubmit()` method for the current card.   It discovers the current card by inspecting the `inputs` object for the `myCardIndex` attribute which is set via a hidden Input.Choice field that is in every card, and is returned with all button presses.
 
 ```javascript
 // Somewhat simplified README version of attachmentAction handler
 framework.on('attachmentAction', async (bot, trigger) => {
     attachmentAction = trigger.attachmentAction;
-    // Go to next card (or ask this card to handle input)
     if (attachmentAction.inputs.nextLesson) {
+      // Go to next card 
       cardArray[attachmentAction.inputs.lessonIndex].renderCard(bot, trigger);
     } else if (attachmentAction.inputs.pickAnotherLesson) {
+      // Jump to another card
       cardArray[attachmentAction.inputs.jumpToLessonIndex].renderCard(bot, trigger);
     } else {
-      // Handle card specific actions
+      // Handle non navigation actions
       cardArray[attachmentAction.inputs.myCardIndex].handleSubmit(trigger, bot);
     }
 });
 ```
 
 ## A note about the use of bot.reply()
-In some circumstances our bot sends a threaded reply in response to button presses.  This happens in cases where the bot determines the user is interacting with a card that is not the most recently displayed lesson, or if the lesson content dictates the use of a threaded reply.
+In some circumstances our bot sends a threaded reply in response to button presses.  This happens in cases where the bot determines that the user is interacting with a card that is not the most recently displayed lesson, or if the lesson content dictates the use of a threaded reply.
 
 At the time of our intial publishing, the API that supports threaded replies is not yet GA.  If you wish to use this feature in your implementation of this bot, please open an issue on this project and we can work to get you early access to this feature.   Alternately, replace the `bot.reply()` call in in the `framework.on('attachmentAction'..)` handler with a call to `bot.say()` instead.
 
