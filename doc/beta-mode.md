@@ -2,7 +2,7 @@
 
 The first step in creating a bot for Webex Teams is navigating to the [Webex Developer's Portal](https://developer.webex.com/add-bot.html) and declaring a unique bot name and email address for your bot.
 
-Once this is done, anyone who discovers the email address of your bot can add it to their spaces.  If your application is running and has registered for Webex Team's events, it will begin communicating with any users in those spaces.
+Once this is done, anyone who discovers that email address can add your bot to their spaces.  If your application is running and has registered for Webex Team's events, it will begin communicating with any users in those spaces.
 
 Sometimes, especially during development, this is not desirable, and in fact you'd prefer to let users know that your bot isn't ready for prime time (or simply not available to them) yet.
 
@@ -20,14 +20,14 @@ If not, and the space is a group space, the bot will inform users that it is not
  If the bot was added to a one-on-one space, the bot will tell the user that they will ignore any further input.
 
 ## Feedback wanted!
-Do you find beta mode helpful?  Are there aspects of it that you would like to change?   Leae a github issue or come to us in the [Ask Buttons and Cards School](https://eurl.io/#SJiS9VKTH) Webex Teams space.
+Do you find beta mode helpful?  Are there aspects of it that you would like to change?   Leave a github issue or join us in the [Ask Buttons and Cards School](https://eurl.io/#SJiS9VKTH) Webex Teams space and share your ideas.
 
 ## More Information
 
 * [Main README for project](../README.md)
-* [Running this project locally](.doc/running.md)
-* [How this app works](.doc/overview.md)
-* [Creating your own lessons](.doc/lessons.md)
+* [Running this project locally](./running.md)
+* [How this app works](./overview.md)
+* [Creating your own lessons](./lessons.md)
 * [Using Persistent Storage](./storage.md)
 * [Advanced Logging](./logging.md)
 * [Ask Buttons and Cards School](https://eurl.io/#SJiS9VKTH) Webex Teams space.

@@ -14,16 +14,18 @@ Prerequisites:
 ----
 - [ ] Download this project as a zip file via the green "Clone or download" button (or if you are familiar with git, fork this repo and run `git clone` with the url to download your forked copy).
 
-- [ ] Optionally, sign up for nGrok (save API key) and start it on your machine (save the port number and public web address): https://ngrok.com/download.  This step is not needed if you are able to run the project locally on a machine with a public IP address.
+- [ ] Optionally, sign up and download for [nGrok]( https://ngrok.com/download) and start it on your machine (save the port number and public web address).  This step is not needed if you are able to run the project locally on a machine with a public IP address.
 
-- [ ] Create a Webex Teams Bot (save the email address and API key): https://developer.webex.com/add-bot.html
+- [ ] Create a Webex Teams Bot in the [Webex Developer's Portal](https://developer.webex.com/add-bot.html) (save the email address and API key).
 
 - [ ] In the directory where you downloaded this project, download the dependencies by typing `npm install` 
 
 ## Configure the environment to build the lessons
-The lessons are generated based on static lesson conent and some environment data about where the application is running.   This process is described in greater detail in the [Creating your own lessons](.doc/lessons.md) readme file.
+The lessons are generated based on static lesson conent and some environment data about where the application is running.   This process is described in greater detail in the [Creating your own lessons](./lessons.md) readme file.
 
-The minimal configuration needed to build the cards is information about where your server is running.   Create or edit a file called `.env` and set an environment variable called `IMAGE_HOSTING_URL` to the public IP address where your application will run.  For example if you are using ngrok your .env file might have a line like this:
+The minimal configuration needed to build the cards is information about where your server is running.   Create or edit a file called `.env` and set an environment variable called `IMAGE_HOSTING_URL` to the public IP address where your application will run, followed by "/images".  
+
+For example if you are using ngrok your .env file might have a line like this:
 
 * IMAGE_HOSTING_URL="http://[XXXXXX].ngrok.io/images"
 
@@ -34,7 +36,7 @@ After your image hosting url environment variable is set, run the following comm
 
 This will create a set of lesson cards in the `generated` directory of your project that will reference images hosted by your server.
 
-You may see some warnings printed out saying that the build program was not able to find other expected environemnt variables. By default the cards will point back to the app and card source of this project on github.   If you go on to use this project to build your own application you will want to either remove these links from your cards, or update the environment to point to your own project.   This is described in more detail in the [Creating your own lessons](.doc/lessons.md) readme file.
+You may see some warnings printed out saying that the build program was not able to find other expected environemnt variables. By default the cards will point back to the app and card source of this project on github.   If you go on to use this project to build your own application you will want to either remove these links from your cards, or update the environment to point to your own project.   This is described in more detail in the [Creating your own lessons](./lessons.md) readme file.
 
 
 ## Configure the server environment
@@ -47,7 +49,7 @@ Edit your `.env` file again and add the following environmnt varibles:
 
 ## Starting the server
 
-Start your node server in your enviornment.  This can be done via a debugger when running locally or by entering the following:
+Start your node server in your environment.  This can be done by entering the following:
 
 `npm start`
 
@@ -55,20 +57,18 @@ Start your node server in your enviornment.  This can be done via a debugger whe
 
 You may see some warnings and errors in the console window.  In a production environment, this bot is configured to leverage a persistent data store which saves information about the bot's state across restarts, and is used to write metrics data on its usage.   These errors and warnings are useful to the operational team monitoring the production instance of this application, but can be safely ignored when running locally for the purposes of understanding how this application works.
 
-To learn more about how this app uses persistent storage see [How this app works](./doc/overview.md)
+To learn more about how this app uses persistent storage see [How this app works](./overview.md)
 
 ## Using the bot
 
 Once the server is up and running Webex Teams users can add the bot to a teams space.  When first added to a space, the bot should print out a help message, and post the Introduction lesson card.   User's can then interact with the bot by clicking on the navigation buttons to move from lesson to lesson.
 
 Most interaction takes place via buttons and cards but the bot does support a few text commands:
-* *help* - will present this message again
+* *help* - will present a help message
 * *lesson X* - show card for a lesson, X is a digit: 0 - 15
 * *start over* - will bring up the first lesson
 
 Any other text input will re-render the current lesson card.  Don't forget to at-mention the bot by name in a group space.
-
-Problems? Feel free to ask for help in the [Ask Buttons and Cards School](https://eurl.io/#SJiS9VKTH) Webex Teams space.
 
 ## Getting feedback in Webex Teams
 
@@ -88,9 +88,11 @@ If both environment variables are set ADMIN_EMAIL will be ignored.
 ## More Information
 
 * [Main README for project](../README.md)
-* [How this app works](.doc/overview.md)
-* [Creating your own lessons](.doc/lessons.md)
+* [How this app works](./overview.md)
+* [Creating your own lessons](./lessons.md)
 * [Using Persistent Storage](./storage.md)
 * [Advanced Logging](./logging.md)
 * Limiting access to your bot with ["beta mode"](./beta-mode.md) 
-* [Ask Buttons and Cards School](https://eurl.io/#SJiS9VKTH) Webex Teams space.
+
+Problems? Feel free to ask for help in the [Ask Buttons and Cards School](https://eurl.io/#SJiS9VKTH) Webex Teams space.
+

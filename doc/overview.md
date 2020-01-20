@@ -2,7 +2,7 @@
 A goal of this project is to help developers understand the logic used to create this bot, and potentially use this app as a reference for creating their own bots that use buttons and cards.
 
 ## Overarching Design Goals
-When designing this app we wanted to decouple the content of the lessons themselves as much as possible from the application's Webex event handling logic in the hopes that the basic server code could be re-used across other applications where information is presented across a series of cards.   The design and development of the cards themselves is described in [Creating your own lessons](.doc/lessons.md)
+When designing this app we wanted to decouple the content of the lessons themselves as much as possible from the application's Webex event handling logic in the hopes that the basic server code could be re-used across other applications where information is presented across a series of cards.   The design and development of the cards themselves is described in [Creating your own lessons](./lessons.md)
 
 While we did strive for simplicity and readability in the application's implementation, this project is the actual production code backing the production version of the Buttons and Cards School bot (cardSchool@webex.bot).  
 
@@ -56,7 +56,7 @@ While the framework is performing its initialization our application reads the c
   }
 ```
 
-Most cards provide only basic navigation and feedback options, and share [common code](../shared-lesson-content/common-actions.json) to handle these requests.   Certain cards may have custom logic that is also loaded.   The order of the lessons and information about custom button handler logic is specified in [lesson-order.json](../lesson-content/lesson-order.json). The lesson creation and generation process is described in more detail in [Creating your own lessons](.doc/lessons.md).
+Most cards provide only basic navigation and feedback options, and share [common code](../shared-lesson-content/common-actions.json) to handle these requests.   Certain cards may have custom logic that is also loaded.   The order of the lessons and information about custom button handler logic is specified in [lesson-order.json](../lesson-content/lesson-order.json). The lesson creation and generation process is described in more detail in [Creating your own lessons](./lessons.md).
 
 After initialization, most of our app logic is driven from events.  Our [server](./server.js) implements a `framework.on('spawn',..)` handler which is called whenever the framework discovers our bot in a Webex Teams space.  At startup the framework typically finds all the existing spaces that the bot is already a member of.  When running, if our bot is added to a new space, this handler is also called.   Our application differentiates between these two use cases, by checking if an actorId parameter was passed to our handler.   When present, this will be the personId of the user who added our bot to a new space.  When our bot is first added to a space, we show the help message.  We don't send any messages when actorId is not set so as to avoid spamming users when our server is restarted.
 
@@ -163,8 +163,8 @@ At the time of our intial publishing, the API that supports threaded replies is 
 ## More Information
 
 * [Main README for project](../README.md)
-* [Running this project locally](.doc/running.md)
-* [Creating your own lessons](.doc/lessons.md)
+* [Running this project locally](./running.md)
+* [Creating your own lessons](./lessons.md)
 * [Using Persistent Storage](./storage.md)
 * [Advanced Logging](./logging.md)
 * Limiting access to your bot with ["beta mode"](./beta-mode.md) 
