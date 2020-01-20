@@ -25,20 +25,22 @@ var ACData = require("adaptivecards-templating");
 // Read URLs for Card and App source links from environment
 require('dotenv').config();
 
+let cardSourceIncludeJson = false;
 if (!process.env.APP_SRC_BASE_URL) {
   console.error('Cannot read the environment variable APP_SRC_BASE_URL, needed to configure the buttons with links to the app and card source.');
-  console.error('The lesson cards were NOT updated!\n');
-  process.exit(0);
+  console.error('Links to this app\'s source will default to https://github.com/WebexSamples/webex-card-school\n');
+  process.env.APP_SRC_BASE_URL="https://github.com/WebexSamples/webex-card-school";
 }
 if (!process.env.CARD_SRC_BASE_URL) {
   console.error('Cannot read the environment variable CARD_SRC_BASE_URL, needed to configure the buttons with links to the card source.');
-  console.error('The lesson cards were NOT updated!\n');
-  process.exit(0);
+  console.error('Links to this cards sources will default to https://github.com/WebexSamples/webex-card-school\n');
+  process.env.CARD_SRC_BASE_URL="https://github.com/WebexSamples/webex-card-school/blob/master/generated";
+  cardSourceIncludeJson = true;
 }
 if (!process.env.ASK_SPACE_URL) {
   console.error('Cannot read the environment variable ASK_SPACE_URL, needed to configure the buttons with links to the app and card source.');
-  console.error('The lesson cards were NOT updated!\n');
-  process.exit(0);
+  console.error('Links will point to "Ask Buttons and Cards School" space\n');
+  process.env.ASK_SPACE_URL="https://eurl.io/#SJiS9VKTH";
 }
 if (!process.env.IMAGE_HOSTING_URL) {
   console.error('Cannot read the environment variable IMAGE_HOSTING_URL, needed to display images on cards.');
@@ -173,6 +175,10 @@ function buildCard(contentIndex, lessonContent, actionContent, nextLessonInfo, n
         imageHostingUrl: process.env.IMAGE_HOSTING_URL,
         nextLessonIndex: `${nextLessonInfo.index}`
       };
+      // Depeding on card source approach add .json to URL
+      if (cardSourceIncludeJson) {
+        cardSource = `${cardSource}.json`;
+      }
       // "Expand" any templatized components into the final card
       populatedCard = template.expand(context);
     }
