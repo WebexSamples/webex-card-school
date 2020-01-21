@@ -41,7 +41,6 @@ class LessonHandler {
       .then(() => bot.store('lastActivity', new Date().toISOString())
         .catch((e) => this.logger.error(`renderCard(): failed writing lessonState to db: ${e.message}`)));
 
-
     // Render the new card (using a custom renderer if necessary...)
     if ((this.customHandlers) && (typeof this.customHandlers.customRenderCard == 'function')) {
       return this.customHandlers.customRenderCard(bot, trigger, this, this.logger, lessonState);
@@ -162,24 +161,23 @@ class LessonHandler {
       this.logger.error(`Error getting card info for ${event}: ${e.message}.  Will write metric with what we have.`);
     }
     bot.writeMetric(data, actorId)
-      // TODO turn this into a nicer log message
-      .then((data) => {
-        let msg = `Processing a "${data.event}" event in spaceID:"${data.spaceId}":\n` +
-          `-- Space Name:    "${data.spaceName}"\n`;
-        if (data.event === 'cardRendered') {
-          msg += `-- Previous Card: "${data.previousLesson}"\n` +
-            `-- Requested via: "${data.requestedVia}"\n` +
-            `-- New card name: "${data.cardName}"\n`;
-        } else if (data.event === 'feedbackProvided') {
-          msg += `-- From Card:     "${data.previousLesson}"\n` +
-            `-- Feedback:     "${data.feedback}"\n`;
-        }
-        if (data.actorDisplayName) {
-          msg += `-- Student Name:  "${data.actorDisplayName}"\n`;
-        }
-        this.logger.info(msg);
-      })
       .catch((e) => this.logger.error(`Failed writing metric to DB about event ${event}: ${e.message}`));
+
+    // Send a nice log message
+    let msg = `Processing a "${data.event}" event in spaceID:"${bot.room.id}":\n` +
+      `-- Space Name:    "${bot.room.title}"\n`;
+    if (data.event === 'cardRendered') {
+      msg += `-- Previous Card: "${data.previousLesson}"\n` +
+        `-- Requested via: "${data.requestedVia}"\n` +
+        `-- New card name: "${data.cardName}"\n`;
+    } else if (data.event === 'feedbackProvided') {
+      msg += `-- From Card:     "${data.previousLesson}"\n` +
+        `-- Feedback:     "${data.feedback}"\n`;
+    }
+    if (data.actorDisplayName) {
+      msg += `-- Student Name:  "${data.actorDisplayName}"\n`;
+    }
+    this.logger.info(msg);
   };
 
 };
