@@ -25,7 +25,7 @@ var ACData = require("adaptivecards-templating");
 // Read URLs for Card and App source links from environment
 require('dotenv').config();
 
-let cardSourceIncludeJson = false;
+let cardSourceUrlUsesJson = false;
 if (!process.env.APP_SRC_BASE_URL) {
   console.error('Cannot read the environment variable APP_SRC_BASE_URL, needed to configure the buttons with links to the app and card source.');
   console.error('Links to this app\'s source will default to https://github.com/WebexSamples/webex-card-school\n');
@@ -35,7 +35,7 @@ if (!process.env.CARD_SRC_BASE_URL) {
   console.error('Cannot read the environment variable CARD_SRC_BASE_URL, needed to configure the buttons with links to the card source.');
   console.error('Links to this cards sources will default to https://github.com/WebexSamples/webex-card-school\n');
   process.env.CARD_SRC_BASE_URL="https://github.com/WebexSamples/webex-card-school/blob/master/generated";
-  cardSourceIncludeJson = true;
+  cardSourceUrlUsesJson = true;
 }
 if (!process.env.ASK_SPACE_URL) {
   console.error('Cannot read the environment variable ASK_SPACE_URL, needed to configure the buttons with links to the app and card source.');
@@ -178,8 +178,8 @@ function buildCard(contentIndex, lessonContent, actionContent, nextLessonInfo, n
         nextLessonIndex: `${nextLessonInfo.index}`
       };
       // Depeding on card source approach add .json to URL
-      if (cardSourceIncludeJson) {
-        cardSource = `${cardSource}.json`;
+      if (cardSourceUrlUsesJson) {
+        context.$root.cardSourceUrl = `${cardSource}.json`;
       }
       // "Expand" any templatized components into the final card
       populatedCard = template.expand(context);
