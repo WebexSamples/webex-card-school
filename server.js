@@ -11,15 +11,8 @@ See the framework's readme for more details on how it works
 */
 
 var Framework = require('webex-node-bot-framework');
-var webhook = require('webex-node-bot-framework/webhook');
 var express = require('express');
-var bodyParser = require('body-parser');
 var _ = require('lodash');
-
-// We will create an express server to serve images for our cards
-var app = express();
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(express.static('public'));
 
 // When running locally read environment variables from a .env file
 require('dotenv').config();
@@ -82,19 +75,21 @@ if (process.env.MONGO_URI) {
     '\n\nThe following optional environment variables will also be used if set:\n' +
     '* MONGO_BOT_STORE -- name of collection for bot storage elements (will be created if does not exist).  Will use "webexBotFramworkStorage" if not set\n' +
     '* MONGO_BOT_METRICS -- name of a collection to write bot metrics to (will be created if does not exist). bot.writeMetric() calls will fail if not set\n' +
-    '* MONGO_INIT_STORAGE -- stringified ojbect aassigned as the default startup config if non exists yet\n' +
+    '* MONGO_INIT_STORAGE -- stringified object assigned as the default startup config if non exists yet\n' +
     '* MONGO_SINGLE_INSTANCE_MODE -- Optimize lookups speeds when only a single bot server instance is running\n\n' +
     'Also note, the mongodb module v3.4 or higher must be available (this is not included in the framework\'s default dependencies)');
   logger.error('Running without having these set will mean that there will be no persistent storage \n' +
-    'across server restarts, and that no metrics will be written.  Generally this is a bad thing.');
+    'across server restarts, and that no metrics will be written.  Generally this is a bad thing for production, \n' +
+    ' but may be expected in developement.  If you meant this, please disregard warnings about ' +
+    ' failed calls to bot.recall() and bot.writeMetric()');
 }
 
 // The beta-mode module allows us to restrict our bot to spaces
 // that include a specified list of users
-let betaUsers = [];
+let betaUsers = false;
 let BetaMode = null;
-if (process.env.EFT_USER_EMAILS) {
-  betaUsers = process.env.EFT_USER_EMAILS.split(/[ ,]+/);
+if (process.env.BETA_USER_EMAILS) {
+  betaUsers = process.env.BETA_USER_EMAILS.split(/[ ,]+/);
   if (betaUsers.length) {
     BetaMode = require('./beta-mode');
   }
@@ -138,7 +133,6 @@ try {
 
   LessonHandler = require('./lesson-handlers/common-lesson-handler.js');
   for (let i = 0; i < numLessons; i++) {
-    // TODO Am I going to miss spawn events by hogging the processor here?
     let customHandlers = null;
     let fileName = `${generatedDir}/lesson-${i}.json`;
     logger.verbose(`${lessons[i].title} is being loaded from ${fileName}`);
@@ -160,7 +154,7 @@ try {
  *
  */
 
-// Called after the framework has registered all necessary webhooks
+// Called after the framework has registered all necessary event handlers
 // and discovered up to the number of bots specified in maxStartupSpaces
 framework.on("initialized", function () {
   logger.info("Framework initialized successfully! [Press CTRL-C to quit]");
@@ -191,7 +185,7 @@ framework.on("initialized", function () {
 // during startup when any kind of activity occurs there.  In these
 // cases addedById will always be null
 // TL;DR we use the addedById param to see if this is a new space for our bot
-framework.on('spawn', async function (bot, id, addedById) {
+framework.on('spawn', async (bot, id, addedById) => {
   try {
     let addedByPerson = null;
     if (!addedById) {
@@ -283,20 +277,20 @@ framework.on('despawn', function (bot, id, removedById) {
  */
 var responded = false;
 // Any good bot should process help requests
-framework.hears(/help/i, function (bot) {
+framework.hears(/help/i, (bot) => {
   responded = true;
   showHelp(bot)
     .catch((e) => logger.error(`Error displaying help in space "${bot.room.title}": ${e.message}`));
 });
 
 // start the lessons over
-framework.hears(/start over/i, function (bot, trigger) {
+framework.hears(/start over/i, (bot, trigger) => {
   responded = true;
   cardArray[0].renderCard(bot, trigger);
 });
 
 // go to a lesson
-framework.hears(/lesson ./i, function (bot, trigger) {
+framework.hears(/lesson ./i, (bot, trigger) => {
   console.log(trigger.args);
   const args = _.toLower(trigger.text).split(' ');
   let lessonIndex = args.indexOf('lesson');
@@ -315,7 +309,7 @@ framework.hears(/lesson ./i, function (bot, trigger) {
 });
 
 // resend the current lesson card in response to any input
-framework.hears(/.*/, async function (bot, trigger) {
+framework.hears(/.*/, async (bot, trigger) => {
   if (!responded) {
     try {
       let lessonState = await bot.recall('lessonState');
@@ -345,9 +339,10 @@ framework.hears(/.*/, async function (bot, trigger) {
  * Note that Action.ShowCard and Action.OpenUrl are handled directly
  * in the Webex Teams client.  Our bot is not notified
  */
-framework.on('attachmentAction', async function (bot, trigger) {
-  let attachmentAction = trigger.attachmentAction;
+framework.on('attachmentAction', async (bot, trigger) => {
+  let attachmentAction = null;
   try {
+    attachmentAction = trigger.attachmentAction;
     logger.verbose(`Got an attachmentAction:\n${JSON.stringify(attachmentAction, null, 2)}`);
     try {
       // Only process input from most recently displayed card
@@ -361,13 +356,13 @@ framework.on('attachmentAction', async function (bot, trigger) {
         '\nDB State may be out of wack. Will process button click and try to recover...');
     }
 
-    // Go to next card (or ask this card to handle input)
     if (attachmentAction.inputs.nextLesson) {
+      // Go to next lesson
       cardArray[attachmentAction.inputs.lessonIndex].renderCard(bot, trigger);
     } else if (attachmentAction.inputs.pickAnotherLesson) {
+      // Jump to another lesson
       cardArray[attachmentAction.inputs.jumpToLessonIndex].renderCard(bot, trigger);
     } else {
-      // Handle card specific actions
       logger.info("Handling a non-navigation button press with the following inputs...");
       logger.info(attachmentAction.inputs);
       let index = parseInt(attachmentAction.inputs.myCardIndex);
@@ -446,9 +441,10 @@ function tryToInitAdminBot(bot, framework) {
 /*
  * Basic express server routes and handling
  */
+var app = express();
 
-// define express path for incoming webhooks
-app.post('/', webhook(framework));
+// Serve image files used by cards
+app.use(express.static('public'));
 
 // Health Check
 app.get('/', function (req, res) {
@@ -460,18 +456,13 @@ app.get('/', function (req, res) {
 });
 
 var server = app.listen(process.env.PORT, function () {
-  if (frameworkConfig.webhookUrl) {
-    logger.info('Server started at %s listening on port %s', frameworkConfig.webhookUrl, process.env.PORT);
-  } else {
-    logger.info('Server listening on port %s', process.env.PORT);
-  }
+  logger.info('Server started. Listening on port %s', process.env.PORT);
 });
 
 // gracefully shutdown (ctrl-c)
-process.on('SIGINT', function () {
+process.on('SIGINT', () => {
   framework.debug('stoppping...');
   server.close();
-  framework.stop().then(function () {
-    process.exit();
-  });
+  framework.stop()
+    .then(() => process.exit());
 });
