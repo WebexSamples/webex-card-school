@@ -7,8 +7,7 @@
       "type": "TextBlock",
       "text": "How This App Handles Events",
       "size": "medium",
-      "weight": "bolder",
-      "horizontalAlignment": "center"
+      "weight": "bolder"
     },
     {
       "type": "TextBlock",
@@ -17,7 +16,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "In order to allow node.js bot developers to focus more on how their bot responds to these inputs, the `framework.start()` function automatically registers for all necessary webhooks.  Bot developers need to only impelment handlers for various events.  You can create handlers for messages and attachmentActions (as well as other events we won't cover here).",
+      "text": "In order to allow node.js bot developers to focus more on how their bot responds to these inputs, the `framework.start()` function automatically registers for all necessary webhooks.  Bot developers need to only implement handlers for various events.  You can create handlers for messages and attachmentActions (as well as other events we won't cover here).",
       "wrap": true
     },
     {
