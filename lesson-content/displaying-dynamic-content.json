@@ -6,8 +6,8 @@
     {
       "type": "TextBlock",
       "text": "Displaying Dynamic Content",
-      "size": "Medium",
-      "weight": "Bolder"
+      "size": "medium",
+      "weight": "bolder"
     },
     {
       "type": "TextBlock",
@@ -38,7 +38,7 @@
           "actions": [
             {
               "type": "Action.ShowCard",
-              "title": "Show the Dynamic \"Student Info\" card",
+              "title": "Show the Dynamic Card",
               "card": {
                 "type": "AdaptiveCard",
                 "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
