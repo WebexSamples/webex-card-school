@@ -33,7 +33,8 @@ class GraduationHandlers {
       context.$root = {
         avatar: (trigger.person.avatar) ? trigger.person.avatar : `${imageHostingUrl}/missing-avatar.jpg`,
         name: trigger.person.displayName,
-        imageHostingUrl: imageHostingUrl
+        imageHostingUrl: imageHostingUrl,
+        nextLessonIndex: "0"
       };
 
       // "Expand" the template - to generate user specific sub-card

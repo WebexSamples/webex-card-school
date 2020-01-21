@@ -16,6 +16,7 @@
             {
               "type": "Input.ChoiceSet",
               "id": "jumpToLessonIndex",
+              "value": "{nextLessonIndex}",
               "choices": []
             },
             {
