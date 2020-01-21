@@ -7,8 +7,7 @@
       "type": "TextBlock",
       "text": "Sending A Card to Webex Teams",
       "size": "medium",
-      "weight": "bolder",
-      "horizontalAlignment": "center"
+      "weight": "bolder"
     },
     {
       "type": "TextBlock",

@@ -7,8 +7,7 @@
       "type": "TextBlock",
       "text": "How This App Sends Cards",
       "size": "medium",
-      "weight": "bolder",
-      "horizontalAlignment": "center"
+      "weight": "bolder"
     },
     {
       "type": "TextBlock",
