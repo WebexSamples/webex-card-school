@@ -40,18 +40,16 @@ class DisplayingDynamicContentHandlers {
         name: trigger.person.displayName,
         email: trigger.person.emails[0],
         currentLesson: cardObj.lessonInfo.title,
-        previousLesson: cardObj.lessons[parseInt(lessonState.previousLessonIndex)].title,
+        previousLesson: (typeof lessonState.previousLessonIndex !== 'number') ? 'Unknown' :
+          cardObj.lessons[parseInt(lessonState.previousLessonIndex)].title,
         studentInfoTemplate: `${process.env.APP_SRC_BASE_URL}/blob/master/lesson-content/student-info-template.json`,
-        customRenderSource: `${process.env.APP_SRC_BASE_URL}/blob/master/lesson-handlers/displaying-dynamic-content-handler.js`
+        customRenderSource: `${process.env.APP_SRC_BASE_URL}/blob/master/lesson-handlers/displaying-dynamic-content-handler.js`,
+        date: `${moment.utc().format('lll')} GMT`
       };
       if (trigger.type != 'attachmentAction') {
-        context.$root.date =
-          `${moment.utc(trigger.message.created).format('lll')} GMT`;
         context.$root.requestedVia = `Message to Bot: ${trigger.message.text}`;
       } else {
         let inputs = trigger.attachmentAction.inputs;
-        context.$root.date =
-          `${moment.utc(trigger.attachmentAction.created).format('lll')} GMT`;
         if (inputs.nextLesson) {
           context.$root.requestedVia = 'Next Lesson Button';
         } else if (inputs.pickAnotherLesson) {
