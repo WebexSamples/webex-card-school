@@ -228,7 +228,9 @@ framework.on('spawn', async (bot, id, addedById) => {
         if ((betaModeState.enabled) && (betaModeState.allowed === false)) {
           if (bot.isDirect) {
             let msg = `Enabling space with former non Beta user ${bot.isDirectTo}`;
-            adminsBot.say(msg);
+            if (adminsBot) {
+              adminsBot.say(msg);
+            }
             logger.info(msg);
           }
           bot.say('I am now available and will respond to messages and button presses.')
