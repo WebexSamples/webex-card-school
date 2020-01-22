@@ -1,0 +1,219 @@
+{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Lesson 7: How This App Sends Cards",
+      "size": "medium",
+      "weight": "bolder"
+    },
+    {
+      "type": "TextBlock",
+      "text": "This open source sample application is built using the [webex-node-bot-framework](https://github.com/webex/webex-bot-node-framework), which abstracts away some of the complexity of calling the Webex APIs. If you are planning on looking at this bot's source code, its helpful to have some background on this.  If you are just trying to get an overview of Buttons and Cards, you can jump to the next lesson.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "This bot's [README](https://github.com/WebexSamples/webex-card-school/blob/master/README.md) talks more about how it works, but in a nutshell, the framework provides our app with a `bot` object each time our bot is added to a space.  The app logic can then call helper methods like `bot.say()` to send messages to the appropriate space.",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "For sending a card, our app can call `bot.sendCard()` and simply pass the card's JSON design, which could be copied directly from the designer, abstracting away the need to build a full `attachments` array. In our app we created an object for each card which contains the card's JSON, resulting in the following:",
+      "wrap": true
+    },
+    {
+      "type": "Image",
+      "altText": "Picture of a bot.sendCard()",
+      "url": "http://jpshipherd.ngrok.io/images/bot-send-card.png",
+      "horizontalAlignment": "Center"
+    },
+    {
+      "type": "TextBlock",
+      "text": "[View this on github](https://github.com/WebexSamples/webex-card-school/blob/master/lesson-handlers/common-lesson-handler.js)",
+      "wrap": true
+    },
+    {
+      "type": "TextBlock",
+      "text": "While this framework is a handy option for node.js developers, the lessons in this bot will primarily cover the pure API approach, while still calling out where this app's code might be slightly different.",
+      "wrap": true
+    },
+    {
+      "type": "Input.ChoiceSet",
+      "id": "myCardIndex",
+      "value": "7",
+      "isMultiSelect": false,
+      "isVisible": false,
+      "choices": [
+        {
+          "title": "This hidden choice ensures that myCardIndex is returned with every Action.Submit attachmentAction",
+          "value": "7"
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "ActionSet",
+          "horizontalAlignment": "Center",
+          "actions": [
+            {
+              "type": "Action.Submit",
+              "title": "Next Lesson: Displaying Dynamic Content",
+              "data": {
+                "nextLesson": true,
+                "lessonIndex": 8
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.ShowCard",
+      "title": "Pick Another Lesson",
+      "card": {
+        "type": "AdaptiveCard",
+        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+        "body": [
+          {
+            "type": "Container",
+            "items": [
+              {
+                "type": "TextBlock",
+                "text": "Available Lessons:"
+              },
+              {
+                "type": "Input.ChoiceSet",
+                "id": "jumpToLessonIndex",
+                "value": "8",
+                "choices": [
+                  {
+                    "title": "Introduction",
+                    "value": "0"
+                  },
+                  {
+                    "title": "Lesson 1: What is a Card?",
+                    "value": "1"
+                  },
+                  {
+                    "title": "Lesson 2: Advantages of Using Cards",
+                    "value": "2"
+                  },
+                  {
+                    "title": "Lesson 3: Card Specifications",
+                    "value": "3"
+                  },
+                  {
+                    "title": "Lesson 4: Designing a Card",
+                    "value": "4"
+                  },
+                  {
+                    "title": "Lesson 5: Webex Card Designer Tool",
+                    "value": "5"
+                  },
+                  {
+                    "title": "Lesson 6: Sending A Card to Webex Teams",
+                    "value": "6"
+                  },
+                  {
+                    "title": "Lesson 7: How This App Sends Cards",
+                    "value": "7"
+                  },
+                  {
+                    "title": "Lesson 8: Displaying Dynamic Content",
+                    "value": "8"
+                  },
+                  {
+                    "title": "Lesson 9: Buttons and Actions",
+                    "value": "9"
+                  },
+                  {
+                    "title": "Lesson 10: Registering for Button Press Events",
+                    "value": "10"
+                  },
+                  {
+                    "title": "Lesson 11: Processing Button Events",
+                    "value": "11"
+                  },
+                  {
+                    "title": "Lesson 12: How This App Handles Events",
+                    "value": "12"
+                  },
+                  {
+                    "title": "Lesson 13: Form with Buttons Demo",
+                    "value": "13"
+                  },
+                  {
+                    "title": "Lesson 14: Lesson 14: Guidelines & Best Practices",
+                    "value": "14"
+                  }
+                ]
+              },
+              {
+                "type": "ActionSet",
+                "actions": [
+                  {
+                    "type": "Action.Submit",
+                    "title": "Go To Lesson!",
+                    "id": "gotoLesson",
+                    "data": {
+                      "nextLesson": false,
+                      "pickAnotherLesson": true
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "Action.ShowCard",
+      "title": "Helpful Resources",
+      "card": {
+        "type": "AdaptiveCard",
+        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+        "body": [
+          {
+            "type": "TextBlock",
+            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://developer.webex.com/buttons-and-cards-designer/lesson-7)\n* [View the Source for This App](https://github.com/WebexSamples/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) ",
+            "wrap": true
+          },
+          {
+            "type": "Container",
+            "items": [
+              {
+                "type": "TextBlock",
+                "text": "Do you have questions, comments or suggestions?\n\nWe'd love to get your feedback on this bot or any aspect of the Webex Teams Buttons and Cards feature.",
+                "wrap": true
+              },
+              {
+                "type": "Input.Text",
+                "id": "feedback",
+                "isMultiline": true,
+                "placeholder": "Enter your feedback"
+              },
+              {
+                "type": "ActionSet",
+                "actions": [
+                  {
+                    "type": "Action.Submit",
+                    "title": "Send Feedback",
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
