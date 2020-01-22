@@ -121,6 +121,7 @@ class BetaMode {
                 });
             }
             // Update persistenet store with this space's new beta mode config
+            // TODO tell user when beta mode is re-enabled
             configIsInitialized = this.initConfig(validUser);
           }
         } catch (e) {
