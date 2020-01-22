@@ -119,9 +119,9 @@ class BetaMode {
                   this.logger.warn(`Unable to notify user in space ${this.bot.room.title}" `
                     `that bot is now availble:${e.message}`);
                 });
-              // Update persistenet store with this space's new beta mode config
-              configIsInitialized = this.initConfig(validUser);
             }
+            // Update persistenet store with this space's new beta mode config
+            configIsInitialized = this.initConfig(validUser);
           }
         } catch (e) {
           this.logger.warn(`Unable to find stored betaMode config for existing space ` +
