@@ -32,3 +32,4 @@ mongo-prodbot.json
 # Deployment scripts
 publish-to-aws.sh
 shutdown-aws.sh
+start-one-aws-instance.sh

@@ -199,7 +199,7 @@ framework.on('spawn', async (bot, id, addedById) => {
     } else {
       logger.info(`Our bot was added to a new room: ${bot.room.title}`);
       // Get details of the user who added our bot to this space
-      addedByPerson = await this.webex.people.get(addedById);
+      addedByPerson = await bot.webex.people.get(addedById);
     }
 
     // Do some housekeeping if the bot for our admin space hasn't spawned yet
