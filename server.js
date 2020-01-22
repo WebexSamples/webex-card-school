@@ -88,6 +88,7 @@ if (process.env.MONGO_URI) {
 // that include a specified list of users
 let betaUsers = false;
 let BetaMode = null;
+let announceOnSpawn = true;   // hack this one time to announce to all non beta 1-1 spaces taht we are available
 if (process.env.BETA_USER_EMAILS) {
   betaUsers = process.env.BETA_USER_EMAILS.split(/[ ,]+/);
   if (betaUsers.length) {
@@ -219,6 +220,38 @@ framework.on('spawn', async (bot, id, addedById) => {
         }
         return;
       }
+    } else if (announceOnSpawn) {
+      // Check if an existing 1-1 space is in the "non beta user" state
+      let betaModeState = {};
+      try {
+        betaModeState = await bot.recall('betaModeState');
+        if ((betaModeState.enabled) && (betaModeState.allowed === false)) {
+          if (bot.isDirect) {
+            let msg = `Enabling space with former non Beta user ${bot.isDirectTo}`;
+            adminsBot.say(msg);
+            logger.info(msg);
+          }
+          bot.say('I am now available and will respond to messages and button presses.')
+            .then(() => showHelp(bot))
+            .then(() => {
+              cardArray[0].renderCard(bot, { message: { text: 'Beta Mode Ended' } })
+                .catch((e) => logger.error(`Error initial lesson in space "${bot.room.title}": ${e.message}`));
+            })
+            .catch((e) => {
+              logger.warn(`Unable to notify user in space ${bot.room.title}" `
+                `that bot is now availble:${e.message}`);
+            });
+        }
+      } catch (e) {
+        logger.error(`Unable to fetch current betaMode state for` +
+          ` for space "${bot.room.title}": :${e.message}. Will try to force it to false`);
+      }
+      betaModeState.enabled = false;
+      bot.store('betaModeState', betaModeState)
+        .catch((e) => {
+          logger.error(`Unable to store updated betaModeState.enabled===false state` +
+            ` for space "${bot.room.title}": :${e.message}. This may result in spamming!`);
+        });
     }
 
     if (addedById) {
