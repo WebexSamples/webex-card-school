@@ -21,7 +21,7 @@
     {
       "type": "Image",
       "altText": "text bot",
-      "url": "http://jpshipherd.ngrok.io/images/jira-text-bot.png"
+      "url": "https://cardschool.webexbots.cloud/images/jira-text-bot.png"
     },
     {
       "type": "TextBlock",
@@ -31,7 +31,7 @@
     {
       "type": "Image",
       "altText": "buttons and cards",
-      "url": "http://jpshipherd.ngrok.io/images/jira-card-bot.jpg"
+      "url": "https://cardschool.webexbots.cloud/images/jira-card-bot.jpg"
     },
     {
       "type": "TextBlock",
@@ -187,7 +187,7 @@
         "body": [
           {
             "type": "TextBlock",
-            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://developer.webex.com/buttons-and-cards-designer/lesson-2)\n* [View the Source for This App](https://github.com/WebexSamples/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) ",
+            "text": "* [Join the 'Ask B&C School' Webex Teams Space](https://eurl.io/#SJiS9VKTH)\n* [View the Source for This Card](https://github.com/WebexSamples/webex-card-school/blob/master/generated/lesson-2.json)\n* [View the Source for This App](https://github.com/WebexSamples/webex-card-school)\n* [Official Developer Guide](https://developer.webex.com/docs/api/guides/cards)\n* [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer)\n* [Adaptive Card Schema Explorer](https://adaptivecards.io/explorer/)\n* [Cisco DevNet: Card Sample App](https://developer.cisco.com/codeexchange/github/repo/CiscoDevNet/webex-card-sample/) ",
             "wrap": true
           },
           {
