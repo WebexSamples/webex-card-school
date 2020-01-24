@@ -27,7 +27,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "* `Action.OpenUrl` - When clicked the client will open the user's browser to the specified URL.\n* `Action.ToggleVisibility` - When clicked the client will \"expand\" the card to show a sub-card associated with the Activity. The \"Helpful Resources\" button on this card is an example of this.\n* `Action.Submit` - When clicked, the application that posted a card will get a notification that includes any data associated with the Action along with the data associated with the button, plus any info collected from any of the Input elements in the card.\n",
+      "text": "* `Action.OpenUrl` - When clicked the client will open the user's browser to the specified URL.\n* `Action.ShowCard` - When clicked the client will \"expand\" the card to show a sub-card associated with the Activity. The \"Helpful Resources\" button on this card is an example of this.\n* `Action.Submit` - When clicked, the application that posted a card will get a notification that includes any data associated with the Action along with the data associated with the button, plus any info collected from any of the Input elements in the card.\n",
       "wrap": true
     },
     {

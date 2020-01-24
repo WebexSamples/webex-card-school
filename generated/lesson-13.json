@@ -10,7 +10,7 @@
     },
     {
       "type": "TextBlock",
-      "text": "Let's put everything we've learned into a simple form.   Below is an `Action.ToggleVisibility` button that will display a Form.",
+      "text": "Let's put everything we've learned into a simple form.   Below is an `Action.ShowCard` button that will display a Form.",
       "wrap": true
     },
     {
