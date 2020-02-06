@@ -229,7 +229,16 @@ framework.on('spawn', async (bot, id, addedById) => {
           if (!bot.isDirect) {
             // skip the card for 1-1 space, since we also will send it in 
             // response to the message the user sent in order to create the space
-            cardArray[0].renderCard(bot, { message: { text: 'Initial Add Action' }, person: addedByPerson })
+            cardArray[0].renderCard(bot,
+              // creating a "trigger object" for metrics to use
+              {
+                type: "spawn",
+                message: {
+                  text: 'Initial Add Action',
+                  personId: addedById
+                },
+                person: addedByPerson
+              })
               .catch((e) => logger.error(`Error initial lesson in space "${bot.room.title}": ${e.message}`));
           }
         })

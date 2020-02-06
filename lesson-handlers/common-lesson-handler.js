@@ -138,7 +138,10 @@ class LessonHandler {
         this.lessons[parseInt(lessonState.previousLessonIndex)].title : 'unknown';
       if (trigger.type === 'attachmentAction') {
         actorId = trigger.attachmentAction.personId;
-      } else {
+      } else if (trigger.type === 'spawn') {
+        // On a spawn event we have the full person object, use it
+        actorId = trigger.person;
+      } else { 
         actorId = trigger.message.personId;
       }
       if (event === 'cardRendered') {
