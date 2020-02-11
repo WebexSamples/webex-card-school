@@ -33,3 +33,6 @@ mongo-prodbot.json
 publish-to-aws.sh
 shutdown-aws.sh
 start-one-aws-instance.sh
+
+# Generated cards hosted in B&C Designer
+CardSchoolLessonsForDesinger-2020-02-06.zip
