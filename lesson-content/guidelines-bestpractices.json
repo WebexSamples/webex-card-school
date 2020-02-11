@@ -10,8 +10,8 @@
       },
       {
         "type": "Image",
-        "altText": "",
-        "url": "http://jpshipherd.ngrok.io/images/guidelines-bestpractices.jpg",
+        "altText": "Person helping another person",
+        "url": "{imageHostingUrl}/guidelines-bestpractices.jpg",
         "horizontalAlignment": "Center"
       },
       {
