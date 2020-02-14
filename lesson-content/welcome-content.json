@@ -12,10 +12,9 @@
     },
     {
       "type": "Image",
-      "altText": "Picture of a school",
-      "url": "{imageHostingUrl}/school.png",
-      "horizontalAlignment": "Center",
-      "size": "large"
+      "altText": "picture of a The Process",
+      "url": "{imageHostingUrl}/CardSchool.png",
+      "horizontalAlignment": "Center"
     },
     {
       "type": "TextBlock",
