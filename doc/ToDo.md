@@ -67,6 +67,6 @@ Research mongo to see if its better to update a single field in a dictionary or
 ## More Information
 
 * [Main README for project](../README.md)
-* [How this app works](.doc/overview.md)
-* [Creating your own lessons](.doc/lessons.md)
+* [How this app works](./doc/overview.md)
+* [Creating your own lessons](./doc/lessons.md)
 * [Ask Buttons and Cards School](https://eurl.io/#SJiS9VKTH) Webex Teams space.
