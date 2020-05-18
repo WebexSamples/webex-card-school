@@ -16,7 +16,7 @@
       },
       {
         "type": "TextBlock",
-        "text": "General:\n* Webex Teams supports Adaptive Cards 1.1.\n* All card elements are available for use except *Media*.\n* Includes all card properties except *backgroundImage*, *iconUrl*, and *speak*.\n* Messages with cards may include up to 10 images.\n* Only one card can be sent per request.\n* The card's content cannot be changed after it's created. ",
+        "text": "General:\n* Webex Teams supports Adaptive Cards 1.2.\n* All card elements are available for use except `Media`.\n* The following card properties are not supported yet: `Action.ToggleVisibility` for \"Action\" and \"ActionSet\" elements, `height` for \"ColumnSet\", and the card level attributes: `fallbackText`, `fallback`, `requires`, `speak`, and `verticalContentAlignment`.\n* Cards may include up to five actions.\n* Messages with Cards may include up to 10 images.\n* Only one card can be sent per request.\n* The card’s content cannot be changed after it’s created.\n* You can use the [Buttons and Cards Designer](https://developer.webex.com/buttons-and-cards-designer) to design your Cards.",
         "wrap": true
       },
       {

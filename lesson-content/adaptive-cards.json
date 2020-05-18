@@ -15,7 +15,7 @@
         },
         {
             "type": "TextBlock",
-            "text": "Webex Buttons and Cards use [Microsoft's Adaptive Cards](https://adaptivecards.io/) open-source specification to define the content of the card in a JSON object. The Webex Teams clients render cards with the same look and feel across every platform, letting you put more focus on the content and the interaction and less on the presentation.\n\n\n",
+            "text": "Webex Buttons and Cards use [Microsoft's Adaptive Cards](https://adaptivecards.io/) open-source specification to define the content of the card in a JSON object. The Webex Teams clients render cards with a similar look and feel across the clients, letting you put more focus on the content and the interaction and less on the presentation.\n\n\n",
             "wrap": true
         },
         {
