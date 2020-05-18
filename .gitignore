@@ -35,4 +35,6 @@ shutdown-aws.sh
 start-one-aws-instance.sh
 
 # Generated cards hosted in B&C Designer
-CardSchoolLessonsForDesinger-2020-02-06.zip
+*.zip
+publish-existing-docker-to-aws.sh
+restart-aws.sh
