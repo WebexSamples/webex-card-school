@@ -10,8 +10,8 @@ To interact with this bot now, simply add cardSchool@webex.bot to a Webex Teams 
 ## More Information
 
 * [How this app works](./doc/overview.md)
-* [Running this project locally](.doc/running.md)
-* [Creating your own lessons](.doc/lessons.md)
+* [Running this project locally](./doc/running.md)
+* [Creating your own lessons](./doc/lessons.md)
 
 
 ## Support and Contributions
