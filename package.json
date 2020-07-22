@@ -21,13 +21,13 @@
   "author": "JP Shipherd",
   "license": "ISC",
   "dependencies": {
-    "adaptivecards-templating": "^0.1.1-alpha.0",
+    "adaptivecards-templating": "0.1.1-alpha.0",
     "body-parser": "^1.15.2",
     "dotenv": "^5.0.1",
     "express": "^4.17.1",
     "moment": "^2.24.0",
     "mongodb": "^3.4.1",
-    "webex-node-bot-framework": "^1.0.4",
+    "webex-node-bot-framework": "^2.1.1",
     "winston": "^2.4.1",
     "winston-papertrail": "^1.0.5"
   }
