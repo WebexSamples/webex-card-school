@@ -24,6 +24,13 @@ if (process.env.DOCKER_BUILD) {
   logger.info(`Starting app in docker container built: ${process.env.DOCKER_BUILD}`);
 }
 
+// Configure where to point users to to see the dyanmic card info
+if (!process.env.APP_SRC_BASE_URL) {
+  console.error('Cannot read the environment variable APP_SRC_BASE_URL, needed to configure the buttons with links to the app and card source.');
+  console.error('Links to this app\'s source will default to https://github.com/WebexSamples/webex-card-school\n');
+  process.env.APP_SRC_BASE_URL="https://github.com/WebexSamples/webex-card-school";
+}
+
 // The admin user or 'admin space' gets extra notifications about bot 
 // usage and feedback. If both are set we prefer the space
 let adminEmail = '';
