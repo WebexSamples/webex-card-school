@@ -1,6 +1,6 @@
 {
   "name": "cardschool",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Webex Teams Bot to demonstrate the use of Buttons and Cards",
   "main": "server.js",
   "engines": {
