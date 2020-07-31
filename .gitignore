@@ -21,10 +21,6 @@ jspm_packages
 
 # Config
 .env*
-config.json
-mongo.json
-config-prodbot.json
-mongo-prodbot.json
  
 # Debug configs
 .vscode/launch.json
@@ -33,8 +29,9 @@ mongo-prodbot.json
 publish-to-aws.sh
 shutdown-aws.sh
 start-one-aws-instance.sh
+publish-existing-docker-to-aws.sh
+restart-aws.sh
 
 # Generated cards hosted in B&C Designer
 *.zip
-publish-existing-docker-to-aws.sh
-restart-aws.sh
+generated/*
