@@ -334,13 +334,13 @@ framework.hears(/.*/, async (bot, trigger) => {
         cardArray[currentLessonIndex].renderCard(bot, trigger, lessonState);
       } else {
         logger.error(`Got invalid index for current lesson: ${currentLessonIndex}` +
-          ` in response to ${trigger.text} in space "${bot.space.title}".` +
+          ` in response to ${trigger.text} in space "${bot.room.title}".` +
           `  Displaying intro lesson.`);
         cardArray[0].renderCard(bot, trigger);
       }
     } catch (e) {
       logger.error(`Failed bot.recall('lessonState'): ${e.message}.` +
-        ` in response to ${trigger.text} in space "${bot.space.title}".` +
+        ` in response to ${trigger.text} in space "${bot.room.title}".` +
         `  Displaying intro lesson.`);
       cardArray[0].renderCard(bot, trigger);
     }
