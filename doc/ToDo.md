@@ -15,7 +15,7 @@
 * [x]  Add a persistent store for information about the bots
   * [x]  Store operative/inopareative status
   * [x]  Store current lesson
-* [ ]  Design a way to go "GA" an notify users in 1-1 spaces that the bot is operational now. (But make sure notification only happens one time)
+* [x]  Design a way to go "GA" an notify users in 1-1 spaces that the bot is operational now. (But make sure notification only happens one time)
 
 ## Core functionality
 * [x]  Add logic to know the most recent card presented.  Respond to submit actions from other cards with a reply that only the most current card's input is processed.
@@ -35,8 +35,8 @@
   * [x] How many users got to the graduation card
   * [x] How many users interacted with more than X lessons
 * [x] Write Add/Remove feedback to a space.  Perhaps create an AdminRoomId instead of AdminEmail for group control
-* [ ] Prevous and Current lesson indexes don't always seem to be correct when using text commands, debug
-* [ ] Is lessonsSeen counter getting updated in all circumstances?  Seems low in some cases
+* [x] Prevous and Current lesson indexes don't always seem to be correct when using text commands, debug
+* [x] Is lessonsSeen counter getting updated in all circumstances?  Seems low in some cases
 
 ## Lesson Content
 * [x] Show an Input Form
@@ -55,14 +55,15 @@ Research mongo to see if its better to update a single field in a dictionary or
 * [x] Write some one-time-only code to move from storage v1 to storage v2
 
 ## Framework improvements
-* [ ] reimplment beta-mode as a core frameowrk feature
+* [x] reimplment beta-mode as a core frameowrk feature
 * [x] reimplement mongoStore as a framework store
 
 ## Ask Buttons and Cards School
 * [x] Create an Ask Buttons and Cards School Space
-* [x] Make avaialble with EURL for Cisco only
+* [x] Make avaialble with EURL for Any interested user
 * [x] Add link to Ask space in More Resources
 * [x] Ask EURL to make link publically avaialble after GA
+* [x] Link to lesson card source in Designer
 
 ## More Information
 
