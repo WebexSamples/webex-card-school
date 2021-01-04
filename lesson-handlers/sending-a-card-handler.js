@@ -23,6 +23,9 @@ class SendingACardHandlers {
         if ('id' in message) {
           bot.store('activeCardMessageId', message.id);
         }
+        let msg = `PROCESSED a SendingACardHandlers - customRenderCard event in spaceID:"${bot.room.id}":\n` +
+          `-- Space Name:    "${bot.room.title}"\n`;
+        logger.info(msg);
       })
       .catch((err) => {
         let msg = 'Failed to render Sending A Card lesson.';

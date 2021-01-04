@@ -36,7 +36,7 @@ class LessonHandler {
     lessonState.totalLessons += 1;
 
     // Capture metrics and logs for this transition
-    this.writeCardMetric(bot, 'cardRendered', trigger, lessonState);
+    let data = await this.writeCardMetric(bot, 'cardRendered', trigger, lessonState);
     bot.store('lessonState', lessonState)
       .then(() => bot.store('lastActivity', new Date().toISOString())
         .catch((e) => this.logger.error(`renderCard(): failed writing lessonState to db: ${e.message}`)));
@@ -53,6 +53,8 @@ class LessonHandler {
           bot.store('activeCardMessageId', message.id)
             .catch((e) => logger.error(`Failed to store active card message ID. Error:${e.message}`));
         }
+        // Add success log
+        this.addLog(bot, data)
       })
       .catch((err) => {
         let msg = `Failed to render ${this.lessonInfo.title} card.`;
@@ -181,7 +183,26 @@ class LessonHandler {
       msg += `-- Student Name:  "${data.actorDisplayName}"\n`;
     }
     this.logger.info(msg);
+
+    return data
   };
+
+  async addLog(bot, data) {
+    let msg = `PROCESSED a "${data.event}" event in spaceID:"${bot.room.id}":\n` +
+      `-- Space Name:    "${bot.room.title}"\n`;
+    if (data.event === 'cardRendered') {
+      msg += `-- Previous Card: "${data.previousLesson}"\n` +
+        `-- Requested via: "${data.requestedVia}"\n` +
+        `-- New card name: "${data.cardName}"\n`;
+    } else if (data.event === 'feedbackProvided') {
+      msg += `-- From Card:     "${data.previousLesson}"\n` +
+        `-- Feedback:     "${data.feedback}"\n`;
+    }
+    if (data.actorDisplayName) {
+      msg += `-- Student Name:  "${data.actorDisplayName}"\n`;
+    }
+    this.logger.info(msg);
+  }
 
 };
 
