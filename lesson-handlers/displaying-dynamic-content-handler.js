@@ -75,6 +75,9 @@ class DisplayingDynamicContentHandlers {
             bot.store('activeCardMessageId', message.id)
               .catch((e) => logger.error(`Failed to store active card message ID. Error:${e.message}`));
           }
+          let msg = `PROCESSED a DisplayingDynamicContentHandlers - customRenderCard event in spaceID:"${bot.room.id}":\n` +
+          `-- Space Name:    "${bot.room.title}"\n`;
+          logger.info(msg);
         })
         .catch((err) => {
           let msg = 'Failed to render Displaying Complex Info lesson.';

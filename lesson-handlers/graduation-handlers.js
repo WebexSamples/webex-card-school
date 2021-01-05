@@ -46,6 +46,9 @@ class GraduationHandlers {
               .then(() => bot.store('seenGraduation', true))
               .catch((e) => logger.error(`Failed to store graduation metrics. Error:${e.message}`));
           }
+          let msg = `PROCESSED a GraduationHandlers - Congratulations event in spaceID:"${bot.room.id}":\n` +
+          `-- Space Name:    "${bot.room.title}"\n`;
+          logger.info(msg);
         })
         .catch((err) => {
           let msg = `Failed to render ${cardObj.lessonInfo.title} lesson.`;
